@@ -149,7 +149,8 @@ public class ConnectionBridge implements Observer {
                     this.analyzeAndExecute(object);
                 }
             } catch (SocketException e) {
-                chat.appendStr("\n" + chat.getClientName() + " Has left the game", smpSet, color);
+            	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+                chat.appendStr("\n" + clientPlayerName + " Has left the game", smpSet, color);
                 chat.setButtons(false);
                 data.isGameOnLine(false);
                 view.reEnableMenuItems(true);
@@ -173,7 +174,8 @@ public class ConnectionBridge implements Observer {
             if (object instanceof Packet) {
                 Packet packet = (Packet) object;
                 if (packet.getMessage() != null) {
-                    chat.appendStr("\n" + chat.getClientName() + ": " + packet.getMessage(), packet.getSmpSet(), packet.getColor());
+                	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+                    chat.appendStr("\n" + clientPlayerName + ": " + packet.getMessage(), packet.getSmpSet(), packet.getColor());
                     chat.getTxtPane().setCaretPosition(chat.getTxtPane().getDocument().getLength());
                 }
                 if (packet.getImgPath() != null) {
@@ -212,7 +214,8 @@ public class ConnectionBridge implements Observer {
      * when it is needed it is calling the method from the view c;lass
      */
     public void restartGame() {
-        int returnValue = JOptionPane.showConfirmDialog(view, chat.getClientName() + "would you like to restart the game", "Confirmation Message", JOptionPane.YES_NO_OPTION);
+    	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+        int returnValue = JOptionPane.showConfirmDialog(view, clientPlayerName + "would you like to restart the game", "Confirmation Message", JOptionPane.YES_NO_OPTION);
         if (returnValue == JOptionPane.YES_OPTION) {
             Packet packet = new Packet();
             packet.setConfirmRestart("restart game");
