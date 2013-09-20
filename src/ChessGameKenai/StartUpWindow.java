@@ -59,13 +59,13 @@ public class StartUpWindow extends JWindow implements Runnable {
                 int h = mainPanel.getHeight();
 
                 //OVERRRIDE THE PAINT COMPONENT AS YOU WANT
-                URL url = mainPanel.getClass().getResource("Icons/board.jpg");
+                URL url = mainPanel.getClass().getResource(ChessGameConstants.boardImage);
                 Toolkit toolkit = this.getToolkit();
                 Image image = toolkit.getImage(url);
                 g.drawImage(image, 0, 0, w, h, mainPanel);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Verdana", Font.PLAIN, 20));
-                g.drawString("All Rights Reserved @Dimitri_Mario_Valeria", 88, 50);
+                g.drawString(ChessGameConstants.copyrightString, 88, 50);
             }
         };
 
