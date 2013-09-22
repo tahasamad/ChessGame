@@ -4,10 +4,13 @@
  * Date: 27-Jan-2011
  * Version: 1.0
  */
-package ChessGameKenai;
+package GameElements;
 
-import java.awt.Color;
 import java.io.Serializable;
+
+import ChessGameKenai.ChessGameConstants.PieceColor;
+import ChessGameKenai.ChessGameConstants.PieceType;
+import Utils.ChessGamePoint;
 
 /**
  * The Non_Visual_Piece class is the abstract piece that is not visual to the user but
@@ -23,12 +26,9 @@ import java.io.Serializable;
  */
 public class Non_Visual_Piece implements Serializable {
 
-    private String type;
-    private int position;
-    private Color color;
-    private int countClicks;
-    private int previousPosition;
-    private transient Chess_Data data;
+	private PieceColor color;
+	private PieceType type;
+    private ChessGamePoint position;
     private boolean isCaptured;
     private boolean isMoved;
     private boolean isQueenFromPawn;
@@ -43,11 +43,10 @@ public class Non_Visual_Piece implements Serializable {
      * @param position as an integer
      * @param color as Color
      */
-    public Non_Visual_Piece(Chess_Data data, String type, int position, Color color) {
+    public Non_Visual_Piece(PieceType type, ChessGamePoint position, PieceColor color) {
         this.type = type;
         this.position = position;
         this.color = color;
-        this.data = data;
     }
 
     /**
@@ -109,35 +108,8 @@ public class Non_Visual_Piece implements Serializable {
      * current piece to the caller
      * @return color as a Color
      */
-    public Color getColor() {
+    public PieceColor getColor() {
         return color;
-    }
-
-    /**
-     * The method canMove simply tells the game if the current piece can move or
-     * not it is done by calling the Chess_Data isMoveable which checks the rules of the game
-     * if that method returns true the piece can move otherwise it can not move
-     * @return true if the piece is can move false other wise
-     */
-    public boolean canMove() {
-        for (int i = 0; i < data.getActivePieces().size(); i++) {
-            if (data.getActivePieces().get(this.getPosition() - 1) != null) {
-                if (data.isMoveable(this.getPosition(), (i + 1))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * The method move simply moves the current piece to its new position
-     * by calling the Chess_Data move method which does all the job for us
-     */
-    public void move() {
-        if (data.getPiecePosition() > 0) {
-            data.move(this.getPosition(), data.getPiecePosition());
-        }
     }
 
     /**
@@ -145,33 +117,16 @@ public class Non_Visual_Piece implements Serializable {
      * what the user chooses
      * @param color as a Color
      */
-    public void setColor(Color color) {
+    public void setColor(PieceColor color) {
         this.color = color;
-    }
-
-    /**
-     * The method getPreviousPosition simply returns the previous position
-     * of the piece object
-     * @return previousPosition as an integer
-     */
-    public int getPreviousPosition() {
-        return previousPosition;
-    }
-
-    /**
-     * The method setPreviousPosition simply sets previous position of the piece
-     * @param previousPosition as an integer
-     */
-    public void setPreviousPosition(int previousPosition) {
-        this.previousPosition = previousPosition;
     }
 
     /**
      * The method setPosition simply sets position of the piece
      * @param position as an integer
      */
-    public void setPosition(int position) {
-        this.position = position;
+    public void setPosition(ChessGamePoint point) {
+        this.position = point;
     }
 
     /**
@@ -179,7 +134,7 @@ public class Non_Visual_Piece implements Serializable {
      * of the piece object
      * @return position as an integer
      */
-    public int getPosition() {
+    public ChessGamePoint getPosition() {
         return position;
     }
 
@@ -187,7 +142,7 @@ public class Non_Visual_Piece implements Serializable {
      * The method setType simply sets the type of the piece
      * @param type as a String
      */
-    public void setType(String type) {
+    public void setType(PieceType type) {
         this.type = type;
     }
 
@@ -195,43 +150,14 @@ public class Non_Visual_Piece implements Serializable {
      * The method getType simply returns the type of the piece to the caller
      * @return type as a String
      */
-    public String getType() {
+    public PieceType getType() {
         return type;
     }
 
-    /**
-     * The method getClickCount simply returns the clickCount on the current piece
-     * @return countClicks as an integer
-     */
-    public int getClickCount() {
-        return countClicks;
-    }
-
-    /**
-     * The method setClickCount simply sets clickCount of the piece
-     * @param countClicks as an integer
-     */
-    public void setClickCount(int countClicks) {
-        this.countClicks = countClicks;
-    }
-
-    /**
-     * The method getPieceType returns the type the user user
-     * @return as a String
-     */
-    public String getPieceType() {
-        return type.substring(1);
-    }
-
-    /**
-     * The toString method of the class this is an overwritten method of the object super class
-     *this is how our object will represent itself as a String
-     * @return s as a String
-     */
     @Override
     public String toString() {
         String s = "";
-        s += "Type: " + this.getType() + ", Position:" + this.getPosition();
+        s += "Type: " + this.getType() + ", Color:" + this.getColor() + ", PositionX:" + this.getPosition().x + ", PositionY:" + this.getPosition().y;
         return s;
     }
 }

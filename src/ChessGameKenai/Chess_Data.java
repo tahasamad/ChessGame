@@ -9,8 +9,9 @@ package ChessGameKenai;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
+
+import GameElements.Non_Visual_Piece;
 
 /**
  * The Chess_Data Class are the model for our chess game

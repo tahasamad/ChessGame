@@ -12,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
 
+import ChessGameKenai.ChessGameConstants.PieceColor;
+
 /**
  * Public Square class which is a template for making Square objects when called upon
  * Some Square objects will have Piece on them some will be empty
@@ -26,7 +28,6 @@ public class Square extends JPanel {
 
     private int position;
     private Color currentColor;
-    private static Chess_Data data;
     private Color previousColor;
 
     /**
@@ -35,7 +36,7 @@ public class Square extends JPanel {
      * @param position Square object position on the ChessBoardView's MainPanel
      * @see ChessBoardView Class
      */
-    public Square(Color color, int position) {
+    public Square(PieceColor color, int position) {
 
         //SET OBJECT COLOR AND POSITION
         this.currentColor = color;

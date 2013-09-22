@@ -17,6 +17,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
+import GameElements.Piece;
+
 /**
  * The ChessBoardView Class is main view of the chess game it consists of the
  * chess board, squares and pieces.This view is an observer so each time the change
@@ -797,11 +799,11 @@ public class ChessBoardView extends JFrame implements Observer {
     public void loadCapturedPieces() {
         for (int i = 0; i < data.getCapturedPieces().size(); i++) {
             if (data.getCapturedPieces().get(i).getType().startsWith("W")) {
-                whiteCapturedPiecesPanel.add(new VisualPiece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
+                whiteCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
                 whiteCapturedPiecesPanel.revalidate();
                 whiteCapturedPiecesPanel.repaint();
             } else {
-                blackCapturedPiecesPanel.add(new VisualPiece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
+                blackCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
                 blackCapturedPiecesPanel.revalidate();
                 blackCapturedPiecesPanel.repaint();
             }

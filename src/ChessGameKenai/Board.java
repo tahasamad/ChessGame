@@ -13,6 +13,9 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 
+import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
+
 /**
  * The Board class is the Board of our Chess Game it consists of a JPanel
  * with the 8 by 8 layout it also has squares and some squares will have pieces on them and some will not
@@ -43,7 +46,7 @@ public final class Board extends JPanel implements Observer {
     private ArrayList<Square> squares;
     private HashMap<String, String> imageMap = new HashMap<String, String>();
     private Chess_Data data;
-    private ArrayList<VisualPiece> pieces = new ArrayList<VisualPiece>();
+    private ArrayList<Piece> pieces = new ArrayList<Piece>();
     private boolean isFirstTime = true;
     private ChessBoardView view;
     private HashMap<Integer, String> mapPositions = new HashMap<Integer, String>();
@@ -102,29 +105,29 @@ public final class Board extends JPanel implements Observer {
             if (data.getActivePieces().get(i) != null) {
                 Non_Visual_Piece p = data.getActivePieces().get(i);
                 if (p.getType().equals("WKing")) {
-                    pieces.add(new VisualPiece(this, p, "King", Color.WHITE, p.getPosition(), imageMap.get("WKing")));
+                    pieces.add(new Piece(this, p, "King", Color.WHITE, p.getPosition(), imageMap.get("WKing")));
                 } else if (p.getType().equals("BKing")) {
-                    pieces.add(new VisualPiece(this, p, "King", Color.BLACK, p.getPosition(), imageMap.get("BKing")));
+                    pieces.add(new Piece(this, p, "King", Color.BLACK, p.getPosition(), imageMap.get("BKing")));
                 } else if (p.getType().equals("WQueen")) {
-                    pieces.add(new VisualPiece(this, p, "Queen", Color.WHITE, p.getPosition(), imageMap.get("WQueen")));
+                    pieces.add(new Piece(this, p, "Queen", Color.WHITE, p.getPosition(), imageMap.get("WQueen")));
                 } else if (p.getType().equals("BQueen")) {
-                    pieces.add(new VisualPiece(this, p, "Queen", Color.BLACK, p.getPosition(), imageMap.get("BQueen")));
+                    pieces.add(new Piece(this, p, "Queen", Color.BLACK, p.getPosition(), imageMap.get("BQueen")));
                 } else if (p.getType().equals("WBishop")) {
-                    pieces.add(new VisualPiece(this, p, "Bishop", Color.WHITE, p.getPosition(), imageMap.get("WBishop")));
+                    pieces.add(new Piece(this, p, "Bishop", Color.WHITE, p.getPosition(), imageMap.get("WBishop")));
                 } else if (p.getType().equals("BBishop")) {
-                    pieces.add(new VisualPiece(this, p, "Bishop", Color.BLACK, p.getPosition(), imageMap.get("BBishop")));
+                    pieces.add(new Piece(this, p, "Bishop", Color.BLACK, p.getPosition(), imageMap.get("BBishop")));
                 } else if (p.getType().equals("WKnight")) {
-                    pieces.add(new VisualPiece(this, p, "Knight", Color.WHITE, p.getPosition(), imageMap.get("WKnight")));
+                    pieces.add(new Piece(this, p, "Knight", Color.WHITE, p.getPosition(), imageMap.get("WKnight")));
                 } else if (p.getType().equals("BKnight")) {
-                    pieces.add(new VisualPiece(this, p, "Knight", Color.BLACK, p.getPosition(), imageMap.get("BKnight")));
+                    pieces.add(new Piece(this, p, "Knight", Color.BLACK, p.getPosition(), imageMap.get("BKnight")));
                 } else if (p.getType().equals("WPawn")) {
-                    pieces.add(new VisualPiece(this, p, "Pawn", Color.WHITE, p.getPosition(), imageMap.get("WPawn")));
+                    pieces.add(new Piece(this, p, "Pawn", Color.WHITE, p.getPosition(), imageMap.get("WPawn")));
                 } else if (p.getType().equals("BPawn")) {
-                    pieces.add(new VisualPiece(this, p, "Pawn", Color.BLACK, p.getPosition(), imageMap.get("BPawn")));
+                    pieces.add(new Piece(this, p, "Pawn", Color.BLACK, p.getPosition(), imageMap.get("BPawn")));
                 } else if (p.getType().equals("WRook")) {
-                    pieces.add(new VisualPiece(this, p, "Rook", Color.WHITE, p.getPosition(), imageMap.get("WRook")));
+                    pieces.add(new Piece(this, p, "Rook", Color.WHITE, p.getPosition(), imageMap.get("WRook")));
                 } else if (p.getType().equals("BRook")) {
-                    pieces.add(new VisualPiece(this, p, "Rook", Color.BLACK, p.getPosition(), imageMap.get("BRook")));
+                    pieces.add(new Piece(this, p, "Rook", Color.BLACK, p.getPosition(), imageMap.get("BRook")));
                 }
             }
             this.mapPositions(i + 1);
@@ -303,7 +306,7 @@ public final class Board extends JPanel implements Observer {
      */
     public void addListeners(Color color) {
         for (int i = 0; i < pieces.size(); i++) {
-            VisualPiece p = pieces.get(i);
+            Piece p = pieces.get(i);
             if (p.getColor() == color) {
                 p.addListener();
             }
@@ -317,7 +320,7 @@ public final class Board extends JPanel implements Observer {
      */
     public void removeListeners(Color color) {
         for (int i = 0; i < pieces.size(); i++) {
-            VisualPiece p = pieces.get(i);
+            Piece p = pieces.get(i);
             if (p.getColor() == color) {
                 p.removeListener();
             }
@@ -328,7 +331,7 @@ public final class Board extends JPanel implements Observer {
      * The method getPieces returns the pieces array list to the caller
      * @return pieces as an ArrayList
      */
-    public ArrayList<VisualPiece> getPieces() {
+    public ArrayList<Piece> getPieces() {
         return pieces;
     }
 
@@ -358,7 +361,7 @@ public final class Board extends JPanel implements Observer {
             ArrayList list = (ArrayList) arg;
             String turn = "";
             if (squares.get((Integer) list.get(1) - 1).getComponentCount() > 0) {
-                VisualPiece p = ((VisualPiece) squares.get((Integer) list.get(1) - 1).getComponent(0));
+                Piece p = ((Piece) squares.get((Integer) list.get(1) - 1).getComponent(0));
                 if (p.getColor() == Color.WHITE) {
                     turn = "W" + p.getType();
                 } else {
@@ -397,12 +400,12 @@ public final class Board extends JPanel implements Observer {
             if (data.getActivePieces().get(i) != null) {
                 Non_Visual_Piece p = data.getActivePieces().get(i);
                 for (int j = 0; j < pieces.size(); j++) {
-                    VisualPiece peice = pieces.get(j);
+                    Piece peice = pieces.get(j);
                     if (p.isQueenFromPawn() && peice.getPosition() == p.getPreviousPosition()) {
-                        VisualPiece pi = (VisualPiece) squares.get(p.getPreviousPosition() - 1).getComponent(0);
+                        Piece pi = (Piece) squares.get(p.getPreviousPosition() - 1).getComponent(0);
                         pieces.remove(pi);
                         squares.get(p.getPreviousPosition() - 1).remove(0);
-                        VisualPiece piece = new VisualPiece(this, p, "Queen", p.getColor(), p.getPosition(), imageMap.get(p.getType()));
+                        Piece piece = new Piece(this, p, "Queen", p.getColor(), p.getPosition(), imageMap.get(p.getType()));
                         pieces.add(piece);
                         getSquares().get(p.getPosition() - 1).add(piece);
                         piece.setBounds(5, 5, 55, 55);
@@ -412,7 +415,7 @@ public final class Board extends JPanel implements Observer {
                         p.isQueenFromPawn(false);
                     } else {
                         if (p.getColor() == peice.getColor() && p.getPieceType().equals(peice.getType()) && p.getPreviousPosition() == peice.getPosition()) {
-                            getSquares().get(p.getPosition() - 1).add((VisualPiece) peice);
+                            getSquares().get(p.getPosition() - 1).add((Piece) peice);
                             peice.setPosition(p.getPosition());
                         }
                         if (p.getPreviousPosition() > 0) {
