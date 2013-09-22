@@ -32,7 +32,7 @@ import javax.swing.text.SimpleAttributeSet;
 public class ChessBoardView extends JFrame implements Observer {
 
     private Container container;
-    private JComponent mainPanel, northPanel, pl1IconPanel, pl2IconPanel, pl1PropetiesPanel, pl2PropetiesPanel;
+    private JComponent mainPanel, northPanel;
     private Chess_Data data;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
@@ -40,8 +40,8 @@ public class ChessBoardView extends JFrame implements Observer {
     private JScrollPane whiteCapturedPiecesScroll, blackCapturedPiecesScroll;
     private JComponent eastPanel1, northButtonPanel, buttonPanel;
     private CapturedPieces whiteCapturedPiecesPanel, blackCapturedPiecesPanel;
-    private JLabel whoseTurnLabel, player1IconLabel, player2IconLabel, player1NbrWinsLabel, player2NbrWinsLabel, player1TimerLabel, player2TimerLabel;
-    private JLabel player1NameLabel, player2NameLabel;
+    private JLabel whoseTurnLabel;
+    private PlayerInfoPanel player1InfoPanel, player2InfoPanel;
     private javax.swing.Timer player1Timer, player2Timer;
     private ActionListener player1TimerAction, player2TimerAction;
     private int hours, minutes, seconds;
@@ -159,19 +159,19 @@ public class ChessBoardView extends JFrame implements Observer {
                     if (seconds < 10 && minutes < 10 && hours < 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
+                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
 
                         //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
                     } else if (minutes < 10 && hours < 10 && seconds >= 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + "0" + minutes + ":" + seconds);
+                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + seconds);
 
                         //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
                     } else if (minutes >= 10 && hours < 10 && seconds >= 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + minutes + ":" + seconds);
+                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + minutes + ":" + seconds);
                     }
                 } //IF NOT WHITE TURN TO PLAY EXECUTE THE IF BLOCK
                 else if (!ChessBoardView.this.data.isWhiteTurn()) {
@@ -216,19 +216,19 @@ public class ChessBoardView extends JFrame implements Observer {
                     if (second < 10 && minute < 10 && hour < 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + "0" + minute + ":" + "0" + second);
+                    	player2InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
 
                         //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
                     } else if (minute < 10 && hour < 10 && second >= 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + "0" + minute + ":" + second);
+                    	player2InfoPanel.updateTimerLabel("0" + hour + ":" + "0" + minute + ":" + second);
 
                         //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
                     } else if (minute >= 10 && hour < 10 && second >= 10) {
 
                         //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + minute + ":" + second);
+                    	player2InfoPanel.updateTimerLabel("0" + hour + ":" + minute + ":" + second);
                     }
 
                     //IF IS WHITE TURN
@@ -255,72 +255,19 @@ public class ChessBoardView extends JFrame implements Observer {
         whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
         whoseTurnLabel.setForeground(Color.WHITE);
 
-        //CREATE AND INITIALIZE PLAYER 1 ICON LABEL
-        player1IconLabel = new JLabel(new ImageIcon(getClass().getResource(data.getPlayers().get(0).getIconPath())));
-
-        //CREATE AND INITIALIZE PL1 ICON PANEL
-        pl1IconPanel = new JPanel();
-        pl1IconPanel.setOpaque(false);
-        pl1IconPanel.add(player1IconLabel);
-
-        //CREATE AND INITIALIZE PLAYER 2 ICON LABEL
-        player2IconLabel = new JLabel(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));
-
-        //CREATE AND INITIALIZE PL2 ICON PANEL
-        pl2IconPanel = new JPanel();
-        pl2IconPanel.setOpaque(false);
-        pl2IconPanel.add(player2IconLabel);
-
-        //CREATE AND INITILAIZE PLAYER 1 PROPERTIES LABELS
-        player1NameLabel = new JLabel(data.getPlayers().get(0).getName(), SwingConstants.LEFT);
-        player1NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1NameLabel.setForeground(Color.WHITE);
-        player1NbrWinsLabel = new JLabel("Number of wins: " + data.getPlayers().get(0).getNumberOfWins(), SwingConstants.LEFT);
-        player1NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1NbrWinsLabel.setForeground(Color.WHITE);
-        player1TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
-        player1TimerLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1TimerLabel.setForeground(Color.WHITE);
-
-        //CREATE AND INITILAIZE PL1 PROPERTIES PANEL
-        pl1PropetiesPanel = new JPanel(new GridLayout(3, 1));
-        pl1PropetiesPanel.setOpaque(false);
-
-        //ADD ALL THE COMPONENTS TO THE PL1 PROPERTIES PANEL
-        pl1PropetiesPanel.add(player1NameLabel);
-        pl1PropetiesPanel.add(player1NbrWinsLabel);
-        pl1PropetiesPanel.add(player1TimerLabel);
-
-        //CREATE AND INITILAIZE PLAYER 2 PROPERTIES LABELS
-        player2NameLabel = new JLabel(data.getPlayers().get(1).getName(), SwingConstants.LEFT);
-        player2NameLabel.setForeground(Color.WHITE);
-        player2NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2NbrWinsLabel = new JLabel("Number of wins: " + data.getPlayers().get(1).getNumberOfWins(), SwingConstants.LEFT);
-        player2NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2NbrWinsLabel.setForeground(Color.WHITE);
-        player2TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
-        player2TimerLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2TimerLabel.setForeground(Color.WHITE);
-
-        //CREATE AND INITILAIZE PL2 PROPERTIES PANEL
-        pl2PropetiesPanel = new JPanel(new GridLayout(3, 1));
-        pl2PropetiesPanel.setOpaque(false);
-
-        //ADD ALL THE COMPONENTS TO THE PL2 PROPERTIES PANEL
-        pl2PropetiesPanel.add(player2NameLabel);
-        pl2PropetiesPanel.add(player2NbrWinsLabel);
-        pl2PropetiesPanel.add(player2TimerLabel);
+        //CREATE AND INITIALIZE PLAYER INFO PANEL
+        
+        player1InfoPanel = new PlayerInfoPanel(data.getPlayers().get(0));
+        player2InfoPanel = new PlayerInfoPanel(data.getPlayers().get(1));
 
         //CREATE AND INITIALIZE NORTH PANEL
-        northPanel = new JPanel(new GridLayout(1, 4));
+        northPanel = new JPanel(new GridLayout(1, 2));
         northPanel.setOpaque(false);
         //northPanel.setBackground(Color.WHITE);
 
         //ADD ALL THE COMPONENTS TO THE NORTH PANEL
-        northPanel.add(pl1IconPanel);
-        northPanel.add(pl1PropetiesPanel);
-        northPanel.add(pl2IconPanel);
-        northPanel.add(pl2PropetiesPanel);
+        northPanel.add(player1InfoPanel);
+        northPanel.add(player2InfoPanel);
 
         buttonPanel.add(restartButton);
 
@@ -709,12 +656,8 @@ public class ChessBoardView extends JFrame implements Observer {
             board.removeListeners(Color.BLACK);
             this.stopTimer();
         }
-        player1NbrWinsLabel.setText("Number of wins: " + data.getPlayers().get(0).getNumberOfWins());
-        player2NbrWinsLabel.setText("Number of wins: " + data.getPlayers().get(1).getNumberOfWins());
-        player1NameLabel.setText(data.getPlayers().get(0).getName());
-        player2NameLabel.setText(data.getPlayers().get(1).getName());
-        player1IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(0).getIconPath())));
-        player2IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));
+       player1InfoPanel.resetPanelInformation();
+       player2InfoPanel.resetPanelInformation();
     }
 
     /**
@@ -738,8 +681,9 @@ public class ChessBoardView extends JFrame implements Observer {
 
                 //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
                 whoseTurnLabel.setText(data.isWhiteTurn() ? (data.getPlayers().get(0).getName() + " turn to play") : (data.getPlayers().get(1).getName() + " turn to play"));
-                player1NameLabel.setText(data.getPlayers().get(0).getName());
-                player2NameLabel.setText(data.getPlayers().get(1).getName());
+                
+                player1InfoPanel.updatePlayerName();
+                player2InfoPanel.updatePlayerName();
             }
         }
     }
@@ -757,13 +701,13 @@ public class ChessBoardView extends JFrame implements Observer {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
                 data.getPlayers().get(0).setName(playerName);
-                player1NameLabel.setText(data.getPlayers().get(0).getName());
+                player1InfoPanel.updatePlayerName();
             }
         } else {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
                 data.getPlayers().get(1).setName(playerName);
-                player2NameLabel.setText(data.getPlayers().get(1).getName());
+                player2InfoPanel.updatePlayerName();
             }
         }
         try {
@@ -821,8 +765,8 @@ public class ChessBoardView extends JFrame implements Observer {
         board.getPieces().clear();
         board.populateBoard();
         hours = minutes = seconds = hour = minute = second = 0;
-        player1TimerLabel.setText("00:00:00");
-        player2TimerLabel.setText("00:00:00");
+        player1InfoPanel.resetTimerLabel();
+        player2InfoPanel.resetTimerLabel();
         player1Timer.stop();
         player2Timer.stop();
         tArea.setText("");
@@ -871,8 +815,8 @@ public class ChessBoardView extends JFrame implements Observer {
         player2Timer.stop();
         tArea.setText("");
         hours = minutes = seconds = hour = minute = second = 0;
-        player1TimerLabel.setText("00:00:00");
-        player2TimerLabel.setText("00:00:00");
+        player1InfoPanel.resetTimerLabel();
+        player2InfoPanel.resetTimerLabel();
         whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " turn to play");
         if (data.isServer()) {
             board.removeListeners(Color.BLACK);
