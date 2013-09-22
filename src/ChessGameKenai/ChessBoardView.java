@@ -6,14 +6,37 @@
  */
 package ChessGameKenai;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
@@ -31,7 +54,6 @@ import javax.swing.text.SimpleAttributeSet;
  */
 public class ChessBoardView extends JFrame implements Observer {
 
-    private Container container;
     private JComponent mainPanel, northPanel;
     private Chess_Data data;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
@@ -62,10 +84,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * @param data address of the Chess_Data object
      */
     public ChessBoardView(Chess_Data data) {
-        this.data = data;
-        this.setLayout(null);
-        this.container = this.getContentPane();
-
+        this.data = data;        
+        
         tArea.setText("--------Moves Made-------\n");
         tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         tArea.setOpaque(false);
@@ -192,10 +212,10 @@ public class ChessBoardView extends JFrame implements Observer {
 
         //ADD ALL THE COMPONENTS TO THE NORTH BUTTON PANEL
         northButtonPanel.add(whoseTurnLabel);
-        northButtonPanel.add(buttonPanel);
+        northButtonPanel.add(buttonPanel,BorderLayout.LINE_END);
 
         //ADD ALL THE COMPONENTS TO THE MAIN NORTH PANEL
-        mainNorthPanel.add(northPanel, BorderLayout.CENTER);
+        mainNorthPanel.add(northPanel, BorderLayout.BEFORE_LINE_BEGINS);
         mainNorthPanel.add(northButtonPanel, BorderLayout.SOUTH);
 
         //CREATE JMENUBAR AND SET IT TO THE JFRAME
@@ -526,29 +546,34 @@ public class ChessBoardView extends JFrame implements Observer {
         this.setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
 
         //ADD EVERYTHING TO THE CONTAINER
-        container.add(board);
-        container.add(chat);
-        container.add(mainEastPanel);
-        container.add(mainNorthPanel);
-
+        
+        JPanel mainContainer = new JPanel();
+        mainContainer.setLayout(null);        
+        JScrollPane mainScrollPane = new JScrollPane(mainContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        getContentPane().add(mainScrollPane);
+        
+        mainContainer.add(mainNorthPanel);
+        mainContainer.add(board);
+        mainContainer.add(mainEastPanel);
+        mainContainer.add(chat);
+        
         mainNorthPanel.setBounds(0, 0, 757, 170);
         mainNorthPanel.repaint();
-
         mainEastPanel.setBounds(520, 170, 230, 531);
         mainEastPanel.repaint();
-
         board.setBounds(0, 170, 583, 592);
         board.repaint();
-
         chat.setBounds(0, 693, 757, 211);
         chat.repaint();
 
-        //INITIALIZES JFRAMES' PROPERTIES
-        this.setTitle("Chess Game V 2.0");
+        //SET LAYOUT PROPERTIES
+        this.setTitle("Chess Game");
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocation(333, 6);
         this.setResizable(false);
-        this.setSize(757, 933);
+        this.setSize(757, 700);
+        mainContainer.setSize(757, 633);
+        mainContainer.setPreferredSize(new Dimension(757, 870));
         this.setVisible(true);
     }
 
