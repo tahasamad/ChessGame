@@ -73,7 +73,6 @@ public class Chat extends JPanel {
     private SimpleAttributeSet smpSet, smpSetUnderline;
     private Color color = Color.ORANGE;
     private ObjectOutputStream out;
-    private Chess_Data data;
     private String name = "";
     private DateFormat format = new SimpleDateFormat("MM/dd/yy");
     private Date dateNow = new Date();
@@ -86,10 +85,9 @@ public class Chat extends JPanel {
      * @param view as a ChessBoardView object
      * @param data as a Chess_Data object
      */
-    public Chat(ChessBoardView view, Chess_Data data) {
+    public Chat(ChessBoardView view) {
 
         this.view = view;
-        this.data = data;
 
 
         smpSet = new SimpleAttributeSet();
@@ -144,7 +142,7 @@ public class Chat extends JPanel {
         chatA.setFont(new Font("Dialog", Font.PLAIN, 16));
         appendStr("Chess chat", smpSetUnderline, Color.BLACK);
 
-        btnFont = new JButton("Font");
+        btnFont = ChessGameUtil.getButtonWithText("Font");
 
         btnFont.addActionListener(new ActionListener() {
 
@@ -177,7 +175,7 @@ public class Chat extends JPanel {
         //sendPnl is the panel which has the JTextArea and two JButtons
         sendPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        btnSend = new JButton("Send");
+        btnSend = ChessGameUtil.getButtonWithText("Send");
 
         btnSend.addActionListener(new ActionListener() {
 
@@ -256,6 +254,7 @@ public class Chat extends JPanel {
                 int h = allChatPanel.getHeight();
 
                 URL url = chatA.getClass().getResource("Icons/background.jpg");
+                
                 Toolkit toolkit = this.getToolkit();
                 Image image = toolkit.getImage(url);
                 g.drawImage(image, 0, 0, w, h, allChatPanel);
@@ -350,7 +349,7 @@ public class Chat extends JPanel {
      * so it can be used in any other class
      * @return imgPath as a String
      */
-    public String getImgPath() {
+    public String getImgPath() { //TODO: Not in use
         return imgPath;
     }
 
@@ -421,7 +420,7 @@ public class Chat extends JPanel {
      * to his JTextPane.
      * @throws IOException
      */
-    public void sendMsg() throws IOException {
+    private void sendMsg() throws IOException {							//DONE: Changed to private
         out = ChessBoardView.getConnectionInstance().getOutputStream();
 
         if (imgPath != null && chatF.getText().indexOf(" :image ") >= 0) {
@@ -436,11 +435,13 @@ public class Chat extends JPanel {
         }
         out.writeObject(packet);
         out.flush();
-        if (data.isServer()) {
-            name = data.getPlayers().get(0).getName();
-        } else {
-            name = data.getPlayers().get(1).getName();
-        }
+        
+        name = ChessGameUtil.getCurrentPlayerName();
+//        if (data.isServer()) {
+//            name = data.getPlayers().get(0).getName();
+//        } else {
+//            name = data.getPlayers().get(1).getName();
+//        }
         if (!chatF.getText().trim().equals("") || imgPath != null) {
             appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);
             if (imgPath != null) {
@@ -477,14 +478,14 @@ public class Chat extends JPanel {
      * it then sets the player name accordingly.
      * @return name as a String
      */
-    public String getClientName() {
-        if (!data.isServer()) {
-            name = data.getPlayers().get(0).getName();
-        } else {
-            name = data.getPlayers().get(1).getName();
-        }
-        return name;
-    }
+//    public String getClientName() {
+//        if (!data.isServer()) {
+//            name = data.getPlayers().get(0).getName();
+//        } else {
+//            name = data.getPlayers().get(1).getName();
+//        }
+//        return name;
+//    }
 
     //*****************************************************************\\
     //                      FONT DIALOG                                 \\--------------------------------------------------------
@@ -510,8 +511,8 @@ public class Chat extends JPanel {
             chkItalic = new JCheckBox("Italic");
             chkBold = new JCheckBox("Bold");
 
-            btnOk = new JButton("Ok");
-            btnColor = new JButton("Change Color");
+            btnOk = ChessGameUtil.getButtonWithText("Ok");
+            btnColor = ChessGameUtil.getButtonWithText("Change Color");
 
             btnColor.addActionListener(new ActionListener() {
 

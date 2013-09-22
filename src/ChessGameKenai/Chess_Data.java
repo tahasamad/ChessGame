@@ -33,6 +33,17 @@ public final class Chess_Data extends Observable {
     private boolean isWhiteTurn = true;
     private boolean isServer = true;
     private boolean isGameOnLine = false;
+    
+    private static Chess_Data chessData;
+	
+	public static Chess_Data getChessData ()
+	{
+		if (chessData == null)
+		{
+			chessData = new Chess_Data ();
+		}
+		return chessData;
+	}
 
     /**
      * Empty Constructor of the Chess_Data Class
@@ -40,7 +51,7 @@ public final class Chess_Data extends Observable {
      * it will contain the information that is specified inside
      * the constructor the constructor creates the non visual pieces and fills the array with them
      */
-    public Chess_Data() {
+    private Chess_Data() {
         this.createNonVisualPieces();
     }
 

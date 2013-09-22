@@ -80,7 +80,7 @@ public class ChessBoardView extends JFrame implements Observer {
         data.addObserver(board);
         data.addObserver(this);
 
-        chat = new Chat(this, data);
+        chat = new Chat(this);
 
         //ADD A WINDOW LISTENER TO THE JFRAME
         this.addWindowListener(new WindowAdapter() {
@@ -676,7 +676,7 @@ public class ChessBoardView extends JFrame implements Observer {
         board.setBounds(0, 170, 583, 592);
         board.repaint();
 
-        chat.setBounds(0, 693, 757, 211);
+        chat.setBounds(0, 0, 757, 211);
         chat.repaint();
 
         //INITIALIZES JFRAMES' PROPERTIES
