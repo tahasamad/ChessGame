@@ -42,10 +42,6 @@ public class ChessBoardView extends JFrame implements Observer {
     private CapturedPieces whiteCapturedPiecesPanel, blackCapturedPiecesPanel;
     private JLabel whoseTurnLabel;
     private PlayerInfoPanel player1InfoPanel, player2InfoPanel;
-    private javax.swing.Timer player1Timer, player2Timer;
-    private ActionListener player1TimerAction, player2TimerAction;
-    private int hours, minutes, seconds;
-    private int hour, minute, second;
     private int numberOfWins;
     private JButton restartButton;
     private JTabbedPane tabs;
@@ -127,125 +123,6 @@ public class ChessBoardView extends JFrame implements Observer {
         northButtonPanel = new JPanel(new GridLayout(1, 2));
         northButtonPanel.setOpaque(false);
 
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        player1TimerAction = new ActionListener() {
-
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-
-                //IF IT IS WHITE TURN EXECUTE THE IF BLOCK
-                if (ChessBoardView.this.data.isWhiteTurn()) {
-
-                    //IF SECONDS VARIABLE IS LESS THAN 60 EXECUTE THE IF BLOCK
-                    if (seconds < 59) {
-                        seconds++;
-
-                        //IF SECONDS VARIABLE IS EQUAL TO 60 EXECUTE THE ELSE IF BLOCK
-                    } else if (seconds == 59) {
-                        seconds = 0;
-                        minutes++;
-
-                        //IF MINUTES VARIABLE IS EQUAL TO 60 EXECUTE THE ELSE F BLOCK
-                    } else if (minutes == 59) {
-                        minutes = 0;
-                        hours++;
-                    }
-
-                    //IF SECONDS LESS THAN 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    if (seconds < 10 && minutes < 10 && hours < 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minutes < 10 && hours < 10 && seconds >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + seconds);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minutes >= 10 && hours < 10 && seconds >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player1InfoPanel.updateTimerLabel("0" + hours + ":" + minutes + ":" + seconds);
-                    }
-                } //IF NOT WHITE TURN TO PLAY EXECUTE THE IF BLOCK
-                else if (!ChessBoardView.this.data.isWhiteTurn()) {
-
-                    //STOP PLAYER 1 TIMER
-                    player1Timer.stop();
-
-                    //START PLAYER 2 TIMER
-                    player2Timer.start();
-                }
-            }
-        };
-
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        player2TimerAction = new ActionListener() {
-
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-                //IF IS WHITE TURN EXECUTE THE IF BLOCK
-                if (!ChessBoardView.this.data.isWhiteTurn()) {
-
-                    //IF SECOND LESS THAN 60 EXECUTE THE IF BLOCK
-                    if (second < 59) {
-                        second++;
-
-                        //IF SECOND IS EQUAL TO 60
-                    } else if (second == 59) {
-                        second = 0;
-                        minute++;
-
-                        //IF MINUTE IS EQUAL TO 60
-                    } else if (minute == 59) {
-                        minute = 0;
-                        hour++;
-                    }
-
-                    //IF SECONDS LESS THAN 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    if (second < 10 && minute < 10 && hour < 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player2InfoPanel.updateTimerLabel("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minute < 10 && hour < 10 && second >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player2InfoPanel.updateTimerLabel("0" + hour + ":" + "0" + minute + ":" + second);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minute >= 10 && hour < 10 && second >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                    	player2InfoPanel.updateTimerLabel("0" + hour + ":" + minute + ":" + second);
-                    }
-
-                    //IF IS WHITE TURN
-                } else if (ChessBoardView.this.data.isWhiteTurn()) {
-
-                    //STOP PLAYER2 TIMER AND START PLAYER1 TIMER
-                    player2Timer.stop();
-                    player1Timer.start();
-                }
-            }
-        };
-
-        //CREATE AND START PLAYER2 TIMER
-        player2Timer = new javax.swing.Timer(1000, player2TimerAction);
-
-        //CREATE AND START PLAYER1 TIMER
-        player1Timer = new javax.swing.Timer(1000, player1TimerAction);
 
         //CREATE AND INITILAIZE MAIN NORTH PANEL
         mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
@@ -257,9 +134,51 @@ public class ChessBoardView extends JFrame implements Observer {
 
         //CREATE AND INITIALIZE PLAYER INFO PANEL
         
-        player1InfoPanel = new PlayerInfoPanel(data.getPlayers().get(0));
-        player2InfoPanel = new PlayerInfoPanel(data.getPlayers().get(1));
+        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
+        ActionListener player1TimerAction = new ActionListener() {
 
+            /**
+             * The method actionPerformed is the method
+             * that is inherited from ActionListener Interface
+             * @param e ActionEvent object that is generated when listener detects an action
+             */
+            public void actionPerformed(ActionEvent e) {
+
+                if (ChessBoardView.this.data.isWhiteTurn()) {            
+                	player1InfoPanel.updateTimerLabel();
+                }
+                else if (!ChessBoardView.this.data.isWhiteTurn()) {
+                    player1InfoPanel.stopTimer();
+                    player2InfoPanel.startTimer();
+                }
+            }
+        };
+        player1InfoPanel = new PlayerInfoPanel(data.getPlayers().get(0));
+        player1InfoPanel.createTimer(player1TimerAction);
+
+        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
+        ActionListener player2TimerAction = new ActionListener() {
+
+            /**
+             * The method actionPerformed is the method
+             * that is inherited from ActionListener Interface
+             * @param e ActionEvent object that is generated when listener detects an action
+             */
+            public void actionPerformed(ActionEvent e) {
+                if (!ChessBoardView.this.data.isWhiteTurn()) 
+                {
+                	player2InfoPanel.updateTimerLabel();
+                } 
+                else if (ChessBoardView.this.data.isWhiteTurn()) 
+                {
+                	player2InfoPanel.stopTimer();
+                	player1InfoPanel.startTimer();
+                }
+            }
+        };
+        player2InfoPanel = new PlayerInfoPanel(data.getPlayers().get(1));
+        player2InfoPanel.createTimer(player2TimerAction);
+        
         //CREATE AND INITIALIZE NORTH PANEL
         northPanel = new JPanel(new GridLayout(1, 2));
         northPanel.setOpaque(false);
@@ -730,7 +649,7 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void startTimer() {
         data.isWhiteTurn(true);
-        player1Timer.start();
+        player1InfoPanel.startTimer();
     }
 
     /**
@@ -764,11 +683,9 @@ public class ChessBoardView extends JFrame implements Observer {
         board.removeAllPieces();
         board.getPieces().clear();
         board.populateBoard();
-        hours = minutes = seconds = hour = minute = second = 0;
+        stopTimer();
         player1InfoPanel.resetTimerLabel();
         player2InfoPanel.resetTimerLabel();
-        player1Timer.stop();
-        player2Timer.stop();
         tArea.setText("");
         whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " turn to play");
         this.resetAllSquares();
@@ -811,12 +728,11 @@ public class ChessBoardView extends JFrame implements Observer {
         board.removeAllPieces();
         board.getPieces().clear();
         board.populateBoard();
-        player1Timer.start();
-        player2Timer.stop();
         tArea.setText("");
-        hours = minutes = seconds = hour = minute = second = 0;
         player1InfoPanel.resetTimerLabel();
         player2InfoPanel.resetTimerLabel();
+        player1InfoPanel.startTimer();
+        player2InfoPanel.stopTimer();
         whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " turn to play");
         if (data.isServer()) {
             board.removeListeners(Color.BLACK);
@@ -862,8 +778,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * In our case we would use this method if the game was won by either party
      */
     public void stopTimer() {
-        player1Timer.stop();
-        player2Timer.stop();
+        player1InfoPanel.stopTimer();
+        player2InfoPanel.stopTimer();
     }
 
     /**
@@ -911,7 +827,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * and calls another method of this class which is restartLocalGame to complete the job
      */
     public void playOnLine() {
-        player1Timer.stop();
+        player1InfoPanel.stopTimer();
         data.isGameOnLine(true);
         data.isWhiteTurn(true);
         board.isFirstTime(true);

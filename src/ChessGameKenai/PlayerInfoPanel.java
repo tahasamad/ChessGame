@@ -3,16 +3,19 @@ package ChessGameKenai;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class PlayerInfoPanel extends JPanel {
 	
 	private JLabel playerNameLabel, numberOfWinsLabel, timerLabel, playerIcon;
 	private Player playerInfo;
+	private Timer playerTimer;
 	
 	public PlayerInfoPanel(Player data)
 	{
@@ -42,6 +45,10 @@ public class PlayerInfoPanel extends JPanel {
 		
 		add(propetiesPanel);
 	}
+	public void createTimer(ActionListener listener)
+	{
+		playerTimer = new javax.swing.Timer(1000, listener);
+	}
 	private void addPlayerIcon()
 	{
 		playerIcon = new JLabel(new ImageIcon(getClass().getResource(playerInfo.getIconPath())));
@@ -70,10 +77,36 @@ public class PlayerInfoPanel extends JPanel {
 	}
 	public void resetTimerLabel()
 	{
+		playerInfo.resetTime();
 		timerLabel.setText("00:00:00");
 	}
-	public void updateTimerLabel(String text)
+	public void updateTimerLabel()
 	{
-		timerLabel.setText(text);
+		playerInfo.incrementTime();
+		int seconds = playerInfo.getSeconds();
+		int minutes = playerInfo.getMinutes();
+		int hours = playerInfo.getHours();
+		String txt = "00:00:00";
+		if (seconds < 10 && minutes < 10 && hours < 10) 
+		{
+			txt = "0" + hours + ":" + "0" + minutes + ":" + "0" + seconds;
+		}
+		else if (minutes < 10 && hours < 10 && seconds >= 10) 
+		{
+			txt = "0" + hours + ":" + "0" + minutes + ":" + seconds;
+		} 
+		else if (minutes >= 10 && hours < 10 && seconds >= 10) 
+		{
+			txt = "0" + hours + ":" + minutes + ":" + seconds;
+		}
+		timerLabel.setText(txt);
+	}
+	public void stopTimer()
+	{
+		playerTimer.stop();
+	}
+	public void startTimer()
+	{
+		playerTimer.start();
 	}
 }
