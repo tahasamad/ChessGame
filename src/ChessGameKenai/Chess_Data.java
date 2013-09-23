@@ -36,7 +36,7 @@ public final class Chess_Data extends Observable {
     
     private static Chess_Data chessData;
 	
-	public static Chess_Data getChessData ()
+	public static Chess_Data getChessData()
 	{
 		if (chessData == null)
 		{

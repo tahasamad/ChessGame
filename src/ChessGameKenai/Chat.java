@@ -46,6 +46,8 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import Utils.ChessGameUtils;
+
 /**
  * Chat class is extends JPanel and is the part of the chess game where the two
  * players may communicate with each other. The chat includes basic message communication
@@ -142,7 +144,7 @@ public class Chat extends JPanel {
         chatA.setFont(new Font("Dialog", Font.PLAIN, 16));
         appendStr("Chess chat", smpSetUnderline, Color.BLACK);
 
-        btnFont = ChessGameUtil.getButtonWithText("Font");
+        btnFont = ChessGameUtils.getButtonWithText("Font");
 
         btnFont.addActionListener(new ActionListener() {
 
@@ -175,7 +177,7 @@ public class Chat extends JPanel {
         //sendPnl is the panel which has the JTextArea and two JButtons
         sendPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        btnSend = ChessGameUtil.getButtonWithText("Send");
+        btnSend = ChessGameUtils.getButtonWithText("Send");
 
         btnSend.addActionListener(new ActionListener() {
 
@@ -436,7 +438,7 @@ public class Chat extends JPanel {
         out.writeObject(packet);
         out.flush();
         
-        name = ChessGameUtil.getCurrentPlayerName();
+        name = ChessGameUtils.getCurrentPlayerName();
 //        if (data.isServer()) {
 //            name = data.getPlayers().get(0).getName();
 //        } else {
@@ -511,8 +513,8 @@ public class Chat extends JPanel {
             chkItalic = new JCheckBox("Italic");
             chkBold = new JCheckBox("Bold");
 
-            btnOk = ChessGameUtil.getButtonWithText("Ok");
-            btnColor = ChessGameUtil.getButtonWithText("Change Color");
+            btnOk = ChessGameUtils.getButtonWithText("Ok");
+            btnColor = ChessGameUtils.getButtonWithText("Change Color");
 
             btnColor.addActionListener(new ActionListener() {
 

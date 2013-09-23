@@ -22,6 +22,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.text.SimpleAttributeSet;
 
+import Utils.ChessGameUtils;
+
 /**
  * The ConnectionBridge class is the connection between two clients if the game is played online
  * using sockets. If the game is played online this class has responsibility to read data from the socket and
@@ -149,7 +151,7 @@ public class ConnectionBridge implements Observer {
                     this.analyzeAndExecute(object);
                 }
             } catch (SocketException e) {
-            	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+            	String clientPlayerName = ChessGameUtils.getCurrentPlayerName();
                 chat.appendStr("\n" + clientPlayerName + " Has left the game", smpSet, color);
                 chat.setButtons(false);
                 data.isGameOnLine(false);
@@ -174,7 +176,7 @@ public class ConnectionBridge implements Observer {
             if (object instanceof Packet) {
                 Packet packet = (Packet) object;
                 if (packet.getMessage() != null) {
-                	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+                	String clientPlayerName = ChessGameUtils.getCurrentPlayerName();
                     chat.appendStr("\n" + clientPlayerName + ": " + packet.getMessage(), packet.getSmpSet(), packet.getColor());
                     chat.getTxtPane().setCaretPosition(chat.getTxtPane().getDocument().getLength());
                 }
@@ -214,7 +216,7 @@ public class ConnectionBridge implements Observer {
      * when it is needed it is calling the method from the view c;lass
      */
     public void restartGame() {
-    	String clientPlayerName = ChessGameUtil.getCurrentPlayerName();
+    	String clientPlayerName = ChessGameUtils.getCurrentPlayerName();
         int returnValue = JOptionPane.showConfirmDialog(view, clientPlayerName + "would you like to restart the game", "Confirmation Message", JOptionPane.YES_NO_OPTION);
         if (returnValue == JOptionPane.YES_OPTION) {
             Packet packet = new Packet();

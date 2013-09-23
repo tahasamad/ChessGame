@@ -11,10 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.JPanel;
 
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
+import GameElements.PieceColor;
+import Utils.ChessGamePoint;
+import Utils.ChessGameUtils;
 
 /**
  * The Board class is the Board of our Chess Game it consists of a JPanel
@@ -31,27 +35,12 @@ import GameElements.Piece;
  */
 public final class Board extends JPanel implements Observer {
 
-    /**
-     * FLIPPED_BOARD variable is a static public and final
-     * It is used in the switch statement in order to switch to Flipped board
-     */
-    public static final int FLIPPED_BOARD = 1;
-    /**
-     * NORMAL_BOARD variable is a static public and final
-     * It is used in the switch statement in order to switch to Normal board
-     */
-    public static final int NORMAL_BOARD = 2;
-    private int currentBoard = NORMAL_BOARD;
-    private boolean isWhite = true;
-    private ArrayList<Square> squares;
-    private HashMap<String, String> imageMap = new HashMap<String, String>();
-    private Chess_Data data;
-    private ArrayList<Piece> pieces = new ArrayList<Piece>();
+    private BoardFlipMode currentBoard = BoardFlipMode.Normal;
+    private Square[][] squares;
     private boolean isFirstTime = true;
     private ChessBoardView view;
-    private HashMap<Integer, String> mapPositions = new HashMap<Integer, String>();
-    private ArrayList<String> positions = new ArrayList<String>();
-
+    private HashMap<String, String> mapPositions = new HashMap<String, String>();
+    
     /**
      * The overloaded constructor of the class sets the layout of the board
      * to 8 by 8 adds the squares the board by calling setSquares method
@@ -64,21 +53,11 @@ public final class Board extends JPanel implements Observer {
      */
     public Board(Chess_Data data, ChessBoardView view) {
         this.setLayout(null);
-        squares = new ArrayList<Square>();
-        this.data = data;
+        this.squares = new Square[ChessGameConstants.gridDimension][ChessGameConstants.gridDimension];
         this.view = view;
-        this.setSquares();
+        this.setupSquares();
         this.setOpaque(false);
-
-        positions.add("a");
-        positions.add("b");
-        positions.add("c");
-        positions.add("d");
-        positions.add("e");
-        positions.add("f");
-        positions.add("g");
-        positions.add("h");
-
+        
         imageMap.put("WKing", "ChessPieces/wKing46.gif");
         imageMap.put("BKing", "ChessPieces/bKing46.gif");
         imageMap.put("WQueen", "ChessPieces/wQueen46.gif");
@@ -101,43 +80,68 @@ public final class Board extends JPanel implements Observer {
      * the first time it fills the array list of visual piece for later use
      */
     public void populateBoard() {
-        for (int i = 0; i < data.getActivePieces().size(); i++) {
-            if (data.getActivePieces().get(i) != null) {
-                Non_Visual_Piece p = data.getActivePieces().get(i);
-                if (p.getType().equals("WKing")) {
-                    pieces.add(new Piece(this, p, "King", Color.WHITE, p.getPosition(), imageMap.get("WKing")));
-                } else if (p.getType().equals("BKing")) {
-                    pieces.add(new Piece(this, p, "King", Color.BLACK, p.getPosition(), imageMap.get("BKing")));
-                } else if (p.getType().equals("WQueen")) {
-                    pieces.add(new Piece(this, p, "Queen", Color.WHITE, p.getPosition(), imageMap.get("WQueen")));
-                } else if (p.getType().equals("BQueen")) {
-                    pieces.add(new Piece(this, p, "Queen", Color.BLACK, p.getPosition(), imageMap.get("BQueen")));
-                } else if (p.getType().equals("WBishop")) {
-                    pieces.add(new Piece(this, p, "Bishop", Color.WHITE, p.getPosition(), imageMap.get("WBishop")));
-                } else if (p.getType().equals("BBishop")) {
-                    pieces.add(new Piece(this, p, "Bishop", Color.BLACK, p.getPosition(), imageMap.get("BBishop")));
-                } else if (p.getType().equals("WKnight")) {
-                    pieces.add(new Piece(this, p, "Knight", Color.WHITE, p.getPosition(), imageMap.get("WKnight")));
-                } else if (p.getType().equals("BKnight")) {
-                    pieces.add(new Piece(this, p, "Knight", Color.BLACK, p.getPosition(), imageMap.get("BKnight")));
-                } else if (p.getType().equals("WPawn")) {
-                    pieces.add(new Piece(this, p, "Pawn", Color.WHITE, p.getPosition(), imageMap.get("WPawn")));
-                } else if (p.getType().equals("BPawn")) {
-                    pieces.add(new Piece(this, p, "Pawn", Color.BLACK, p.getPosition(), imageMap.get("BPawn")));
-                } else if (p.getType().equals("WRook")) {
-                    pieces.add(new Piece(this, p, "Rook", Color.WHITE, p.getPosition(), imageMap.get("WRook")));
-                } else if (p.getType().equals("BRook")) {
-                    pieces.add(new Piece(this, p, "Rook", Color.BLACK, p.getPosition(), imageMap.get("BRook")));
-                }
+    	ArrayList<Non_Visual_Piece> activePieces = Chess_Data.getChessData().getActivePieces();
+    	int size = activePieces.size();
+        for (int i = 0; i < size; i++) {
+        	Non_Visual_Piece activePieceModel = activePieces.get(i);
+            if (activePieceModel != null) {
+            	Piece piece = new Piece(activePieceModel, this);
+            	this.addPiece(piece);
+                piece.repaint();
             }
-            this.mapPositions(i + 1);
+            //this.mapPositions(i + 1);
         }
-        for (int i = 0; i < pieces.size(); i++) {
-            squares.get(pieces.get(i).getPosition() - 1).add(pieces.get(i));
-            pieces.get(i).setBounds(5, 5, 55, 55);
-            pieces.get(i).repaint();
-        }
+//        for (int i = 0; i < pieces.size(); i++) {
+//            squares.get(pieces.get(i).getPosition() - 1).add(pieces.get(i));
+//            pieces.get(i).setBounds(5, 5, 55, 55);
+//            pieces.get(i).repaint();
+//        }
         this.notifyView();
+    }
+
+    /**
+     */
+    public void addPiece(Piece piece) {
+    	if(piece != null)
+    	{
+    		ChessGamePoint piecePosition = piece.getPosition();
+    		if(ChessGameUtils.isInGridBounds(piecePosition))
+    		{
+	    		Piece prevPiece = this.squares[piecePosition.x][piecePosition.y].getPiece();
+	    		if(prevPiece != null && !prevPiece.equals(piece))
+	    		{
+	    			throw new RuntimeException("Trying to add a piece on top of an existing piece.");
+	    		}
+	    		this.squares[piecePosition.x][piecePosition.y].setPiece(piece);
+	    		this.add(piece);
+    		}
+    		else
+    		{
+    			throw new RuntimeException("Position Index out of bound.");
+    		}
+    	}
+    }
+    
+    public void removePiece(Piece piece) {
+    	if(piece != null)
+    	{
+    		ChessGamePoint piecePosition = piece.getPosition();
+    		if(ChessGameUtils.isInGridBounds(piecePosition))
+    		{
+	    		Piece pieceInSquare = this.squares[piecePosition.x][piecePosition.y].getPiece();
+	    		if(pieceInSquare == null || !pieceInSquare.equals(piece))
+	    		{
+	    			throw new RuntimeException("Piece Model Square Out of Synch");
+	    		}
+	    		this.squares[piecePosition.x][piecePosition.y].setPiece(null);
+	    		piece.setPosition(new ChessGamePoint(-1, -1));
+	    		this.remove(piece);
+    		}
+    		else
+    		{
+    			throw new RuntimeException("Position Index out of bound.");
+    		}
+    	}
     }
 
     /**
@@ -145,30 +149,16 @@ public final class Board extends JPanel implements Observer {
      * this method is used when we want to restart the game
      */
     public void removeAllPieces() {
-        for (int i = 0; i < squares.size(); i++) {
-            if (squares.get(i).getComponentCount() > 0) {
-                squares.get(i).remove(0);
-            }
+    	for (int x = 0; x < ChessGameConstants.gridDimension; x++) {
+    		for (int y = 0; y < ChessGameConstants.gridDimension; y++) {
+    			Piece piece = this.squares[x][y].getPiece();
+	            if (piece != null) {
+	                this.removePiece(piece);
+	            }
+    		}
         }
         this.revalidate();
         this.repaint();
-    }
-
-    /**
-     * The method getSquares returns the squares to the caller
-     * @return squares as an ArrayList
-     */
-    public ArrayList<Square> getSquares() {
-        return squares;
-    }
-
-    /**
-     * The getImageMap method simply returns the map
-     * to the caller this images could be used to draw visual pieces on the board
-     * @return imageMap as HashMap
-     */
-    public HashMap<String, String> getImageMap() {
-        return imageMap;
     }
 
     /**
@@ -176,54 +166,29 @@ public final class Board extends JPanel implements Observer {
      * This method actually creates the squares and adds them to the board
      * As well as this method also adds the pieces to the squares
      */
-    public void setSquares() {
-        int y = 0;
-        int p = 0;
-
-        //CONSTRUCT SQUARE OBJECTS
-        for (int i = 0; i < 64; i++) {
-            p = i;
-            if ((i + 1) > 8 && (i + 1) % 8 != 0) {
-                p = ((i + 1) % 8) - 1;
+    public void setupSquares() {
+    	PieceColor columnStartColor = PieceColor.Black;
+    	PieceColor columnAlternateColor = PieceColor.White;
+        for(int x = 0; x < ChessGameConstants.gridDimension; x++)
+        {
+        	for(int y = 0; y < ChessGameConstants.gridDimension; y++)
+            {
+        		Square square;
+        		if(y % ChessGameConstants.gridDimension == 0)
+        		{
+        			 square = new Square(columnStartColor, new ChessGamePoint(x, y));
+        		}
+        		else
+        		{
+        			square = new Square(columnAlternateColor, new ChessGamePoint(x, y));
+        		}
+        		squares[x][y] = square;
+        		this.add(square);
             }
-            if ((i + 1) % 8 == 0) {
-                p = 7;
-            }
-            if ((i) % 8 == 0) {
-                p = 0;
-            }
-
-            if (isWhite) {
-                squares.add(new Square(Color.WHITE, (i + 1)));
-                squares.get(i).setBackground(Color.WHITE);
-                squares.get(i).setBounds(p * (65), y, 65, 65);
-                squares.get(i).repaint();
-                isWhite = !isWhite;
-            } else {
-                squares.add(new Square(Color.BLACK, (i + 1)));
-                squares.get(i).setBackground(Color.BLACK);
-                squares.get(i).setBounds(p * (65), y, 65, 65);
-                squares.get(i).repaint();
-                isWhite = !isWhite;
-            }
-            if ((i + 1) % 8 == 0) {
-                isWhite = !isWhite;
-                y += 65;
-            }
-            this.add(squares.get(i));
+        	PieceColor prevColumnStartColor = columnStartColor;
+        	columnStartColor = columnAlternateColor;
+        	columnAlternateColor = prevColumnStartColor;
         }
-        for (int i = 0; i < pieces.size(); i++) {
-            squares.get(pieces.get(i).getPosition() - 1).add(pieces.get(i));
-        }
-    }
-
-    /**
-     * The metho setCurrentBoard simply sets the current board it
-     * is either flipped or normal
-     * @param currentBoard as an integer
-     */
-    public void setBoard(int currentBoard) {
-        this.currentBoard = currentBoard;
     }
 
     /**
@@ -275,31 +240,6 @@ public final class Board extends JPanel implements Observer {
     }
 
     /**
-     * The method distributeListeners simply distribute listeners
-     * depending on who's turn it is adds or removes listeners
-     * This method is only used if the game is played locally
-     */
-    public void distributeListeners() {
-        if (!data.isWhiteTurn()) {
-            for (int i = 0; i < pieces.size(); i++) {
-                if (pieces.get(i).getColor() == Color.BLACK) {
-                    pieces.get(i).addListener();
-                } else {
-                    pieces.get(i).removeListener();
-                }
-            }
-        } else {
-            for (int i = 0; i < pieces.size(); i++) {
-                if (pieces.get(i).getColor() == Color.WHITE) {
-                    pieces.get(i).addListener();
-                } else {
-                    pieces.get(i).removeListener();
-                }
-            }
-        }
-    }
-
-    /**
      * The method addListeners adds the listeners to the specified color
      * it loops through the list of visual pieces and adds the listeners to the specified color pieces
      * @param color as a Color
@@ -325,14 +265,6 @@ public final class Board extends JPanel implements Observer {
                 p.removeListener();
             }
         }
-    }
-
-    /**
-     * The method getPieces returns the pieces array list to the caller
-     * @return pieces as an ArrayList
-     */
-    public ArrayList<Piece> getPieces() {
-        return pieces;
     }
 
     /**
@@ -438,41 +370,41 @@ public final class Board extends JPanel implements Observer {
      * the array list of pieces so it is no longer on the board
      * the piece will be added to the captured pieces panel
      */
-    public void removeCapturedPieces() {
-        if (!data.getCapturedPieces().isEmpty()) {
-            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
-            for (int i = 0; i < pieces.size(); i++) {
-                if (pieces.get(i).getPiece().equals(p)) {
-                    pieces.remove(pieces.get(i));
-                }
-            }
-        }
-    }
+//    public void removeCapturedPieces() {
+//        if (!data.getCapturedPieces().isEmpty()) {
+//            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
+//            for (int i = 0; i < pieces.size(); i++) {
+//                if (pieces.get(i).getPiece().equals(p)) {
+//                    pieces.remove(pieces.get(i));
+//                }
+//            }
+//        }
+//    }
 
     /**
      * The method distributeOnLineListeners simply distribute listeners
      * depending on who's turn it is adds or removes listeners
      * This method is only used if the game is played online
      */
-    public void distributeOnLineListeners() {
-        if (data.isServer()) {
-            if (data.isWhiteTurn()) {
-                this.addListeners(Color.WHITE);
-                this.removeListeners(Color.BLACK);
-            } else {
-                this.removeListeners(Color.WHITE);
-                this.removeListeners(Color.BLACK);
-            }
-        } else {
-            if (!data.isWhiteTurn()) {
-                this.addListeners(Color.BLACK);
-                this.removeListeners(Color.WHITE);
-            } else {
-                this.removeListeners(Color.BLACK);
-                this.removeListeners(Color.WHITE);
-            }
-        }
-    }
+//    public void distributeOnLineListeners() {
+//        if (data.isServer()) {
+//            if (data.isWhiteTurn()) {
+//                this.addListeners(Color.WHITE);
+//                this.removeListeners(Color.BLACK);
+//            } else {
+//                this.removeListeners(Color.WHITE);
+//                this.removeListeners(Color.BLACK);
+//            }
+//        } else {
+//            if (!data.isWhiteTurn()) {
+//                this.addListeners(Color.BLACK);
+//                this.removeListeners(Color.WHITE);
+//            } else {
+//                this.removeListeners(Color.BLACK);
+//                this.removeListeners(Color.WHITE);
+//            }
+//        }
+//    }
 
     /**
      * This method only notifies the view to update the display
@@ -480,7 +412,7 @@ public final class Board extends JPanel implements Observer {
      * it is used to update changes
      */
     public void notifyView() {
-        data.notifyView();
+        Chess_Data.getChessData().notifyView();
     }
 
     /**
@@ -498,23 +430,15 @@ public final class Board extends JPanel implements Observer {
      * standard chess game positions like e4, f5 etc... are all mapped to integers from 1 to 64
      * @param position as an integer
      */
-    public void mapPositions(int position) {
-        if (position <= 8) {
-            mapPositions.put(position, 8 + positions.get(position - 1));
-        } else if (position > 8 && position <= 16) {
-            mapPositions.put(position, 7 + positions.get(position - 9));
-        } else if (position > 16 && position <= 24) {
-            mapPositions.put(position, 6 + positions.get(position - 17));
-        } else if (position > 24 && position <= 32) {
-            mapPositions.put(position, 5 + positions.get(position - 25));
-        } else if (position > 32 && position <= 40) {
-            mapPositions.put(position, 4 + positions.get(position - 33));
-        } else if (position > 40 && position <= 48) {
-            mapPositions.put(position, 3 + positions.get(position - 41));
-        } else if (position > 48 && position <= 56) {
-            mapPositions.put(position, 2 + positions.get(position - 49));
-        } else if (position > 56) {
-            mapPositions.put(position, 1 + positions.get(position - 57));
-        }
+    public void mapPositions(int x, int y) {
+    	int asciiForSmallA = 97;
+    	String string = Character.toString((char) (asciiForSmallA + x));
+    	string += y;
+    	this.mapPositions.put(this.getMapPositionKey(x, y), string);
+    }
+    
+    private String getMapPositionKey(int x, int y)
+    {
+    	return "" + x + ":" + y;
     }
 }

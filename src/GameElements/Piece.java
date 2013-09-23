@@ -14,11 +14,15 @@ import java.net.URL;
 
 import javax.swing.JPanel;
 
-import Utils.ChessGamePoint;
-
+import ChessGameKenai.Board;
 import ChessGameKenai.ChessGameConstants;
 import ChessGameKenai.ChessGameConstants.PieceColor;
 import ChessGameKenai.ChessGameConstants.PieceType;
+import Utils.ChessGamePoint;
+import Utils.ChessGameRect;
+import Utils.ChessGameUtils;
+
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 
 /**
  * The VisualPiece class is the piece that is visual to the user
@@ -39,16 +43,20 @@ public class Piece extends JPanel {
 
     private String imagePath;
 	private Non_Visual_Piece pieceModel;
+	private Board board;
 
     /**
      * Overloaded constructor of our class receives the path to its image
      * @param imagePath as a String
      */
-    public Piece(Non_Visual_Piece pieceModel) {
+    public Piece(Non_Visual_Piece pieceModel, Board board) {
     	this.pieceModel = pieceModel;
-        this.imagePath = ChessGameUtil.getPieceImageFilePathForTypeAndColor(this.pieceModel.getType(), this.pieceModel.getColor());
+    	this.board = board;
+        this.imagePath = ChessGameUtils.getPieceImageFilePathForTypeAndColor(this.pieceModel.getType(), this.pieceModel.getColor());
         this.setOpaque(false);
         this.setPreferredSize(new Dimension(ChessGameConstants.pieceDimension, ChessGameConstants.pieceDimension));
+        ChessGameRect bounds = ChessGameConstants.pieceBounds.clone();
+        this.setBounds(bounds.point.x, bounds.point.y, bounds.size.width, bounds.size.height);
     }
 
     /**
@@ -89,6 +97,18 @@ public class Piece extends JPanel {
      */
     public void setPosition(ChessGamePoint position) {
         this.pieceModel.setPosition(position);
+    }
+    
+    public void setPositionOnBoard(ChessGamePoint position) throws Error {
+    	if(this.board == null)
+    	{
+    		throw new Error("Board is null.");
+    	}
+    	else
+    	{
+    		this.pieceModel.setPosition(position);
+    		this.board.addPiece(this);
+    	}
     }
 
     /**

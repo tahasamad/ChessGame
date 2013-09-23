@@ -1,4 +1,4 @@
-package ChessGameKenai;
+package Utils;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -9,9 +9,10 @@ import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class ChessGameUtil { // Applying Utility Pattern
+import ChessGameKenai.ChessGameConstants;
+import ChessGameKenai.Chess_Data;
 
-	
+public static class ChessGameUtils { // Applying Utility Pattern
 	
 	public static String getCurrentPlayerName ()
 	{
@@ -61,6 +62,16 @@ public class ChessGameUtil { // Applying Utility Pattern
         };
         
         return panel;
+	}
+	
+	public static boolean isInGridBounds(ChessGamePoint point)
+	{
+		return ChessGameUtils.isInGridBounds(point.x, point.y);
+	}
+	
+	public static boolean isInGridBounds(int x, int y)
+	{
+		return ((x >= 0 && x < ChessGameConstants.gridDimension) && (y >= 0 && y < ChessGameConstants.gridDimension)); 
 	}
 	
 //	public static Player getFirstPlayer ()

@@ -6,13 +6,15 @@
  */
 package ChessGameKenai;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import ChessGameKenai.ChessGameConstants.PieceColor;
+import javax.swing.JPanel;
+
+import GameElements.PieceColor;
+import Utils.ChessGamePoint;
+import Utils.ChessGameUtils;
 
 /**
  * Public Square class which is a template for making Square objects when called upon
@@ -26,7 +28,8 @@ import ChessGameKenai.ChessGameConstants.PieceColor;
  */
 public class Square extends JPanel {
 
-    private int position;
+    private ChessGamePoint position;
+    private PieceColor baseColor;
     private Color currentColor;
     private Color previousColor;
 
@@ -36,13 +39,14 @@ public class Square extends JPanel {
      * @param position Square object position on the ChessBoardView's MainPanel
      * @see ChessBoardView Class
      */
-    public Square(PieceColor color, int position) {
+    public Square(PieceColor color, ChessGamePoint position) {
 
         //SET OBJECT COLOR AND POSITION
-        this.currentColor = color;
+        this.baseColor = color;
         this.position = position;
-        this.setBackground(color);
+        this.setBackground(ChessGameUtils.getColorFromElementColor(this.baseColor));
         this.setLayout(null);
+        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize)
         
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
         this.addMouseListener(new SendData(data));
@@ -130,7 +134,7 @@ public class Square extends JPanel {
         @Override
         public void mousePressed(MouseEvent e) {
             int x = Square.this.getPosition();
-            if (Square.data.getPiecePosition() == x || data.getPiecePosition() == 0) {
+            if (ChessGam) {
                 return;
             } else if (Square.data.getPiecePosition() > 0) {
                 Square.data.move(Square.data.getPiecePosition(), x);

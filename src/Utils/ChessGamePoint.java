@@ -6,8 +6,8 @@ public class ChessGamePoint {
 	
 	public ChessGamePoint()
 	{
-		this.x = 0;
-		this.y = 0;
+		this.x = -1;
+		this.y = -1;
 	}
 	
 	public ChessGamePoint(int x, int y)
