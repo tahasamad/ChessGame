@@ -16,13 +16,9 @@ import javax.swing.JPanel;
 
 import ChessGameKenai.Board;
 import ChessGameKenai.ChessGameConstants;
-import ChessGameKenai.ChessGameConstants.PieceColor;
-import ChessGameKenai.ChessGameConstants.PieceType;
 import Utils.ChessGamePoint;
 import Utils.ChessGameRect;
 import Utils.ChessGameUtils;
-
-import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 
 /**
  * The VisualPiece class is the piece that is visual to the user

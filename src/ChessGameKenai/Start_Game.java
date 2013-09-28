@@ -6,7 +6,6 @@
  */
 package ChessGameKenai;
 
-import java.awt.EventQueue;
 
 /**
  * Start_Game class is used to run the application
@@ -31,11 +30,11 @@ public class Start_Game {
         Chess_Data data = Chess_Data.getChessData();
 
         //CONSTRUCT THE MAIN VIEW WHICH IS ALSO A CONTROLLER
-        ChessBoardView cbv = new ChessBoardView(data);
+        ChessBoardView cbv = new ChessBoardView();
 
         //USE A SQUARE OBJECT TO CONSTRUCT AN OBJECT OUT OF ITS NESTED CLASS
         Square square = new Square();
-        Square.SendData sd = square.new SendData(data);
+        Square.SendData sd = square.new SendData();
 
         //CALL THE MODEL METHOD IN ORDER TO BE NOTIFIED OF THE STATE OF THE CHESS BOARD
         data.notifyView();

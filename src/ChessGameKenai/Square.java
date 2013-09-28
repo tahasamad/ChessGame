@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import GameElements.Piece;
 import GameElements.PieceColor;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
@@ -32,6 +33,7 @@ public class Square extends JPanel {
     private PieceColor baseColor;
     private Color currentColor;
     private Color previousColor;
+    private Piece piece;
 
     /**
      * OverLoaded Constructor for creating square objects
@@ -46,10 +48,10 @@ public class Square extends JPanel {
         this.position = position;
         this.setBackground(ChessGameUtils.getColorFromElementColor(this.baseColor));
         this.setLayout(null);
-        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize)
+        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);
         
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
-        this.addMouseListener(new SendData(data));
+        this.addMouseListener(new SendData());
     }
 
     /**
@@ -78,7 +80,7 @@ public class Square extends JPanel {
      * The method setPosition sets object position to whatever is its argument
      * @param position the position that the object will have
      */
-    public void setPosition(int position) {
+    public void setPosition(ChessGamePoint position) {
         this.position = position;
     }
 
@@ -86,7 +88,7 @@ public class Square extends JPanel {
      * The method getPosition returns the position of particular object
      * @return position of the object
      */
-    public int getPosition() {
+    public ChessGamePoint getPosition() {
         return position;
     }
 
@@ -107,7 +109,16 @@ public class Square extends JPanel {
         return previousColor;
     }
 
-    /**
+    public Piece getPiece() {
+		return piece;
+	}
+
+	public void setPiece(Piece piece) {
+		this.piece = piece;
+	}
+
+
+	/**
      * The SendData Class is a nested inner class of our object
      * It does as its name suggests sends data to the model after receiving the data and
      * the address of the model from its outer class it completes the job by sending the request to the model
@@ -122,8 +133,7 @@ public class Square extends JPanel {
          * Overloaded Constructor of the inner class
          * @param data the address of the model for later communication purposes
          */
-        protected SendData(Chess_Data data) {
-            Square.data = data;
+        protected SendData() {
 
         }
 
@@ -133,12 +143,12 @@ public class Square extends JPanel {
          */
         @Override
         public void mousePressed(MouseEvent e) {
-            int x = Square.this.getPosition();
-            if (ChessGam) {
-                return;
-            } else if (Square.data.getPiecePosition() > 0) {
-                Square.data.move(Square.data.getPiecePosition(), x);
-            }
+            ChessGamePoint pos = Square.this.getPosition();
+//            if (ChessGam) {
+//                return;
+//            } else if (Square.data.getPiecePosition() > 0) {
+//                Square.data.move(Square.data.getPiecePosition(), x);
+//            }
         }
     }
 }

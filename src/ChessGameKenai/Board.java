@@ -51,26 +51,12 @@ public final class Board extends JPanel implements Observer {
      * @param data as Chess_Data
      * @param view as ChessBoardView
      */
-    public Board(Chess_Data data, ChessBoardView view) {
+    public Board(ChessBoardView view) {
         this.setLayout(null);
         this.squares = new Square[ChessGameConstants.gridDimension][ChessGameConstants.gridDimension];
         this.view = view;
         this.setupSquares();
         this.setOpaque(false);
-        
-        imageMap.put("WKing", "ChessPieces/wKing46.gif");
-        imageMap.put("BKing", "ChessPieces/bKing46.gif");
-        imageMap.put("WQueen", "ChessPieces/wQueen46.gif");
-        imageMap.put("BQueen", "ChessPieces/bQueen46.gif");
-        imageMap.put("WBishop", "ChessPieces/wBishop46.gif");
-        imageMap.put("BBishop", "ChessPieces/bBishop46.gif");
-        imageMap.put("WKnight", "ChessPieces/wKnight46.gif");
-        imageMap.put("BKnight", "ChessPieces/bKnight46.gif");
-        imageMap.put("WRook", "ChessPieces/wRook46.gif");
-        imageMap.put("BRook", "ChessPieces/bRook46.gif");
-        imageMap.put("WPawn", "ChessPieces/wPawn46.gif");
-        imageMap.put("BPawn", "ChessPieces/bPawn46.gif");
-
         this.populateBoard();
     }
 
@@ -89,7 +75,6 @@ public final class Board extends JPanel implements Observer {
             	this.addPiece(piece);
                 piece.repaint();
             }
-            //this.mapPositions(i + 1);
         }
 //        for (int i = 0; i < pieces.size(); i++) {
 //            squares.get(pieces.get(i).getPosition() - 1).add(pieces.get(i));
@@ -183,6 +168,7 @@ public final class Board extends JPanel implements Observer {
         			square = new Square(columnAlternateColor, new ChessGamePoint(x, y));
         		}
         		squares[x][y] = square;
+                this.mapPositions(x, y);
         		this.add(square);
             }
         	PieceColor prevColumnStartColor = columnStartColor;
@@ -197,38 +183,38 @@ public final class Board extends JPanel implements Observer {
      */
     public void flipBoard() {
 
-        //SWITCH STATEMENT FOR CURRENT BOARD VARIABLE IT'S EITHER NORMAL OR FLIPPED
-        switch (this.currentBoard) {
-
-            //IF NORMAL_BOARD EXECUTE THE CASE STATEMENT
-            case Board.NORMAL_BOARD:
-                for (int i = 0; i < squares.size(); i++) {
-                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
-                    squares.get(i).repaint();
-                    this.add(squares.get(i));
-                }
-                break;
-
-            //IF FLIPPED_BOARD EXECUTE THE CASE STATEMENT
-            case Board.FLIPPED_BOARD:
-                for (int i = squares.size() - 1; i > -1; i--) {
-                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
-                    squares.get(i).repaint();
-                    this.add(squares.get(i));
-                }
-                break;
-        }
-        this.revalidate();
-        this.repaint();
+//        //SWITCH STATEMENT FOR CURRENT BOARD VARIABLE IT'S EITHER NORMAL OR FLIPPED
+//        switch (this.currentBoard) {
+//
+//            //IF NORMAL_BOARD EXECUTE THE CASE STATEMENT
+//            case Board.NORMAL_BOARD:
+//                for (int i = 0; i < squares.size(); i++) {
+//                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
+//                    squares.get(i).repaint();
+//                    this.add(squares.get(i));
+//                }
+//                break;
+//
+//            //IF FLIPPED_BOARD EXECUTE THE CASE STATEMENT
+//            case Board.FLIPPED_BOARD:
+//                for (int i = squares.size() - 1; i > -1; i--) {
+//                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
+//                    squares.get(i).repaint();
+//                    this.add(squares.get(i));
+//                }
+//                break;
+//        }
+//        this.revalidate();
+//        this.repaint();
     }
 
     /**
      * The method getCurrentBoard simply returns the current board to the caller
      * @return currentBoard as an integer
      */
-    public int getCurrentBoard() {
-        return currentBoard;
-    }
+//    public int getCurrentBoard() {
+//        return currentBoard;
+//    }
 
     /**
      * The method setCurrentBoard sets the current board
@@ -236,7 +222,7 @@ public final class Board extends JPanel implements Observer {
      * @param currentBoard as an integer
      */
     public void setCurrentBoard(int currentBoard) {
-        this.currentBoard = currentBoard;
+//        this.currentBoard = currentBoard;
     }
 
     /**
@@ -245,12 +231,12 @@ public final class Board extends JPanel implements Observer {
      * @param color as a Color
      */
     public void addListeners(Color color) {
-        for (int i = 0; i < pieces.size(); i++) {
-            Piece p = pieces.get(i);
-            if (p.getColor() == color) {
-                p.addListener();
-            }
-        }
+//        for (int i = 0; i < pieces.size(); i++) {
+//            Piece p = pieces.get(i);
+//            if (p.getColor() == color) {
+//                p.addListener();
+//            }
+//        }
     }
 
     /**
@@ -259,12 +245,12 @@ public final class Board extends JPanel implements Observer {
      * @param color as a Color
      */
     public void removeListeners(Color color) {
-        for (int i = 0; i < pieces.size(); i++) {
-            Piece p = pieces.get(i);
-            if (p.getColor() == color) {
-                p.removeListener();
-            }
-        }
+//        for (int i = 0; i < pieces.size(); i++) {
+//            Piece p = pieces.get(i);
+//            if (p.getColor() == color) {
+//                p.removeListener();
+//            }
+//        }
     }
 
     /**
@@ -278,35 +264,35 @@ public final class Board extends JPanel implements Observer {
      */
     public void update(Observable o, Object arg) {
         this.redrawPieces();
-        if (!data.isWinner() && !data.isGameOnLine()) {
-            this.distributeListeners();
-        }
-        if (data.isGameOnLine()) {
-            this.distributeOnLineListeners();
-        }
-        if (!data.isServer() && isFirstTime) {
-            this.removeListeners(Color.BLACK);
-            this.removeListeners(Color.WHITE);
-            isFirstTime = false;
-        }
-        if (arg != null) {
-            ArrayList list = (ArrayList) arg;
-            String turn = "";
-            if (squares.get((Integer) list.get(1) - 1).getComponentCount() > 0) {
-                Piece p = ((Piece) squares.get((Integer) list.get(1) - 1).getComponent(0));
-                if (p.getColor() == Color.WHITE) {
-                    turn = "W" + p.getType();
-                } else {
-                    turn = "B" + p.getType();
-                }
-            }
-            view.getMoves().append(turn + " from: " + mapPositions.get(list.get(0)) + " to " + mapPositions.get(list.get(1)) + "\n");
-            view.getMoves().append("--------------------------\n");
-            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
-        }
-        this.removeCapturedPieces();
-        this.revalidate();
-        this.repaint();
+//        if (!data.isWinner() && !data.isGameOnLine()) {
+//            //this.distributeListeners();
+//        }
+//        if (data.isGameOnLine()) {
+//            //this.distributeOnLineListeners();
+//        }
+//        if (!data.isServer() && isFirstTime) {
+//            this.removeListeners(Color.BLACK);
+//            this.removeListeners(Color.WHITE);
+//            isFirstTime = false;
+//        }
+//        if (arg != null) {
+//            ArrayList list = (ArrayList) arg;
+//            String turn = "";
+//            if (squares.get((Integer) list.get(1) - 1).getComponentCount() > 0) {
+//                Piece p = ((Piece) squares.get((Integer) list.get(1) - 1).getComponent(0));
+//                if (p.getColor() == Color.WHITE) {
+//                    turn = "W" + p.getType();
+//                } else {
+//                    turn = "B" + p.getType();
+//                }
+//            }
+//            view.getMoves().append(turn + " from: " + mapPositions.get(list.get(0)) + " to " + mapPositions.get(list.get(1)) + "\n");
+//            view.getMoves().append("--------------------------\n");
+//            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
+//        }
+//        this.removeCapturedPieces();
+//        this.revalidate();
+//        this.repaint();
     }
 
     /**
@@ -328,40 +314,16 @@ public final class Board extends JPanel implements Observer {
      * of the non visual piece then redraws its view as needed
      */
     public void redrawPieces() {
-        for (int i = 0; i < data.getActivePieces().size(); i++) {
-            if (data.getActivePieces().get(i) != null) {
-                Non_Visual_Piece p = data.getActivePieces().get(i);
-                for (int j = 0; j < pieces.size(); j++) {
-                    Piece peice = pieces.get(j);
-                    if (p.isQueenFromPawn() && peice.getPosition() == p.getPreviousPosition()) {
-                        Piece pi = (Piece) squares.get(p.getPreviousPosition() - 1).getComponent(0);
-                        pieces.remove(pi);
-                        squares.get(p.getPreviousPosition() - 1).remove(0);
-                        Piece piece = new Piece(this, p, "Queen", p.getColor(), p.getPosition(), imageMap.get(p.getType()));
-                        pieces.add(piece);
-                        getSquares().get(p.getPosition() - 1).add(piece);
-                        piece.setBounds(5, 5, 55, 55);
-                        peice.revalidate();
-                        peice.repaint();
-                        peice.removeListener();
-                        p.isQueenFromPawn(false);
-                    } else {
-                        if (p.getColor() == peice.getColor() && p.getPieceType().equals(peice.getType()) && p.getPreviousPosition() == peice.getPosition()) {
-                            getSquares().get(p.getPosition() - 1).add((Piece) peice);
-                            peice.setPosition(p.getPosition());
-                        }
-                        if (p.getPreviousPosition() > 0) {
-                            Square currentSquare = squares.get(p.getPreviousPosition() - 1);
-                            currentSquare.setBackground(currentSquare.getColor());
-                            currentSquare.revalidate();
-                            currentSquare.repaint();
-                        }
-                        peice.revalidate();
-                        peice.repaint();
-                        peice.removeListener();
-                    }
-                }
-            }
+        for (int x = 0; x < ChessGameConstants.gridDimension; x++) {
+        	for (int y = 0; y < ChessGameConstants.gridDimension; y++) {
+        		Piece piece = this.squares[x][y].getPiece();
+        		if(piece != null)
+        		{
+                    piece.revalidate();
+                    piece.repaint();
+                    //piece.removeListener();
+        		}
+        	}  
         }
     }
 

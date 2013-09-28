@@ -131,21 +131,21 @@ public class CapturedPieces extends JPanel implements Observer {
      * @param arg as an Object any object passed in
      */
     public void update(Observable o, Object arg) {
-        Chess_Data data = (Chess_Data) o;
-        Piece pi = null;
-        if (!data.getCapturedPieces().isEmpty()) {
-            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
-            if (board.getSquares().get(p.getPosition() - 1).getComponentCount() > 0) {
-                pi = (Piece) board.getSquares().get(p.getPosition() - 1).getComponent(0);
-                if (this.getColor() == Color.WHITE && p.getColor() == Color.WHITE && p.isCaptured() && pi.getColor() == Color.WHITE) {
-                    pi.setPreferredSize(new Dimension(64, 64));
-                    this.add(pi);
-                } else if (this.getColor() == Color.BLACK && p.getColor() == Color.BLACK && p.isCaptured() && pi.getColor() == Color.BLACK) {
-                    pi.setPreferredSize(new Dimension(64, 64));
-                    this.add(pi);
-                }
-            }
-        }
+//        Chess_Data data = (Chess_Data) o;
+//        Piece pi = null;
+//        if (!data.getCapturedPieces().isEmpty()) {
+//            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
+//            if (board.getSquares().get(p.getPosition() - 1).getComponentCount() > 0) {
+//                pi = (Piece) board.getSquares().get(p.getPosition() - 1).getComponent(0);
+//                if (this.getColor() == Color.WHITE && p.getColor() == Color.WHITE && p.isCaptured() && pi.getColor() == Color.WHITE) {
+//                    pi.setPreferredSize(new Dimension(64, 64));
+//                    this.add(pi);
+//                } else if (this.getColor() == Color.BLACK && p.getColor() == Color.BLACK && p.isCaptured() && pi.getColor() == Color.BLACK) {
+//                    pi.setPreferredSize(new Dimension(64, 64));
+//                    this.add(pi);
+//                }
+//            }
+//        }
         this.revalidate();
         this.repaint();
     }

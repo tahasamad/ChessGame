@@ -1,6 +1,7 @@
 package Utils;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -11,8 +12,10 @@ import javax.swing.JPanel;
 
 import ChessGameKenai.ChessGameConstants;
 import ChessGameKenai.Chess_Data;
+import GameElements.PieceColor;
+import GameElements.PieceType;
 
-public static class ChessGameUtils { // Applying Utility Pattern
+public class ChessGameUtils { // Applying Utility Pattern
 	
 	public static String getCurrentPlayerName ()
 	{
@@ -74,6 +77,52 @@ public static class ChessGameUtils { // Applying Utility Pattern
 		return ((x >= 0 && x < ChessGameConstants.gridDimension) && (y >= 0 && y < ChessGameConstants.gridDimension)); 
 	}
 	
+	public static Color getColorFromElementColor(PieceColor pieceColor)
+	{
+		if(pieceColor == PieceColor.White)
+		{
+			return Color.WHITE;
+		}
+		else
+		{
+			return Color.BLACK;
+		}
+	}
+	
+	public static String getPieceImageFilePathForTypeAndColor(PieceType type, PieceColor color)
+	{
+		String path = "ChessPieces/";
+		if(color == PieceColor.White)
+		{
+			path += "w";
+		}
+		else
+		{
+			path += "b";
+		}
+		switch(type)
+		{
+			case Bishop:
+				path += "Bishop46.gif";
+				break;
+			case King:
+				path += "King46.gif";
+				break;
+			case Knight:
+				path += "Knight46.gif";
+				break;
+			case Pawn:
+				path += "Pawn46.gif";
+				break;
+			case Queen:
+				path += "Queen46.gif";
+				break;
+			case Rook:
+				break;
+		}
+		return path;
+		
+	}
 //	public static Player getFirstPlayer ()
 //	{
 //		

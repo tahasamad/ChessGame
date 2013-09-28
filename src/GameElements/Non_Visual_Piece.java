@@ -8,8 +8,6 @@ package GameElements;
 
 import java.io.Serializable;
 
-import ChessGameKenai.ChessGameConstants.PieceColor;
-import ChessGameKenai.ChessGameConstants.PieceType;
 import Utils.ChessGamePoint;
 
 /**

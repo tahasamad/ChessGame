@@ -6,18 +6,40 @@
  */
 package ChessGameKenai;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
-
-import GameElements.Piece;
 
 /**
  * The ChessBoardView Class is main view of the chess game it consists of the
@@ -35,7 +57,6 @@ public class ChessBoardView extends JFrame implements Observer {
 
     private Container container;
     private JComponent mainPanel, northPanel, pl1IconPanel, pl2IconPanel, pl1PropetiesPanel, pl2PropetiesPanel;
-    private Chess_Data data;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
     private JMenu fileMenu, helpMenu, optionsMenu;
@@ -65,10 +86,9 @@ public class ChessBoardView extends JFrame implements Observer {
     /**
      * OverLoaded constructor that receives Chess_Data object's address in the system
      * for later communication with the object
-     * @param data address of the Chess_Data object
+     * @param Chess_Data.getChessData() address of the Chess_Data object
      */
-    public ChessBoardView(Chess_Data data) {
-        this.data = data;
+    public ChessBoardView() {
         this.setLayout(null);
         this.container = this.getContentPane();
 
@@ -76,9 +96,9 @@ public class ChessBoardView extends JFrame implements Observer {
         tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         tArea.setOpaque(false);
         tArea.setEditable(false);
-        board = new Board(data, ChessBoardView.this);
-        data.addObserver(board);
-        data.addObserver(this);
+        board = new Board(ChessBoardView.this);
+        Chess_Data.getChessData().addObserver(board);
+        Chess_Data.getChessData().addObserver(this);
 
         chat = new Chat(this);
 
@@ -97,8 +117,8 @@ public class ChessBoardView extends JFrame implements Observer {
         });
 
         //LOADS THE ARRAY LIST WITH TWO PLAYER OBJECTS AND GIVES THEM INITIAL VALUES
-        data.getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
-        data.getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
+        Chess_Data.getChessData().getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
+        Chess_Data.getChessData().getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
 
         //CREATE JBUTTON RESTART AND ADD ACTION LISTENER TO IT THROUGH THE ANONYMOUS CLASS
         restartButton = new JButton("Restart", new ImageIcon(getClass().getResource("Icons/start.png")));
@@ -110,7 +130,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects an action
              */
             public void actionPerformed(ActionEvent e) {
-                if (!ChessBoardView.this.data.isGameOnLine()) {
+                if (!Chess_Data.getChessData().isGameOnLine()) {
                     ChessBoardView.this.restartLocalGame();
                 } else {
                     ChessBoardView.this.restartOnlineGame();
@@ -140,7 +160,7 @@ public class ChessBoardView extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
 
                 //IF IT IS WHITE TURN EXECUTE THE IF BLOCK
-                if (ChessBoardView.this.data.isWhiteTurn()) {
+                if (Chess_Data.getChessData().isWhiteTurn()) {
 
                     //IF SECONDS VARIABLE IS LESS THAN 60 EXECUTE THE IF BLOCK
                     if (seconds < 59) {
@@ -176,7 +196,7 @@ public class ChessBoardView extends JFrame implements Observer {
                         player1TimerLabel.setText("0" + hours + ":" + minutes + ":" + seconds);
                     }
                 } //IF NOT WHITE TURN TO PLAY EXECUTE THE IF BLOCK
-                else if (!ChessBoardView.this.data.isWhiteTurn()) {
+                else if (!Chess_Data.getChessData().isWhiteTurn()) {
 
                     //STOP PLAYER 1 TIMER
                     player1Timer.stop();
@@ -197,7 +217,7 @@ public class ChessBoardView extends JFrame implements Observer {
              */
             public void actionPerformed(ActionEvent e) {
                 //IF IS WHITE TURN EXECUTE THE IF BLOCK
-                if (!ChessBoardView.this.data.isWhiteTurn()) {
+                if (!Chess_Data.getChessData().isWhiteTurn()) {
 
                     //IF SECOND LESS THAN 60 EXECUTE THE IF BLOCK
                     if (second < 59) {
@@ -234,7 +254,7 @@ public class ChessBoardView extends JFrame implements Observer {
                     }
 
                     //IF IS WHITE TURN
-                } else if (ChessBoardView.this.data.isWhiteTurn()) {
+                } else if (Chess_Data.getChessData().isWhiteTurn()) {
 
                     //STOP PLAYER2 TIMER AND START PLAYER1 TIMER
                     player2Timer.stop();
@@ -253,12 +273,12 @@ public class ChessBoardView extends JFrame implements Observer {
         mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
 
         //CREATE AND INITILALIZE WHOSE TURN LABEL
-        whoseTurnLabel = new JLabel(data.getPlayers().get(0).getName(), SwingConstants.CENTER);
+        whoseTurnLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(0).getName(), SwingConstants.CENTER);
         whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
         whoseTurnLabel.setForeground(Color.WHITE);
 
         //CREATE AND INITIALIZE PLAYER 1 ICON LABEL
-        player1IconLabel = new JLabel(new ImageIcon(getClass().getResource(data.getPlayers().get(0).getIconPath())));
+        player1IconLabel = new JLabel(new ImageIcon(getClass().getResource(Chess_Data.getChessData().getPlayers().get(0).getIconPath())));
 
         //CREATE AND INITIALIZE PL1 ICON PANEL
         pl1IconPanel = new JPanel();
@@ -266,7 +286,7 @@ public class ChessBoardView extends JFrame implements Observer {
         pl1IconPanel.add(player1IconLabel);
 
         //CREATE AND INITIALIZE PLAYER 2 ICON LABEL
-        player2IconLabel = new JLabel(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));
+        player2IconLabel = new JLabel(new ImageIcon(getClass().getResource(Chess_Data.getChessData().getPlayers().get(1).getIconPath())));
 
         //CREATE AND INITIALIZE PL2 ICON PANEL
         pl2IconPanel = new JPanel();
@@ -274,10 +294,10 @@ public class ChessBoardView extends JFrame implements Observer {
         pl2IconPanel.add(player2IconLabel);
 
         //CREATE AND INITILAIZE PLAYER 1 PROPERTIES LABELS
-        player1NameLabel = new JLabel(data.getPlayers().get(0).getName(), SwingConstants.LEFT);
+        player1NameLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(0).getName(), SwingConstants.LEFT);
         player1NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
         player1NameLabel.setForeground(Color.WHITE);
-        player1NbrWinsLabel = new JLabel("Number of wins: " + data.getPlayers().get(0).getNumberOfWins(), SwingConstants.LEFT);
+        player1NbrWinsLabel = new JLabel("Number of wins: " + Chess_Data.getChessData().getPlayers().get(0).getNumberOfWins(), SwingConstants.LEFT);
         player1NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
         player1NbrWinsLabel.setForeground(Color.WHITE);
         player1TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
@@ -294,10 +314,10 @@ public class ChessBoardView extends JFrame implements Observer {
         pl1PropetiesPanel.add(player1TimerLabel);
 
         //CREATE AND INITILAIZE PLAYER 2 PROPERTIES LABELS
-        player2NameLabel = new JLabel(data.getPlayers().get(1).getName(), SwingConstants.LEFT);
+        player2NameLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(1).getName(), SwingConstants.LEFT);
         player2NameLabel.setForeground(Color.WHITE);
         player2NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2NbrWinsLabel = new JLabel("Number of wins: " + data.getPlayers().get(1).getNumberOfWins(), SwingConstants.LEFT);
+        player2NbrWinsLabel = new JLabel("Number of wins: " + Chess_Data.getChessData().getPlayers().get(1).getNumberOfWins(), SwingConstants.LEFT);
         player2NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
         player2NbrWinsLabel.setForeground(Color.WHITE);
         player2TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
@@ -350,7 +370,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                if (ChessBoardView.this.data.isGameOnLine()) {
+                if (Chess_Data.getChessData().isGameOnLine()) {
                     int returnValue = JOptionPane.showConfirmDialog(ChessBoardView.this, "The Connection will be lost would you like to proceed?Y/N", "Confirmation Message", JOptionPane.YES_NO_OPTION);
                     if (returnValue == JOptionPane.YES_OPTION) {
                         ChessBoardView.this.dispose();
@@ -385,7 +405,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                ChessBoardView.this.data.savePlayer();
+                Chess_Data.getChessData().savePlayer();
             }
         });
 
@@ -397,7 +417,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                ChessBoardView.this.data.loadPlayer();
+                Chess_Data.getChessData().loadPlayer();
 
             }
         });
@@ -412,7 +432,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                ChessBoardView.this.data.save();
+                Chess_Data.getChessData().save();
             }
         });
 
@@ -424,9 +444,9 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                ChessBoardView.this.data.load();
+                Chess_Data.getChessData().load();
                 ChessBoardView.this.board.removeAllPieces();
-                ChessBoardView.this.board.getPieces().clear();
+                //ChessBoardView.this.board.getPieces().clear();
                 ChessBoardView.this.board.populateBoard();
                 ChessBoardView.this.loadCapturedPieces();
             }
@@ -443,7 +463,7 @@ public class ChessBoardView extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if ((returnValue = fileChooser.showSaveDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    ChessBoardView.this.data.save(file);
+                    Chess_Data.getChessData().save(file);
                 }
             }
         });
@@ -457,9 +477,9 @@ public class ChessBoardView extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if ((returnValue = fileChooser.showOpenDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    ChessBoardView.this.data.load(file);
+                    Chess_Data.getChessData().load(file);
                     ChessBoardView.this.board.removeAllPieces();
-                    ChessBoardView.this.board.getPieces().clear();
+                    //ChessBoardView.this.board.getPieces().clear();
                     ChessBoardView.this.board.populateBoard();
                     ChessBoardView.this.loadCapturedPieces();
                 }
@@ -498,8 +518,8 @@ public class ChessBoardView extends JFrame implements Observer {
                         public void run() {
                             ChessBoardView.this.playOnLine();
                             ChessBoardView.this.reEnableMenuItems(false);
-                            bridge = new ConnectionBridge(ChessBoardView.this.data, ChessBoardView.this, false, ipAddress, chat);
-                            ChessBoardView.this.data.addObserver(bridge);
+                            bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, false, ipAddress, chat);
+                            Chess_Data.getChessData().addObserver(bridge);
                         }
                     }).start();
                 } catch (UnknownHostException ex) {
@@ -521,8 +541,8 @@ public class ChessBoardView extends JFrame implements Observer {
                     public void run() {
                         ChessBoardView.this.playOnLine();
                         ChessBoardView.this.reEnableMenuItems(false);
-                        bridge = new ConnectionBridge(ChessBoardView.this.data, ChessBoardView.this, true, null, chat);
-                        ChessBoardView.this.data.addObserver(bridge);
+                        bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, true, null, chat);
+                        Chess_Data.getChessData().addObserver(bridge);
                     }
                 }).start();
             }
@@ -536,12 +556,12 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                if (board.getCurrentBoard() == Board.NORMAL_BOARD) {
+                /*if (board.getCurrentBoard() == Board.NORMAL_BOARD) {
                     board.setBoard(Board.FLIPPED_BOARD);
                 } else {
                     board.setBoard(Board.NORMAL_BOARD);
                 }
-                board.flipBoard();
+                board.flipBoard();*/
             }
         });
 
@@ -553,7 +573,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                new Choose_Icon(ChessBoardView.this.data, bridge);
+                new Choose_Icon(Chess_Data.getChessData(), bridge);
             }
         });
 
@@ -565,7 +585,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                if (!ChessBoardView.this.data.isGameOnLine()) {
+                if (!Chess_Data.getChessData().isGameOnLine()) {
                     ChessBoardView.this.chooseNameLocal();
                 } else {
                     ChessBoardView.this.chooseNameOnLine();
@@ -617,8 +637,8 @@ public class ChessBoardView extends JFrame implements Observer {
         blackCapturedPiecesScroll = new JScrollPane(blackCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         //ADD TWO OBSERVERS TO THE DATA WHICH ARE CAPTURED PIECES PANELS
-        data.addObserver(whiteCapturedPiecesPanel);
-        data.addObserver(blackCapturedPiecesPanel);
+        Chess_Data.getChessData().addObserver(whiteCapturedPiecesPanel);
+        Chess_Data.getChessData().addObserver(blackCapturedPiecesPanel);
 
         mainEastPanel = new CostumPanel("Icons/background.jpg", new GridLayout(1, 1));
 
@@ -697,9 +717,9 @@ public class ChessBoardView extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
 
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-        whoseTurnLabel.setText(data.isWhiteTurn() ? (ChessBoardView.this.data.getPlayers().get(0).getName() + " turn to play") : (ChessBoardView.this.data.getPlayers().get(1).getName() + " turn to play"));
+        whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
 
-        if (data.isWinner()) {
+        /*if (data.isWinner()) {
             if (data.getCapturedPieces().get(data.getCapturedPieces().size() - 1).getColor() == Color.BLACK) {
                 whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " has won the game!");
                 data.getPlayers().get(0).setNumberOfWins(++numberOfWins);
@@ -716,7 +736,7 @@ public class ChessBoardView extends JFrame implements Observer {
         player1NameLabel.setText(data.getPlayers().get(0).getName());
         player2NameLabel.setText(data.getPlayers().get(1).getName());
         player1IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(0).getIconPath())));
-        player2IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));
+        player2IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));*/
     }
 
     /**
@@ -725,7 +745,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * this method is used when the user is playing the game locally
      */
     public void chooseNameLocal() {
-        if (!data.isGameOnLine()) {
+        if (!Chess_Data.getChessData().isGameOnLine()) {
             String player1Name = "";
             String player2Name = "";
 
@@ -735,13 +755,13 @@ public class ChessBoardView extends JFrame implements Observer {
 
             if (player1Name != null && player2Name != null) {
 
-                data.getPlayers().get(0).setName(player1Name);
-                data.getPlayers().get(1).setName(player2Name);
+                Chess_Data.getChessData().getPlayers().get(0).setName(player1Name);
+                Chess_Data.getChessData().getPlayers().get(1).setName(player2Name);
 
                 //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-                whoseTurnLabel.setText(data.isWhiteTurn() ? (data.getPlayers().get(0).getName() + " turn to play") : (data.getPlayers().get(1).getName() + " turn to play"));
-                player1NameLabel.setText(data.getPlayers().get(0).getName());
-                player2NameLabel.setText(data.getPlayers().get(1).getName());
+                whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
+                player1NameLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName());
+                player2NameLabel.setText(Chess_Data.getChessData().getPlayers().get(1).getName());
             }
         }
     }
@@ -755,17 +775,17 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void chooseNameOnLine() {
         String playerName = "";
-        if (data.isServer()) {
+        if (Chess_Data.getChessData().isServer()) {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-                data.getPlayers().get(0).setName(playerName);
-                player1NameLabel.setText(data.getPlayers().get(0).getName());
+                Chess_Data.getChessData().getPlayers().get(0).setName(playerName);
+                player1NameLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName());
             }
         } else {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-                data.getPlayers().get(1).setName(playerName);
-                player2NameLabel.setText(data.getPlayers().get(1).getName());
+                Chess_Data.getChessData().getPlayers().get(1).setName(playerName);
+                player2NameLabel.setText(Chess_Data.getChessData().getPlayers().get(1).getName());
             }
         }
         try {
@@ -778,7 +798,7 @@ public class ChessBoardView extends JFrame implements Observer {
         }
 
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-        whoseTurnLabel.setText(data.isWhiteTurn() ? (data.getPlayers().get(0).getName() + " turn to play") : (data.getPlayers().get(1).getName() + " turn to play"));
+        whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
     }
 
     /**
@@ -787,7 +807,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * will start the second player timer an so on.....
      */
     public void startTimer() {
-        data.isWhiteTurn(true);
+        Chess_Data.getChessData().isWhiteTurn(true);
         player1Timer.start();
     }
 
@@ -797,8 +817,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * captured pieces panel white or black
      */
     public void loadCapturedPieces() {
-        for (int i = 0; i < data.getCapturedPieces().size(); i++) {
-            if (data.getCapturedPieces().get(i).getType().startsWith("W")) {
+        for (int i = 0; i < Chess_Data.getChessData().getCapturedPieces().size(); i++) {
+            /*if (data.getCapturedPieces().get(i).getType().startsWith("W")) {
                 whiteCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
                 whiteCapturedPiecesPanel.revalidate();
                 whiteCapturedPiecesPanel.repaint();
@@ -806,7 +826,7 @@ public class ChessBoardView extends JFrame implements Observer {
                 blackCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
                 blackCapturedPiecesPanel.revalidate();
                 blackCapturedPiecesPanel.repaint();
-            }
+            }*/
         }
     }
 
@@ -816,11 +836,11 @@ public class ChessBoardView extends JFrame implements Observer {
      * on the same computer locally
      */
     public void restartLocalGame() {
-        data.getActivePieces().clear();
-        data.getCapturedPieces().clear();
-        data.createNonVisualPieces();
+        Chess_Data.getChessData().getActivePieces().clear();
+        Chess_Data.getChessData().getCapturedPieces().clear();
+        Chess_Data.getChessData().createNonVisualPieces();
         board.removeAllPieces();
-        board.getPieces().clear();
+        //board.getPieces().clear();
         board.populateBoard();
         hours = minutes = seconds = hour = minute = second = 0;
         player1TimerLabel.setText("00:00:00");
@@ -828,10 +848,10 @@ public class ChessBoardView extends JFrame implements Observer {
         player1Timer.stop();
         player2Timer.stop();
         tArea.setText("");
-        whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " turn to play");
+        whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
         this.resetAllSquares();
         chat.getTxtPane().setText("");
-        data.getCapturedPieces().clear();
+        Chess_Data.getChessData().getCapturedPieces().clear();
         board.removeListeners(Color.BLACK);
         board.addListeners(Color.WHITE);
         whiteCapturedPiecesPanel.removeAll();
@@ -844,7 +864,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * The information is sent to the client on the other side and restarts its game as well
      */
     public void restartOnlineGame() {
-        if (data.isGameOnLine()) {
+        if (Chess_Data.getChessData().isGameOnLine()) {
             try {
                 Packet packet = new Packet();
                 packet.setRestartGame("restart game");
@@ -863,11 +883,11 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void restartClientGame() {
         this.resetAllSquares();
-        data.getActivePieces().clear();
-        data.getCapturedPieces().clear();
-        data.createNonVisualPieces();
+        Chess_Data.getChessData().getActivePieces().clear();
+        Chess_Data.getChessData().getCapturedPieces().clear();
+        Chess_Data.getChessData().createNonVisualPieces();
         board.removeAllPieces();
-        board.getPieces().clear();
+        //board.getPieces().clear();
         board.populateBoard();
         player1Timer.start();
         player2Timer.stop();
@@ -875,8 +895,8 @@ public class ChessBoardView extends JFrame implements Observer {
         hours = minutes = seconds = hour = minute = second = 0;
         player1TimerLabel.setText("00:00:00");
         player2TimerLabel.setText("00:00:00");
-        whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " turn to play");
-        if (data.isServer()) {
+        whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
+        if (Chess_Data.getChessData().isServer()) {
             board.removeListeners(Color.BLACK);
             board.addListeners(Color.WHITE);
         } else {
@@ -936,7 +956,7 @@ public class ChessBoardView extends JFrame implements Observer {
             if ((returnValue = fileChooser.showSaveDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    ChessBoardView.this.data.save(file);
+                    Chess_Data.getChessData().save(file);
                 } catch (Exception er) {
                     JOptionPane.showMessageDialog(ChessBoardView.this, "Error: " + er.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
                 }
@@ -956,11 +976,11 @@ public class ChessBoardView extends JFrame implements Observer {
      * and if the background is blue then it switches the background back to original color
      */
     public void resetAllSquares() {
-        for (Square s : board.getSquares()) {
+        /*for (Square s : board.getSquares()) {
             if (s.getBackground() == Color.BLUE) {
                 s.setBackground(s.getColor());
             }
-        }
+        }*/
     }
 
     /**
@@ -970,8 +990,8 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void playOnLine() {
         player1Timer.stop();
-        data.isGameOnLine(true);
-        data.isWhiteTurn(true);
+        Chess_Data.getChessData().isGameOnLine(true);
+        Chess_Data.getChessData().isWhiteTurn(true);
         board.isFirstTime(true);
         this.restartClientGame();
     }
@@ -983,11 +1003,11 @@ public class ChessBoardView extends JFrame implements Observer {
      * back the view he would simply go in the options menu and change the flip back
      */
     public void flipClientBoard() {
-        if (!data.isServer()) {
-            board.removeAll();
-            board.setBoard(Board.FLIPPED_BOARD);
-            board.flipBoard();
-        }
+//        if (!data.isServer()) {
+//            board.removeAll();
+//            board.setBoard(Board.FLIPPED_BOARD);
+//            board.flipBoard();
+//        }
     }
 
     /**
