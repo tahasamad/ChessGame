@@ -8,7 +8,6 @@ package ChessGameKenai;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -55,20 +54,15 @@ import javax.swing.text.SimpleAttributeSet;
  */
 public class ChessBoardView extends JFrame implements Observer {
 
-    private Container container;
-    private JComponent mainPanel, northPanel, pl1IconPanel, pl2IconPanel, pl1PropetiesPanel, pl2PropetiesPanel;
+    private JComponent mainPanel, northPanel;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
     private JMenu fileMenu, helpMenu, optionsMenu;
     private JScrollPane whiteCapturedPiecesScroll, blackCapturedPiecesScroll;
     private JComponent eastPanel1, northButtonPanel, buttonPanel;
     private CapturedPieces whiteCapturedPiecesPanel, blackCapturedPiecesPanel;
-    private JLabel whoseTurnLabel, player1IconLabel, player2IconLabel, player1NbrWinsLabel, player2NbrWinsLabel, player1TimerLabel, player2TimerLabel;
-    private JLabel player1NameLabel, player2NameLabel;
-    private javax.swing.Timer player1Timer, player2Timer;
-    private ActionListener player1TimerAction, player2TimerAction;
-    private int hours, minutes, seconds;
-    private int hour, minute, second;
+    private JLabel whoseTurnLabel;
+    private PlayerInfoPanel player1InfoPanel, player2InfoPanel;
     private int numberOfWins;
     private JButton restartButton;
     private JTabbedPane tabs;
@@ -88,10 +82,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * for later communication with the object
      * @param Chess_Data.getChessData() address of the Chess_Data object
      */
-    public ChessBoardView() {
+     public ChessBoardView() {
         this.setLayout(null);
-        this.container = this.getContentPane();
-
         tArea.setText("--------Moves Made-------\n");
         tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         tArea.setOpaque(false);
@@ -149,125 +141,6 @@ public class ChessBoardView extends JFrame implements Observer {
         northButtonPanel = new JPanel(new GridLayout(1, 2));
         northButtonPanel.setOpaque(false);
 
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        player1TimerAction = new ActionListener() {
-
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-
-                //IF IT IS WHITE TURN EXECUTE THE IF BLOCK
-                if (Chess_Data.getChessData().isWhiteTurn()) {
-
-                    //IF SECONDS VARIABLE IS LESS THAN 60 EXECUTE THE IF BLOCK
-                    if (seconds < 59) {
-                        seconds++;
-
-                        //IF SECONDS VARIABLE IS EQUAL TO 60 EXECUTE THE ELSE IF BLOCK
-                    } else if (seconds == 59) {
-                        seconds = 0;
-                        minutes++;
-
-                        //IF MINUTES VARIABLE IS EQUAL TO 60 EXECUTE THE ELSE F BLOCK
-                    } else if (minutes == 59) {
-                        minutes = 0;
-                        hours++;
-                    }
-
-                    //IF SECONDS LESS THAN 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    if (seconds < 10 && minutes < 10 && hours < 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minutes < 10 && hours < 10 && seconds >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + "0" + minutes + ":" + seconds);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minutes >= 10 && hours < 10 && seconds >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player1TimerLabel.setText("0" + hours + ":" + minutes + ":" + seconds);
-                    }
-                } //IF NOT WHITE TURN TO PLAY EXECUTE THE IF BLOCK
-                else if (!Chess_Data.getChessData().isWhiteTurn()) {
-
-                    //STOP PLAYER 1 TIMER
-                    player1Timer.stop();
-
-                    //START PLAYER 2 TIMER
-                    player2Timer.start();
-                }
-            }
-        };
-
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        player2TimerAction = new ActionListener() {
-
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-                //IF IS WHITE TURN EXECUTE THE IF BLOCK
-                if (!Chess_Data.getChessData().isWhiteTurn()) {
-
-                    //IF SECOND LESS THAN 60 EXECUTE THE IF BLOCK
-                    if (second < 59) {
-                        second++;
-
-                        //IF SECOND IS EQUAL TO 60
-                    } else if (second == 59) {
-                        second = 0;
-                        minute++;
-
-                        //IF MINUTE IS EQUAL TO 60
-                    } else if (minute == 59) {
-                        minute = 0;
-                        hour++;
-                    }
-
-                    //IF SECONDS LESS THAN 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    if (second < 10 && minute < 10 && hour < 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + "0" + minute + ":" + "0" + second);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS THAN 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minute < 10 && hour < 10 && second >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + "0" + minute + ":" + second);
-
-                        //IF SECONDS LESS OR EQUAL TO 10 AND MINUTES LESS OR EQUAL TO 10 AND HOURS LESS THAN 10 EXECUTE THE IF BLOCK
-                    } else if (minute >= 10 && hour < 10 && second >= 10) {
-
-                        //SET APROPRIATE TEXT TO THE LABEL
-                        player2TimerLabel.setText("0" + hour + ":" + minute + ":" + second);
-                    }
-
-                    //IF IS WHITE TURN
-                } else if (Chess_Data.getChessData().isWhiteTurn()) {
-
-                    //STOP PLAYER2 TIMER AND START PLAYER1 TIMER
-                    player2Timer.stop();
-                    player1Timer.start();
-                }
-            }
-        };
-
-        //CREATE AND START PLAYER2 TIMER
-        player2Timer = new javax.swing.Timer(1000, player2TimerAction);
-
-        //CREATE AND START PLAYER1 TIMER
-        player1Timer = new javax.swing.Timer(1000, player1TimerAction);
 
         //CREATE AND INITILAIZE MAIN NORTH PANEL
         mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
@@ -277,81 +150,70 @@ public class ChessBoardView extends JFrame implements Observer {
         whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
         whoseTurnLabel.setForeground(Color.WHITE);
 
-        //CREATE AND INITIALIZE PLAYER 1 ICON LABEL
-        player1IconLabel = new JLabel(new ImageIcon(getClass().getResource(Chess_Data.getChessData().getPlayers().get(0).getIconPath())));
+        //CREATE AND INITIALIZE PLAYER INFO PANEL
+        
+        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
+        ActionListener player1TimerAction = new ActionListener() {
 
-        //CREATE AND INITIALIZE PL1 ICON PANEL
-        pl1IconPanel = new JPanel();
-        pl1IconPanel.setOpaque(false);
-        pl1IconPanel.add(player1IconLabel);
+            /**
+             * The method actionPerformed is the method
+             * that is inherited from ActionListener Interface
+             * @param e ActionEvent object that is generated when listener detects an action
+             */
+            public void actionPerformed(ActionEvent e) {
 
-        //CREATE AND INITIALIZE PLAYER 2 ICON LABEL
-        player2IconLabel = new JLabel(new ImageIcon(getClass().getResource(Chess_Data.getChessData().getPlayers().get(1).getIconPath())));
+                if (Chess_Data.getChessData().isWhiteTurn()) {            
+                	player1InfoPanel.updateTimerLabel();
+                }
+                else if (!Chess_Data.getChessData().isWhiteTurn()) {
+                    player1InfoPanel.stopTimer();
+                    player2InfoPanel.startTimer();
+                }
+            }
+        };
+        player1InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(0));
+        player1InfoPanel.createTimer(player1TimerAction);
 
-        //CREATE AND INITIALIZE PL2 ICON PANEL
-        pl2IconPanel = new JPanel();
-        pl2IconPanel.setOpaque(false);
-        pl2IconPanel.add(player2IconLabel);
+        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
+        ActionListener player2TimerAction = new ActionListener() {
 
-        //CREATE AND INITILAIZE PLAYER 1 PROPERTIES LABELS
-        player1NameLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(0).getName(), SwingConstants.LEFT);
-        player1NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1NameLabel.setForeground(Color.WHITE);
-        player1NbrWinsLabel = new JLabel("Number of wins: " + Chess_Data.getChessData().getPlayers().get(0).getNumberOfWins(), SwingConstants.LEFT);
-        player1NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1NbrWinsLabel.setForeground(Color.WHITE);
-        player1TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
-        player1TimerLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player1TimerLabel.setForeground(Color.WHITE);
-
-        //CREATE AND INITILAIZE PL1 PROPERTIES PANEL
-        pl1PropetiesPanel = new JPanel(new GridLayout(3, 1));
-        pl1PropetiesPanel.setOpaque(false);
-
-        //ADD ALL THE COMPONENTS TO THE PL1 PROPERTIES PANEL
-        pl1PropetiesPanel.add(player1NameLabel);
-        pl1PropetiesPanel.add(player1NbrWinsLabel);
-        pl1PropetiesPanel.add(player1TimerLabel);
-
-        //CREATE AND INITILAIZE PLAYER 2 PROPERTIES LABELS
-        player2NameLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(1).getName(), SwingConstants.LEFT);
-        player2NameLabel.setForeground(Color.WHITE);
-        player2NameLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2NbrWinsLabel = new JLabel("Number of wins: " + Chess_Data.getChessData().getPlayers().get(1).getNumberOfWins(), SwingConstants.LEFT);
-        player2NbrWinsLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2NbrWinsLabel.setForeground(Color.WHITE);
-        player2TimerLabel = new JLabel("00:00:00", SwingConstants.LEFT);
-        player2TimerLabel.setFont(new Font("Times Roman", Font.PLAIN, 20));
-        player2TimerLabel.setForeground(Color.WHITE);
-
-        //CREATE AND INITILAIZE PL2 PROPERTIES PANEL
-        pl2PropetiesPanel = new JPanel(new GridLayout(3, 1));
-        pl2PropetiesPanel.setOpaque(false);
-
-        //ADD ALL THE COMPONENTS TO THE PL2 PROPERTIES PANEL
-        pl2PropetiesPanel.add(player2NameLabel);
-        pl2PropetiesPanel.add(player2NbrWinsLabel);
-        pl2PropetiesPanel.add(player2TimerLabel);
-
+            /**
+             * The method actionPerformed is the method
+             * that is inherited from ActionListener Interface
+             * @param e ActionEvent object that is generated when listener detects an action
+             */
+            public void actionPerformed(ActionEvent e) {
+                if (!Chess_Data.getChessData().isWhiteTurn()) 
+                {
+                	player2InfoPanel.updateTimerLabel();
+                } 
+                else if (Chess_Data.getChessData().isWhiteTurn()) 
+                {
+                	player2InfoPanel.stopTimer();
+                	player1InfoPanel.startTimer();
+                }
+            }
+        };
+        player2InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(1));
+        player2InfoPanel.createTimer(player2TimerAction);
+        
         //CREATE AND INITIALIZE NORTH PANEL
-        northPanel = new JPanel(new GridLayout(1, 4));
+        northPanel = new JPanel(new GridLayout(1, 2));
         northPanel.setOpaque(false);
         //northPanel.setBackground(Color.WHITE);
 
         //ADD ALL THE COMPONENTS TO THE NORTH PANEL
-        northPanel.add(pl1IconPanel);
-        northPanel.add(pl1PropetiesPanel);
-        northPanel.add(pl2IconPanel);
-        northPanel.add(pl2PropetiesPanel);
+        northPanel.add(player1InfoPanel);
+        northPanel.add(player2InfoPanel);
 
         buttonPanel.add(restartButton);
 
         //ADD ALL THE COMPONENTS TO THE NORTH BUTTON PANEL
         northButtonPanel.add(whoseTurnLabel);
-        northButtonPanel.add(buttonPanel);
+        northButtonPanel.add(buttonPanel,BorderLayout.LINE_END);
 
         //ADD ALL THE COMPONENTS TO THE MAIN NORTH PANEL
-        mainNorthPanel.add(northPanel, BorderLayout.CENTER);
+        mainNorthPanel.add(northPanel, BorderLayout.BEFORE_LINE_BEGINS);
         mainNorthPanel.add(northButtonPanel, BorderLayout.SOUTH);
 
         //CREATE JMENUBAR AND SET IT TO THE JFRAME
@@ -682,29 +544,34 @@ public class ChessBoardView extends JFrame implements Observer {
         this.setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
 
         //ADD EVERYTHING TO THE CONTAINER
-        container.add(board);
-        container.add(chat);
-        container.add(mainEastPanel);
-        container.add(mainNorthPanel);
-
+        
+        JPanel mainContainer = new JPanel();
+        mainContainer.setLayout(null);        
+        JScrollPane mainScrollPane = new JScrollPane(mainContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        getContentPane().add(mainScrollPane);
+        
+        mainContainer.add(mainNorthPanel);
+        mainContainer.add(board);
+        mainContainer.add(mainEastPanel);
+        mainContainer.add(chat);
+        
         mainNorthPanel.setBounds(0, 0, 757, 170);
         mainNorthPanel.repaint();
-
         mainEastPanel.setBounds(520, 170, 230, 531);
         mainEastPanel.repaint();
-
         board.setBounds(0, 170, 583, 592);
         board.repaint();
-
-        chat.setBounds(0, 0, 757, 211);
+        chat.setBounds(0, 693, 757, 211);
         chat.repaint();
 
-        //INITIALIZES JFRAMES' PROPERTIES
-        this.setTitle("Chess Game V 2.0");
+        //SET LAYOUT PROPERTIES
+        this.setTitle("Chess Game");
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocation(333, 6);
         this.setResizable(false);
-        this.setSize(757, 933);
+        this.setSize(757, 700);
+        mainContainer.setSize(757, 633);
+        mainContainer.setPreferredSize(new Dimension(757, 870));
         this.setVisible(true);
     }
 
@@ -731,12 +598,8 @@ public class ChessBoardView extends JFrame implements Observer {
             board.removeListeners(Color.BLACK);
             this.stopTimer();
         }
-        player1NbrWinsLabel.setText("Number of wins: " + data.getPlayers().get(0).getNumberOfWins());
-        player2NbrWinsLabel.setText("Number of wins: " + data.getPlayers().get(1).getNumberOfWins());
-        player1NameLabel.setText(data.getPlayers().get(0).getName());
-        player2NameLabel.setText(data.getPlayers().get(1).getName());
-        player1IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(0).getIconPath())));
-        player2IconLabel.setIcon(new ImageIcon(getClass().getResource(data.getPlayers().get(1).getIconPath())));*/
+       player1InfoPanel.resetPanelInformation();
+       player2InfoPanel.resetPanelInformation();*/
     }
 
     /**
@@ -760,8 +623,9 @@ public class ChessBoardView extends JFrame implements Observer {
 
                 //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
                 whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
-                player1NameLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName());
-                player2NameLabel.setText(Chess_Data.getChessData().getPlayers().get(1).getName());
+                
+                player1InfoPanel.updatePlayerName();
+                player2InfoPanel.updatePlayerName();
             }
         }
     }
@@ -778,14 +642,14 @@ public class ChessBoardView extends JFrame implements Observer {
         if (Chess_Data.getChessData().isServer()) {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-                Chess_Data.getChessData().getPlayers().get(0).setName(playerName);
-                player1NameLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName());
+            	Chess_Data.getChessData().getPlayers().get(0).setName(playerName);
+                player1InfoPanel.updatePlayerName();
             }
         } else {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-                Chess_Data.getChessData().getPlayers().get(1).setName(playerName);
-                player2NameLabel.setText(Chess_Data.getChessData().getPlayers().get(1).getName());
+            	Chess_Data.getChessData().getPlayers().get(1).setName(playerName);
+                player2InfoPanel.updatePlayerName();
             }
         }
         try {
@@ -807,8 +671,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * will start the second player timer an so on.....
      */
     public void startTimer() {
-        Chess_Data.getChessData().isWhiteTurn(true);
-        player1Timer.start();
+    	Chess_Data.getChessData().isWhiteTurn(true);
+        player1InfoPanel.startTimer();
     }
 
     /**
@@ -842,11 +706,9 @@ public class ChessBoardView extends JFrame implements Observer {
         board.removeAllPieces();
         //board.getPieces().clear();
         board.populateBoard();
-        hours = minutes = seconds = hour = minute = second = 0;
-        player1TimerLabel.setText("00:00:00");
-        player2TimerLabel.setText("00:00:00");
-        player1Timer.stop();
-        player2Timer.stop();
+        stopTimer();
+        player1InfoPanel.resetTimerLabel();
+        player2InfoPanel.resetTimerLabel();
         tArea.setText("");
         whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
         this.resetAllSquares();
@@ -889,12 +751,11 @@ public class ChessBoardView extends JFrame implements Observer {
         board.removeAllPieces();
         //board.getPieces().clear();
         board.populateBoard();
-        player1Timer.start();
-        player2Timer.stop();
         tArea.setText("");
-        hours = minutes = seconds = hour = minute = second = 0;
-        player1TimerLabel.setText("00:00:00");
-        player2TimerLabel.setText("00:00:00");
+        player1InfoPanel.resetTimerLabel();
+        player2InfoPanel.resetTimerLabel();
+        player1InfoPanel.startTimer();
+        player2InfoPanel.stopTimer();
         whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
         if (Chess_Data.getChessData().isServer()) {
             board.removeListeners(Color.BLACK);
@@ -940,8 +801,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * In our case we would use this method if the game was won by either party
      */
     public void stopTimer() {
-        player1Timer.stop();
-        player2Timer.stop();
+        player1InfoPanel.stopTimer();
+        player2InfoPanel.stopTimer();
     }
 
     /**
@@ -989,7 +850,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * and calls another method of this class which is restartLocalGame to complete the job
      */
     public void playOnLine() {
-        player1Timer.stop();
+        player1InfoPanel.stopTimer();
         Chess_Data.getChessData().isGameOnLine(true);
         Chess_Data.getChessData().isWhiteTurn(true);
         board.isFirstTime(true);
