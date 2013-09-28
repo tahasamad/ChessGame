@@ -158,19 +158,16 @@ public final class Board extends JPanel implements Observer {
         {
         	for(int y = 0; y < ChessGameConstants.gridDimension; y++)
             {
-        		Square square;
-        		if(y % ChessGameConstants.gridDimension == 0)
-        		{
-        			 square = new Square(columnStartColor, new ChessGamePoint(x, y));
-        		}
-        		else
-        		{
-        			square = new Square(columnAlternateColor, new ChessGamePoint(x, y));
-        		}
+        		Square 	 square = new Square(columnStartColor, new ChessGamePoint(x, y));
         		squares[x][y] = square;
                 this.mapPositions(x, y);
         		this.add(square);
+            	//Row Color Switch
+        		PieceColor prevColumnStartColor = columnStartColor;
+            	columnStartColor = columnAlternateColor;
+            	columnAlternateColor = prevColumnStartColor;
             }
+        	//Column Color Switch
         	PieceColor prevColumnStartColor = columnStartColor;
         	columnStartColor = columnAlternateColor;
         	columnAlternateColor = prevColumnStartColor;
