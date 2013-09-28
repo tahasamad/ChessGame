@@ -84,8 +84,6 @@ public final class Board extends JPanel implements Observer {
 	            	case Queen:
 	            	default:
 	            		break;
-	            		
-            		
             	}
             	Piece piece = new Piece(activePieceModel, this);
             	this.addPiece(piece);
