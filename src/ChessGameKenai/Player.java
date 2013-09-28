@@ -21,6 +21,7 @@ public class Player implements Serializable {
     private String name;
     private int numberOfWins;
     private String imagePath;
+    private int seconds, minutes,hours;
 
     /**
      * OverLoaded Constructor for creating Player object
@@ -28,9 +29,59 @@ public class Player implements Serializable {
      */
     public Player(String name) {
         this.name = name;
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
     }
 
-    /**
+    public int getSeconds() {
+		return seconds;
+	}
+
+	public void setSeconds(int seconds) {
+		this.seconds = seconds;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
+
+	public int getHours() {
+		return hours;
+	}
+
+	public void resetTime()
+	{
+		seconds = 0;
+		minutes = 0;
+		hours = 0;
+		
+	}
+	public void incrementTime()
+	{
+		seconds++;    
+		if (seconds == 60) 
+		{
+			seconds = 0;
+	     	minutes++;    
+		}		
+		if (minutes == 60) 
+		{
+		    minutes = 0;
+		    hours++;
+		}
+		if (hours == 24)
+		{
+			resetTime();
+		}
+	}
+	
+
+	/**
      * Overloaded constructor of the class
      * receives name and image path to represent itself
      * @param name as a String
