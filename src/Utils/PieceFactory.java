@@ -49,9 +49,7 @@ public class PieceFactory {
             		
         		
         	}
-        	
-        	board.addPiece(piece);
-            piece.repaint();
+
             return piece;
 		}
 		return null;
