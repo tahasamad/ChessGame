@@ -148,7 +148,7 @@ public class Piece extends JPanel {
         super.paintComponent(g);
         int w = this.getWidth();
         int h = this.getHeight();
-        URL url = this.getClass().getResource(imagePath);
+        URL url = this.getClass().getResource(this.imagePath);
         Toolkit toolkit = this.getToolkit();
         Image image = toolkit.getImage(url);
         g.drawImage(image, 0, 0, w, h, this);

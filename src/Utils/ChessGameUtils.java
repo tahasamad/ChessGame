@@ -91,7 +91,7 @@ public class ChessGameUtils { // Applying Utility Pattern
 	
 	public static String getPieceImageFilePathForTypeAndColor(PieceType type, PieceColor color)
 	{
-		String path = "ChessPieces/";
+		String path = "../ChessGameKenai/ChessPieces/";
 		if(color == PieceColor.White)
 		{
 			path += "w";
@@ -118,6 +118,7 @@ public class ChessGameUtils { // Applying Utility Pattern
 				path += "Queen46.gif";
 				break;
 			case Rook:
+				path += "Rook46.gif";
 				break;
 		}
 		return path;
