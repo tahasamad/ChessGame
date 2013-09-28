@@ -89,6 +89,7 @@ public final class Board extends JPanel implements Observer {
     public void addPiece(Piece piece) {
     	if(piece != null)
     	{
+    		int index = 2;
     		ChessGamePoint piecePosition = piece.getPosition();
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
@@ -98,7 +99,7 @@ public final class Board extends JPanel implements Observer {
 	    			throw new RuntimeException("Trying to add a piece on top of an existing piece.");
 	    		}
 	    		this.squares[piecePosition.x][piecePosition.y].setPiece(piece);
-	    		this.add(piece);
+	    		this.add(piece, index);
     		}
     		else
     		{
@@ -152,6 +153,7 @@ public final class Board extends JPanel implements Observer {
      * As well as this method also adds the pieces to the squares
      */
     public void setupSquares() {
+    	int index = 0;
     	PieceColor columnStartColor = PieceColor.Black;
     	PieceColor columnAlternateColor = PieceColor.White;
         for(int x = 0; x < ChessGameConstants.gridDimension; x++)
@@ -161,7 +163,7 @@ public final class Board extends JPanel implements Observer {
         		Square 	 square = new Square(columnStartColor, new ChessGamePoint(x, y));
         		squares[x][y] = square;
                 this.mapPositions(x, y);
-        		this.add(square);
+        		this.add(square, index);
             	//Row Color Switch
         		PieceColor prevColumnStartColor = columnStartColor;
             	columnStartColor = columnAlternateColor;
