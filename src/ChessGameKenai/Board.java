@@ -37,7 +37,7 @@ public final class Board extends JPanel implements Observer {
 
     private BoardFlipMode currentBoard = BoardFlipMode.Normal;
     private Square[][] squares;
-    private boolean isFirstTime = true;
+	private boolean isFirstTime = true;
     private ChessBoardView view;
     private HashMap<String, String> mapPositions = new HashMap<String, String>();
     
@@ -84,6 +84,10 @@ public final class Board extends JPanel implements Observer {
         this.notifyView();
     }
 
+    public Square[][] getSquares() {
+		return squares;
+	}
+    
     /**
      */
     public void addPiece(Piece piece) {

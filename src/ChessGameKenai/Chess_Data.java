@@ -18,6 +18,7 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
 import GameElements.PieceColor;
 import GameElements.PieceType;
 import Utils.ChessGamePoint;
@@ -42,8 +43,9 @@ public final class Chess_Data extends Observable {
     private boolean isWhiteTurn = true;
     private boolean isServer = true;
     private boolean isGameOnLine = false;
+    private Square[][] squares;
     
-    private static Chess_Data chessData;
+	private static Chess_Data chessData;
 	
 	public static Chess_Data getChessData()
 	{
@@ -68,6 +70,17 @@ public final class Chess_Data extends Observable {
      * The method createNonVisualPieces simply creates non visual pieces
      * the pieces are stored in the ArrayList of activePieces
      */
+    public boolean isPieceSelectedAtPos(ChessGamePoint point)
+    {
+    	boolean isPieceSelected = false;
+		Square selectedSquare = squares[point.x][point.y];
+		Piece piece = selectedSquare.getPiece();
+		if(piece != null)
+		{
+			isPieceSelected = true;
+		}
+		return isPieceSelected;
+    }
     public void createNonVisualPieces() {
         if (!activePieces.isEmpty()) {
             activePieces.clear();
@@ -444,6 +457,13 @@ public final class Chess_Data extends Observable {
 //        }
         return 0;
     }
+    public Square[][] getSquares() {
+		return squares;
+	}
+
+	public void setSquares(Square[][] squares) {
+		this.squares = squares;
+	}
 
     /**
      * The method isMoveable will check if the current piece can be moved

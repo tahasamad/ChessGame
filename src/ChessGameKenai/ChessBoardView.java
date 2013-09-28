@@ -90,7 +90,8 @@ public class ChessBoardView extends JFrame implements Observer {
         board = new Board(ChessBoardView.this);
         Chess_Data.getChessData().addObserver(board);
         Chess_Data.getChessData().addObserver(this);
-
+        Chess_Data.getChessData().setSquares(board.getSquares());
+        
         chat = new Chat(this);
 
         //ADD A WINDOW LISTENER TO THE JFRAME
