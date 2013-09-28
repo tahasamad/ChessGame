@@ -83,7 +83,6 @@ public class ChessBoardView extends JFrame implements Observer {
      * @param Chess_Data.getChessData() address of the Chess_Data object
      */
      public ChessBoardView() {
-        this.setLayout(null);
         tArea.setText("--------Moves Made-------\n");
         tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         tArea.setOpaque(false);
