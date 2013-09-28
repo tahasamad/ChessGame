@@ -143,12 +143,42 @@ public class Square extends JPanel {
          */
         @Override
         public void mousePressed(MouseEvent e) {
-            ChessGamePoint pos = Square.this.getPosition();
-//            if (ChessGam) {
-//                return;
-//            } else if (Square.data.getPiecePosition() > 0) {
-//                Square.data.move(Square.data.getPiecePosition(), x);
-//            }
+            Piece piece = Square.this.getPiece();
+            if(piece != null)
+            {
+            	boolean whiteTurn = Chess_Data.getChessData().isWhiteTurn();
+            	PieceColor turnColor = PieceColor.Black;
+            	if(whiteTurn)
+            	{
+            		turnColor = PieceColor.White;
+            	}
+            	PieceColor pieceColor = piece.getPieceColor(); 
+            	if(pieceColor == turnColor)
+            	{
+            		//unselect prev
+            		Square.this.setBackground(Color.BLUE);
+            	}
+            	else if(true)//prev selected)
+            	{
+                	//check move
+                	//if possible
+                	//{
+            			//kill
+    	            	//move
+    	            	//unselect prev square.
+                	//}
+            	}
+            }
+            else if(true)//if prev selected)
+            {
+            	//check move
+            	//if possible
+            	//{
+	            	//move
+	            	//unselect prev square.
+            	//}
+            }            
+            //check if its has same piece
         }
     }
 }

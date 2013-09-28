@@ -1,5 +1,7 @@
 package ChessGameKenai;
 
+import java.awt.Color;
+
 import Utils.ChessGameRect;
 
 
