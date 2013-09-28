@@ -78,21 +78,7 @@ public final class Chess_Data extends Observable {
         	for (int y = 0; y < 2; y++) {
         		if(y == 0)
         		{
-		            if (x == 0 || x == 7) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Rook, new ChessGamePoint(x, y), PieceColor.Black));
-		            }
-		            else if (x == 1 || x == 6) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Knight, new ChessGamePoint(x, y), PieceColor.Black));
-		            }
-		            else if (x == 2 || x == 5) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Bishop, new ChessGamePoint(x, y), PieceColor.Black));
-		            }
-		            else if (x == 3) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Queen, new ChessGamePoint(x, y), PieceColor.Black));
-		            }
-		            else if (x == 4) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.King, new ChessGamePoint(x, y), PieceColor.Black));
-		            }
+        			addPieceInActivePieces (x, y, PieceColor.Black);
         		}
         		else
 	            {
@@ -102,21 +88,7 @@ public final class Chess_Data extends Observable {
         	for (int y = ChessGameConstants.gridDimension - 2; y < ChessGameConstants.gridDimension; y++) {
 	            if(y == ChessGameConstants.gridDimension - 1)
 	            {
-	            	if (x == 0 || x == 7) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Rook, new ChessGamePoint(x, y), PieceColor.White));
-		            }
-		            else if (x == 1 || x == 6) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Knight, new ChessGamePoint(x, y), PieceColor.White));
-		            }
-		            else if (x == 2 || x == 5) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.King, new ChessGamePoint(x, y), PieceColor.White));
-		            }
-		            else if (x == 3) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Queen, new ChessGamePoint(x, y), PieceColor.White));
-		            }
-		            else if (x == 4) {
-		                activePieces.add(new Non_Visual_Piece(PieceType.Rook, new ChessGamePoint(x, y), PieceColor.White));
-		            }	
+	            	addPieceInActivePieces (x, y, PieceColor.White);
 	            }
 	            else
 	            {
@@ -124,6 +96,31 @@ public final class Chess_Data extends Observable {
 	            }
         	}
         }
+    }
+    //Yasir
+    private void addPieceInActivePieces (int xPos, int yPos, PieceColor color)
+    {
+    	if (xPos == 0 || xPos == 7) 
+    	{
+    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Rook, new ChessGamePoint(xPos, yPos), color);
+            activePieces.add (nonVisualPiece);
+        }
+        else if (xPos == 1 || xPos == 6) {
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Knight, new ChessGamePoint(xPos, yPos), color);
+            activePieces.add (nonVisualPiece);
+        }
+        else if (xPos == 2 || xPos == 5) {
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Bishop, new ChessGamePoint(xPos, yPos), color);
+            activePieces.add (nonVisualPiece);
+        }
+        else if (xPos == 3) {
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Queen, new ChessGamePoint(xPos, yPos), color);
+            activePieces.add (nonVisualPiece);
+        }
+        else if (xPos == 4) {
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.King, new ChessGamePoint(xPos, yPos), color);
+            activePieces.add (nonVisualPiece);
+        }	
     }
 
     /**
