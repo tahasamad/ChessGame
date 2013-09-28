@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 
 import ChessGameKenai.Board;
 import ChessGameKenai.ChessGameConstants;
+import ChessGameKenai.PurposedMoveResult;
+import GameElements.Behaviors.Behavior;
 import Utils.ChessGamePoint;
 import Utils.ChessGameRect;
 import Utils.ChessGameUtils;
@@ -40,6 +42,7 @@ public class Piece extends JPanel {
     private String imagePath;
 	private Non_Visual_Piece pieceModel;
 	private Board board;
+	protected Behavior behavior;
 
     /**
      * Overloaded constructor of our class receives the path to its image
@@ -153,5 +156,19 @@ public class Piece extends JPanel {
         Toolkit toolkit = this.getToolkit();
         Image image = toolkit.getImage(url);
         g.drawImage(image, 0, 0, w, h, this);
+    }
+    
+    public boolean tryToMove(ChessGamePoint position)
+    {
+    	if(this.behavior != null)
+    	{
+    		PurposedMoveResult result = this.behavior.purposeMove(position, this.getPieceModel());
+    		//Read result here.
+    		if(result.isValidMove())
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

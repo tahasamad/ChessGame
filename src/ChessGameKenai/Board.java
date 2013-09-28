@@ -71,6 +71,22 @@ public final class Board extends JPanel implements Observer {
         for (int i = 0; i < size; i++) {
         	Non_Visual_Piece activePieceModel = activePieces.get(i);
             if (activePieceModel != null) {
+            	//TODO: May be apply factory here.
+            	switch (activePieceModel.getType())
+            	{
+	            	case Pawn:
+	            		break;
+	            	case Rook:
+	            		break;
+	            	case Bishop:
+	            	case King:
+	            	case Knight:
+	            	case Queen:
+	            	default:
+	            		break;
+	            		
+            		
+            	}
             	Piece piece = new Piece(activePieceModel, this);
             	this.addPiece(piece);
                 piece.repaint();

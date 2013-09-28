@@ -17,8 +17,8 @@ public class VerticalBehavior implements Behavior {
 		if((ChessGameUtils.isInGridBounds(newPosition)) && newPosition.y == pieceModel.getPosition().y)
 		{
 			Chess_Data data = Chess_Data.getChessData();
-			result.setPieceSelected(data.isPieceSelectedAtPos(newPosition));
-			result.setIsvalidResult(true);
+			result.setHasKilled(data.isPieceSelectedAtPos(newPosition));
+			result.setIsValidMove(true);
 		}
 		
 		return result;

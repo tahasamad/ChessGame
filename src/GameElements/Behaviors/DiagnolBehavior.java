@@ -16,14 +16,14 @@ public class DiagnolBehavior implements Behavior {
 		if(ChessGameUtils.isInGridBounds(newPosition))
 		{
 			Chess_Data data = Chess_Data.getChessData();
-			result.setPieceSelected(data.isPieceSelectedAtPos(newPosition));
+			result.setHasKilled(data.isPieceSelectedAtPos(newPosition));
 			
 			ChessGamePoint piecePosition = pieceModel.getPosition();
 			int xDiff = Math.abs(newPosition.x - piecePosition.x);
 			int yDiff = Math.abs(newPosition.y - piecePosition.y);
 			if(xDiff == yDiff)
 			{
-				result.setIsvalidResult(true);
+				result.setIsValidMove(true);
 			}
 		}	
 		return result;

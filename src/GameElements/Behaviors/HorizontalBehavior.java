@@ -20,8 +20,8 @@ public class HorizontalBehavior implements Behavior {
 		if( (ChessGameUtils.isInGridBounds(newPosition)) && newPosition.x == pieceModel.getPosition().x)
 		{
 			Chess_Data data = Chess_Data.getChessData();
-			result.setPieceSelected(data.isPieceSelectedAtPos(newPosition));
-			result.setIsvalidResult(true);
+			result.setHasKilled(data.isPieceSelectedAtPos(newPosition));
+			result.setIsValidMove(true);
 		}
 		
 		return result;
