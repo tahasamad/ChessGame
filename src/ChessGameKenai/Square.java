@@ -157,6 +157,7 @@ public class Square extends JPanel {
             	{
             		//unselect prev
             		Square.this.setBackground(Color.BLUE);
+            		Chess_Data.getChessData().changeTurn(whiteTurn);
             	}
             	else if(true)//prev selected)
             	{

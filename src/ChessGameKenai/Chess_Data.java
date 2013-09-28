@@ -192,6 +192,11 @@ public final class Chess_Data extends Observable {
     public void isWhiteTurn(boolean isWhiteTurn) {
         this.isWhiteTurn = isWhiteTurn;
     }
+    
+    public void changeTurn (boolean previousTurn)
+    {
+    	this.isWhiteTurn = !previousTurn;
+    }
 
     /**
      * The method getActivePieces simply returns the array list of

@@ -239,6 +239,8 @@ public final class Board extends JPanel implements Observer {
      * @param color as a Color
      */
     public void addListeners(Color color) {
+    	
+    	
 //        for (int i = 0; i < pieces.size(); i++) {
 //            Piece p = pieces.get(i);
 //            if (p.getColor() == color) {
