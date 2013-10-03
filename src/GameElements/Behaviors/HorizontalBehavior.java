@@ -9,8 +9,6 @@ import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
 public class HorizontalBehavior implements Behavior {
-
-	
 	
 	@Override
 	public PurposedMoveResult purposeMove(ChessGamePoint newPosition,
