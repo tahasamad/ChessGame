@@ -27,10 +27,8 @@ import Utils.ChessGamePoint;
  * The Chess_Data Class are the model for our chess game
  * This model is an Observable object which when changed notifies the
  * observers in order to update observer views
- * The model contains all possible moves for the game
  * @author Dimitri Pankov
  * @see Observable Class
- * @see ArrayList object
  * @version 1.1
  */
 public final class Chess_Data extends Observable {
@@ -38,12 +36,13 @@ public final class Chess_Data extends Observable {
     private ArrayList<Non_Visual_Piece> capturedPieces = new ArrayList<Non_Visual_Piece>();
     private ArrayList<Player> players = new ArrayList<Player>();
     private ArrayList<Player> loadedPlayer = new ArrayList<Player>();
-    private int counter = 0;
-    private ArrayList<Non_Visual_Piece> activePieces = new ArrayList<Non_Visual_Piece>();
+    //private ArrayList<Non_Visual_Piece> activePieces = new ArrayList<Non_Visual_Piece>();
+    private Non_Visual_Piece[][] activePieces;
     private boolean isWhiteTurn = true;
     private boolean isServer = true;
     private boolean isGameOnLine = false;
-    private Square[][] squares;
+    private SquareModel[][] squareModels;
+    private Square selectedSquare;
     
 	private static Chess_Data chessData;
 	
@@ -63,17 +62,18 @@ public final class Chess_Data extends Observable {
      * the constructor the constructor creates the non visual pieces and fills the array with them
      */
     private Chess_Data() {
+    	this.createSquareModels();
         this.createNonVisualPieces();
     }
 
     /**
      * The method createNonVisualPieces simply creates non visual pieces
-     * the pieces are stored in the ArrayList of activePieces
+     * the pieces are stored in the Array of activePieces
      */
-    public boolean isPieceSelectedAtPos(ChessGamePoint point)
+    public boolean posHasPiece(ChessGamePoint point)
     {
     	boolean isPieceSelected = false;
-		Square selectedSquare = squares[point.x][point.y];
+		SquareModel selectedSquare = this.getSquareModel(point.x, point.y);
 		Piece piece = selectedSquare.getPiece();
 		if(piece != null)
 		{
@@ -81,59 +81,161 @@ public final class Chess_Data extends Observable {
 		}
 		return isPieceSelected;
     }
-    public void createNonVisualPieces() {
-        if (!activePieces.isEmpty()) {
-            activePieces.clear();
+    
+    public void createSquareModels()
+    {
+    	int size = this.getDimension();
+    	if (this.squareModels == null) {
+    		this.squareModels = new SquareModel[size][size];
         }
-
-        //FILL NON VISUAL PIECES INTO THE ARRAY LIST OF THE DATA CLASS
-        for (int x = 0; x < ChessGameConstants.gridDimension; x++) {
-        	for (int y = 0; y < 2; y++) {
-        		if(y == 0)
-        		{
-        			addPieceInActivePieces (x, y, PieceColor.Black);
-        		}
-        		else
-	            {
-	            	activePieces.add(new Non_Visual_Piece(PieceType.Pawn, new ChessGamePoint(x, y), PieceColor.Black));
-	            }
-        	}
-        	for (int y = ChessGameConstants.gridDimension - 2; y < ChessGameConstants.gridDimension; y++) {
-	            if(y == ChessGameConstants.gridDimension - 1)
-	            {
-	            	addPieceInActivePieces (x, y, PieceColor.White);
-	            }
-	            else
-	            {
-	            	activePieces.add(new Non_Visual_Piece(PieceType.Pawn, new ChessGamePoint(x, y), PieceColor.White));
-	            }
-        	}
-        }
+        
+        PieceColor columnStartColor = PieceColor.Black;
+    	PieceColor columnAlternateColor = PieceColor.White;
+        
+    	for(int x = 0; x < size; x++)
+        {
+        	for(int y = 0; y < size; y++)
+            {
+        		this.setSquareModel(x, y, new SquareModel(new ChessGamePoint(x, y), columnStartColor, null));
+        		//Row Color Switch
+        		PieceColor prevColumnStartColor = columnStartColor;
+            	columnStartColor = columnAlternateColor;
+            	columnAlternateColor = prevColumnStartColor;
+            }
+        	//Column Color Switch
+        	PieceColor prevColumnStartColor = columnStartColor;
+        	columnStartColor = columnAlternateColor;
+        	columnAlternateColor = prevColumnStartColor;
+        }    	
     }
-    //Yasir
+    
+    public int getDimension()
+    {
+    	return ChessGameConstants.gridDimension;
+    }
+    
+    public SquareModel getSquareModel(int x, int y)
+    {
+    	if(this.squareModels != null)
+    	{
+    		int size = this.getDimension();
+    		if(x >= 0 && x < size && y >= 0 && y < size)
+    		{
+    			return this.squareModels[x][y];
+    		}
+    	}
+    	return null;
+    }
+    
+    public SquareModel getSquareModel(ChessGamePoint position)
+    {
+    	return this.getSquareModel(position.x, position.y);
+    }
+        
+    private void setSquareModel(int x, int y, SquareModel model)
+    {
+    	if(this.squareModels != null)
+    	{
+    		int size = this.getDimension();
+    		if(x >= 0 && x < size && y >= 0 && y < size)
+    		{
+    			this.squareModels[x][y] = model;
+    			this.notifyView();
+    		}
+    	}
+    	else
+    	{
+    		throw new Error("Out of Bounds");
+    	}
+    }
+    
+    public void createNonVisualPieces() {
+    	int size = this.getDimension();
+    	if(this.activePieces == null)
+    	{
+            this.activePieces = new Non_Visual_Piece[size][size];
+    	}
+    	if(this.activePieces != null)
+    	{
+	        //FILL NON VISUAL PIECES INTO THE ARRAY OF THE DATA CLASS
+	        for (int x = 0; x < size; x++) {
+	        	for (int y = 0; y < 2; y++) {
+	        		addPieceInActivePieces (x, y, PieceColor.Black);
+	        	}
+	        	for (int y = size - 2; y < size; y++) {
+		            addPieceInActivePieces (x, y, PieceColor.White);
+	        	}
+	        }
+    	}
+    }
+    
+    public Non_Visual_Piece getPieceModel(int x, int y)
+    {
+    	if(this.activePieces != null)
+    	{
+    		int size = this.getDimension();
+    		if(x >= 0 && x < size && y >= 0 && y < size)
+    		{
+    			return this.activePieces[x][y];
+    		}
+    	}
+    	return null;
+    }
+    
+    public Non_Visual_Piece getPieceModel(ChessGamePoint position)
+    {
+    	return this.getPieceModel(position.x, position.y);
+    }
+        
+    private void setPieceModel(int x, int y, Non_Visual_Piece pieceModel)
+    {
+    	if(this.activePieces != null)
+    	{
+    		int size = this.getDimension();
+    		if(x >= 0 && x < size && y >= 0 && y < size)
+    		{
+    			this.activePieces[x][y] = pieceModel;
+    			this.notifyView();
+    		}
+    		else
+        	{
+        		throw new Error("Out of Bounds");
+        	}
+    	}
+    	else
+    	{
+    		throw new Error("Array is null");
+    	}
+    }
+    
     private void addPieceInActivePieces (int xPos, int yPos, PieceColor color)
     {
-    	if (xPos == 0 || xPos == 7) 
+    	if(yPos == 1 || yPos == this.getDimension() - 2)
+        {
+    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Pawn, color);
+    		this.setPieceModel(xPos, yPos, nonVisualPiece);
+        }
+    	else if (xPos == 0 || xPos == 7) 
     	{
-    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Rook, new ChessGamePoint(xPos, yPos), color);
-            activePieces.add (nonVisualPiece);
+    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Rook, color);
+    		this.setPieceModel(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 1 || xPos == 6) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Knight, new ChessGamePoint(xPos, yPos), color);
-            activePieces.add (nonVisualPiece);
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Knight, color);
+        	this.setPieceModel(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 2 || xPos == 5) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Bishop, new ChessGamePoint(xPos, yPos), color);
-            activePieces.add (nonVisualPiece);
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Bishop, color);
+        	this.setPieceModel(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 3) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Queen, new ChessGamePoint(xPos, yPos), color);
-            activePieces.add (nonVisualPiece);
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Queen, color);
+        	this.setPieceModel(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 4) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.King, new ChessGamePoint(xPos, yPos), color);
-            activePieces.add (nonVisualPiece);
-        }	
+        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.King, color);
+        	this.setPieceModel(xPos, yPos, nonVisualPiece);
+        }
     }
 
     /**
@@ -193,28 +295,9 @@ public final class Chess_Data extends Observable {
         this.isWhiteTurn = isWhiteTurn;
     }
     
-    public void changeTurn (boolean previousTurn)
+    public void changeTurn ()
     {
-    	this.isWhiteTurn = !previousTurn;
-    }
-
-    /**
-     * The method getActivePieces simply returns the array list of
-     * non visual pieces to the caller
-     * @return activePieces as an ArrayList
-     */
-    public ArrayList<Non_Visual_Piece> getActivePieces() {
-        return activePieces;
-    }
-
-    /**
-     * The method setActivePieces simply sets the active pieces
-     * @param activePieces as an ArrayList
-     */
-    public void setActivePieces(ArrayList<Non_Visual_Piece> activePieces) {
-        this.activePieces = activePieces;
-        this.setChanged();
-        this.notifyObservers();
+    	this.isWhiteTurn = !this.isWhiteTurn;
     }
 
     /**
@@ -338,7 +421,7 @@ public final class Chess_Data extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("saved_game.dat")));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(new File("saved_game_captured_pieces.dat")));
-            activePieces = (ArrayList) ois.readObject();
+            activePieces = (Non_Visual_Piece[][]) ois.readObject();
             capturedPieces = (ArrayList) iis.readObject();
             this.setPieces();
             iis.close();
@@ -359,7 +442,7 @@ public final class Chess_Data extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(file + ".bak"));
-            activePieces = (ArrayList<Non_Visual_Piece>) ois.readObject();
+            activePieces = (Non_Visual_Piece[][]) ois.readObject();
             this.setPieces();
             capturedPieces = (ArrayList<Non_Visual_Piece>) iis.readObject();
             iis.close();
@@ -459,13 +542,6 @@ public final class Chess_Data extends Observable {
 //        }
         return 0;
     }
-    public Square[][] getSquares() {
-		return squares;
-	}
-
-	public void setSquares(Square[][] squares) {
-		this.squares = squares;
-	}
 
     /**
      * The method isMoveable will check if the current piece can be moved
@@ -3610,4 +3686,14 @@ public final class Chess_Data extends Observable {
 //            this.notifyObservers(list);
 //        }
     }
+
+	public Square getSelectedSquare() {
+		return selectedSquare;
+	}
+
+	public void setSelectedSquare(Square selectedSquare) {
+		this.selectedSquare = selectedSquare;
+	}
+    
+    
 }

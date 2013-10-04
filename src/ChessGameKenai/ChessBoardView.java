@@ -90,7 +90,7 @@ public class ChessBoardView extends JFrame implements Observer {
         board = new Board(ChessBoardView.this);
         Chess_Data.getChessData().addObserver(board);
         Chess_Data.getChessData().addObserver(this);
-        Chess_Data.getChessData().setSquares(board.getSquares());
+        //Chess_Data.getChessData().setSquares(board.getSquares());
         
         chat = new Chat(this);
 
@@ -700,7 +700,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * on the same computer locally
      */
     public void restartLocalGame() {
-        Chess_Data.getChessData().getActivePieces().clear();
+/*        Chess_Data.getChessData().getActivePieces().clear();
         Chess_Data.getChessData().getCapturedPieces().clear();
         Chess_Data.getChessData().createNonVisualPieces();
         board.removeAllPieces();
@@ -717,7 +717,7 @@ public class ChessBoardView extends JFrame implements Observer {
         board.removeListeners(Color.BLACK);
         board.addListeners(Color.WHITE);
         whiteCapturedPiecesPanel.removeAll();
-        blackCapturedPiecesPanel.removeAll();
+        blackCapturedPiecesPanel.removeAll();*/
     }
 
     /**
@@ -744,7 +744,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * adds and removes listeners depending on who's server or a client
      */
     public void restartClientGame() {
-        this.resetAllSquares();
+/*        this.resetAllSquares();
         Chess_Data.getChessData().getActivePieces().clear();
         Chess_Data.getChessData().getCapturedPieces().clear();
         Chess_Data.getChessData().createNonVisualPieces();
@@ -765,7 +765,7 @@ public class ChessBoardView extends JFrame implements Observer {
             board.removeListeners(Color.BLACK);
         }
         whiteCapturedPiecesPanel.removeAll();
-        blackCapturedPiecesPanel.removeAll();
+        blackCapturedPiecesPanel.removeAll();*/
     }
 
     /**

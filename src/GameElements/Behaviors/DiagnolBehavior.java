@@ -1,31 +1,26 @@
 package GameElements.Behaviors;
 
-import ChessGameKenai.Chess_Data;
-import ChessGameKenai.PurposedMoveResult;
-import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
 public class DiagnolBehavior implements Behavior {
-
+	
+	private Behavior basicBehavior = new BasicBehavior();
+	
 	@Override
-	public PurposedMoveResult purposeMove(ChessGamePoint newPosition,
-			Non_Visual_Piece pieceModel) {
-		
-		PurposedMoveResult result = new PurposedMoveResult();
+	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	{
 		if(ChessGameUtils.isInGridBounds(newPosition))
 		{
-			Chess_Data data = Chess_Data.getChessData();
-			result.setHasKilled(data.isPieceSelectedAtPos(newPosition));
-			
-			ChessGamePoint piecePosition = pieceModel.getPosition();
-			int xDiff = Math.abs(newPosition.x - piecePosition.x);
-			int yDiff = Math.abs(newPosition.y - piecePosition.y);
+			int xDiff = Math.abs(newPosition.x - currentPosition.x);
+			int yDiff = Math.abs(newPosition.y - currentPosition.y);
 			if(xDiff == yDiff)
 			{
-				result.setIsValidMove(true);
+				this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
+				return true;
 			}
 		}	
-		return result;
+		return false;
 	}
 }

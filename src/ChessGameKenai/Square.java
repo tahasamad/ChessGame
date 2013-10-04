@@ -29,11 +29,9 @@ import Utils.ChessGameUtils;
  */
 public class Square extends JPanel {
 
-    private ChessGamePoint position;
-    private PieceColor baseColor;
     private Color currentColor;
     private Color previousColor;
-    private Piece piece;
+    private SquareModel squareModel;
 
     /**
      * OverLoaded Constructor for creating square objects
@@ -41,15 +39,16 @@ public class Square extends JPanel {
      * @param position Square object position on the ChessBoardView's MainPanel
      * @see ChessBoardView Class
      */
-    public Square(PieceColor color, ChessGamePoint position) {
-
-        //SET OBJECT COLOR AND POSITION
-        this.baseColor = color;
-        this.position = position;
-        this.setBackground(ChessGameUtils.getColorFromElementColor(this.baseColor));
+    public Square(SquareModel squareModel) {
+    	if(squareModel == null)
+    	{
+    		throw new Error("Can not accept squareModel = null");
+    	}
+        this.squareModel = squareModel;
+        this.setBackground(ChessGameUtils.getColorFromElementColor(this.squareModel.getBaseColor()));
         this.setLayout(null);
-        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);
-        
+        ChessGamePoint position = this.getPosition();
+        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);        
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
         this.addMouseListener(new SendData());
     }
@@ -77,19 +76,11 @@ public class Square extends JPanel {
     }
 
     /**
-     * The method setPosition sets object position to whatever is its argument
-     * @param position the position that the object will have
-     */
-    public void setPosition(ChessGamePoint position) {
-        this.position = position;
-    }
-
-    /**
      * The method getPosition returns the position of particular object
      * @return position of the object
      */
     public ChessGamePoint getPosition() {
-        return position;
+        return this.squareModel.getPosition();
     }
 
     /**
@@ -110,13 +101,16 @@ public class Square extends JPanel {
     }
 
     public Piece getPiece() {
-		return piece;
+		return this.squareModel.getPiece();
 	}
 
 	public void setPiece(Piece piece) {
-		this.piece = piece;
+		this.squareModel.setPiece(piece);
 	}
 
+	public PieceColor getBaseColor() {
+		return this.squareModel.getBaseColor();
+	}
 
 	/**
      * The SendData Class is a nested inner class of our object
@@ -144,6 +138,7 @@ public class Square extends JPanel {
         @Override
         public void mousePressed(MouseEvent e) {
             Piece piece = Square.this.getPiece();
+            Square selectedSquare = Chess_Data.getChessData().getSelectedSquare();
             if(piece != null)
             {
             	boolean whiteTurn = Chess_Data.getChessData().isWhiteTurn();
@@ -152,34 +147,35 @@ public class Square extends JPanel {
             	{
             		turnColor = PieceColor.White;
             	}
-            	PieceColor pieceColor = piece.getPieceColor(); 
+            	PieceColor pieceColor = piece.getPieceColor();
             	if(pieceColor == turnColor)
             	{
-            		//unselect prev
+            		if(selectedSquare != null)
+            		{
+            			selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(Square.this.getBaseColor()));
+            		}
             		Square.this.setBackground(Color.BLUE);
-            		Chess_Data.getChessData().changeTurn(whiteTurn);
+            		Chess_Data.getChessData().setSelectedSquare(Square.this);
             	}
-            	else if(true)//prev selected)
+            	else if(selectedSquare != null)
             	{
-                	//check move
-                	//if possible
-                	//{
-            			//kill
-    	            	//move
-    	            	//unselect prev square.
-                	//}
+                	this.tryToCompleteMove(selectedSquare);
             	}
             }
-            else if(true)//if prev selected)
+            else if(selectedSquare != null)//if prev selected)
             {
-            	//check move
-            	//if possible
-            	//{
-	            	//move
-	            	//unselect prev square.
-            	//}
+            	this.tryToCompleteMove(selectedSquare);
             }            
-            //check if its has same piece
+        }
+        
+        private void tryToCompleteMove(Square selectedSquare)
+        {
+        	Piece selectedPiece = selectedSquare.getPiece();
+        	boolean hasMoved = selectedPiece.tryToMove(Square.this.getPosition().clone());
+        	if(hasMoved)
+        	{
+        		Chess_Data.getChessData().changeTurn(whiteTurn);
+        	}
         }
     }
 }

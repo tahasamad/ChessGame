@@ -8,7 +8,9 @@ package GameElements;
 
 import java.io.Serializable;
 
-import Utils.ChessGamePoint;
+import GameElements.Behaviors.BasicBehavior;
+import GameElements.Behaviors.Behavior;
+import GameElements.Behaviors.BehaviorFactory;
 
 /**
  * The Non_Visual_Piece class is the abstract piece that is not visual to the user but
@@ -26,10 +28,10 @@ public class Non_Visual_Piece implements Serializable {
 
 	private PieceColor color;
 	private PieceType type;
-    private ChessGamePoint position;
     private boolean isCaptured;
     private boolean isMoved;
     private boolean isQueenFromPawn;
+	private Behavior behavior;
 
     /**
      * Overloaded constructor of our class it receives all needed references
@@ -41,10 +43,10 @@ public class Non_Visual_Piece implements Serializable {
      * @param position as an integer
      * @param color as Color
      */
-    public Non_Visual_Piece(PieceType type, ChessGamePoint position, PieceColor color) {
+    public Non_Visual_Piece(PieceType type, PieceColor color) {
         this.type = type;
-        this.position = position;
         this.color = color;
+        BehaviorFactory.makeBehaviorForType(this);
     }
 
     /**
@@ -64,6 +66,8 @@ public class Non_Visual_Piece implements Serializable {
      */
     public void isQueenFromPawn(boolean isQueenFromPawn) {
         this.isQueenFromPawn = isQueenFromPawn;
+        this.type = PieceType.Queen;
+        this.behavior = BehaviorFactory.makeBehaviorForType(this);
     }
 
     /**
@@ -97,7 +101,7 @@ public class Non_Visual_Piece implements Serializable {
      * captured piece to true to tell the game that a certain piece as captured
      * @param isCaptured as a boolean
      */
-    public void isCaptured(boolean isCaptured) {
+    public void setIsCaptured(boolean isCaptured) {
         this.isCaptured = isCaptured;
     }
 
@@ -111,40 +115,6 @@ public class Non_Visual_Piece implements Serializable {
     }
 
     /**
-     * The method setColor simply sets the color of the piece to
-     * what the user chooses
-     * @param color as a Color
-     */
-    public void setColor(PieceColor color) {
-        this.color = color;
-    }
-
-    /**
-     * The method setPosition simply sets position of the piece
-     * @param position as an integer
-     */
-    public void setPosition(ChessGamePoint point) {
-        this.position = point;
-    }
-
-    /**
-     * The method getPosition simply returns the position
-     * of the piece object
-     * @return position as an integer
-     */
-    public ChessGamePoint getPosition() {
-        return position;
-    }
-
-    /**
-     * The method setType simply sets the type of the piece
-     * @param type as a String
-     */
-    public void setType(PieceType type) {
-        this.type = type;
-    }
-
-    /**
      * The method getType simply returns the type of the piece to the caller
      * @return type as a String
      */
@@ -155,7 +125,9 @@ public class Non_Visual_Piece implements Serializable {
     @Override
     public String toString() {
         String s = "";
-        s += "Type: " + this.getType() + ", Color:" + this.getColor() + ", PositionX:" + this.getPosition().x + ", PositionY:" + this.getPosition().y;
+        s += "Type: " + this.getType() + ", Color:" + this.getColor();
         return s;
     }
+    
+    
 }

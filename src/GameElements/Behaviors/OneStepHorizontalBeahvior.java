@@ -1,29 +1,24 @@
 package GameElements.Behaviors;
 
-import ChessGameKenai.PurposedMoveResult;
-import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
 import Utils.ChessGamePoint;
 
 public class OneStepHorizontalBeahvior implements Behavior {
 	
-	HorizontalBehavior horizontalBehavior;
+	HorizontalBehavior horizontalBehavior = new HorizontalBehavior();
 	
-	public OneStepHorizontalBeahvior() {
-		horizontalBehavior = new HorizontalBehavior();
-	}
 	@Override
-	public PurposedMoveResult purposeMove(ChessGamePoint newPosition,
-			Non_Visual_Piece pieceModel) {
-		PurposedMoveResult result = null;
-		PurposedMoveResult horizontalMoveResult = horizontalBehavior.purposeMove(newPosition, pieceModel);
-		int nextXPos = newPosition.x+ 1;
-		int pieceNextXPos = pieceModel.getPosition().x + 1;
-		if(horizontalMoveResult.isValidMove() && nextXPos == pieceNextXPos)
+	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	{
+		int diffX = Math.abs(currentPosition.x - newPosition.x);
+		if(diffX == 1)
 		{
-			result = horizontalMoveResult;
+			if(this.horizontalBehavior.purposeMove(currentPosition, newPosition, piece))
+			{
+				return true;
+			}
 		}
-		
-		return result;
+		return false;
 	}
 
 }

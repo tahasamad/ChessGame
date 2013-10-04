@@ -1,12 +1,11 @@
 package GameElements.Behaviors;
 
 
-import ChessGameKenai.PurposedMoveResult;
-import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
 import Utils.ChessGamePoint;
 
 
 public interface Behavior {
-	//public SomeObject canMove(Piece piece);
-	PurposedMoveResult purposeMove(ChessGamePoint newPosition, Non_Visual_Piece pieceModel);
+	
+	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece);
 }

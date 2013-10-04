@@ -7,7 +7,6 @@
 package ChessGameKenai;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,10 +15,8 @@ import javax.swing.JPanel;
 
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
-import GameElements.PieceColor;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
-import Utils.PieceFactory;
 
 /**
  * The Board class is the Board of our Chess Game it consists of a JPanel
@@ -54,7 +51,8 @@ public final class Board extends JPanel implements Observer {
      */
     public Board(ChessBoardView view) {
         this.setLayout(null);
-        this.squares = new Square[ChessGameConstants.gridDimension][ChessGameConstants.gridDimension];
+        int size = Chess_Data.getChessData().getDimension();
+        this.squares = new Square[size][size];
         this.view = view;
         this.setupSquares();
         this.setOpaque(false);
@@ -67,26 +65,20 @@ public final class Board extends JPanel implements Observer {
      * the first time it fills the array list of visual piece for later use
      */
     public void populateBoard() {
-    	ArrayList<Non_Visual_Piece> activePieces = Chess_Data.getChessData().getActivePieces();
-    	int size = activePieces.size();
-        for (int i = 0; i < size; i++) {
-        	Non_Visual_Piece activePieceModel = activePieces.get(i);
+    	int size = Chess_Data.getChessData().getDimension();
+        for (int x = 0; x < size; x++) {
+        	for (int y = 0; y < size; y++) {
+        		Non_Visual_Piece activePieceModel = Chess_Data.getChessData().getPieceModel(x, y);
+        		if(activePieceModel != null)
+        		{
+	            	Piece piece = new Piece(activePieceModel, this);
+	            	this.addPiece(piece, new ChessGamePoint(x, y));
+	                piece.repaint();
+        		}
+        	}
         	
-        	PieceFactory pieceFactory = new PieceFactory();
-        	Piece piece = pieceFactory.makePiece(activePieceModel, this);
-        	this.addPiece(piece);
-            piece.repaint();
-            
-            
-        	//this.addPiece(piece);
-//            }
         }
-//        for (int i = 0; i < pieces.size(); i++) {
-//            squares.get(pieces.get(i).getPosition() - 1).add(pieces.get(i));
-//            pieces.get(i).setBounds(5, 5, 55, 55);
-//            pieces.get(i).repaint();
-//        }
-        this.notifyView();
+//      this.notifyView();//TODO
     }
 
     public Square[][] getSquares() {
@@ -95,11 +87,10 @@ public final class Board extends JPanel implements Observer {
     
     /**
      */
-    public void addPiece(Piece piece) {
+    private void addPiece(Piece piece, ChessGamePoint piecePosition) {
     	if(piece != null)
     	{
     		int index = 2;
-    		ChessGamePoint piecePosition = piece.getPosition();
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
 	    		Piece prevPiece = this.squares[piecePosition.x][piecePosition.y].getPiece();
@@ -117,10 +108,9 @@ public final class Board extends JPanel implements Observer {
     	}
     }
     
-    public void removePiece(Piece piece) {
+    private void removePiece(Piece piece, ChessGamePoint piecePosition) {
     	if(piece != null)
     	{
-    		ChessGamePoint piecePosition = piece.getPosition();
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
 	    		Piece pieceInSquare = this.squares[piecePosition.x][piecePosition.y].getPiece();
@@ -129,7 +119,6 @@ public final class Board extends JPanel implements Observer {
 	    			throw new RuntimeException("Piece Model Square Out of Synch");
 	    		}
 	    		this.squares[piecePosition.x][piecePosition.y].setPiece(null);
-	    		piece.setPosition(new ChessGamePoint(-1, -1));
 	    		this.remove(piece);
     		}
     		else
@@ -144,18 +133,18 @@ public final class Board extends JPanel implements Observer {
      * this method is used when we want to restart the game
      */
     public void removeAllPieces() {
-    	for (int x = 0; x < ChessGameConstants.gridDimension; x++) {
-    		for (int y = 0; y < ChessGameConstants.gridDimension; y++) {
+    	int size = Chess_Data.getChessData().getDimension();
+    	for (int x = 0; x < size; x++) {
+    		for (int y = 0; y < size; y++) {
     			Piece piece = this.squares[x][y].getPiece();
 	            if (piece != null) {
-	                this.removePiece(piece);
+	                this.removePiece(piece, new ChessGamePoint(x, y));
 	            }
     		}
         }
         this.revalidate();
         this.repaint();
     }
-
     /**
      * The method setSquares simply sets the squares
      * This method actually creates the squares and adds them to the board
@@ -163,25 +152,16 @@ public final class Board extends JPanel implements Observer {
      */
     public void setupSquares() {
     	int index = 0;
-    	PieceColor columnStartColor = PieceColor.Black;
-    	PieceColor columnAlternateColor = PieceColor.White;
-        for(int x = 0; x < ChessGameConstants.gridDimension; x++)
+    	int size = Chess_Data.getChessData().getDimension();
+    	for(int x = 0; x < size; x++)
         {
-        	for(int y = 0; y < ChessGameConstants.gridDimension; y++)
+        	for(int y = 0; y < size; y++)
             {
-        		Square 	 square = new Square(columnStartColor, new ChessGamePoint(x, y));
+        		Square 	 square = new Square(Chess_Data.getChessData().getSquareModel(x, y));
         		squares[x][y] = square;
                 this.mapPositions(x, y);
         		this.add(square, index);
-            	//Row Color Switch
-        		PieceColor prevColumnStartColor = columnStartColor;
-            	columnStartColor = columnAlternateColor;
-            	columnAlternateColor = prevColumnStartColor;
             }
-        	//Column Color Switch
-        	PieceColor prevColumnStartColor = columnStartColor;
-        	columnStartColor = columnAlternateColor;
-        	columnAlternateColor = prevColumnStartColor;
         }
     }
 
@@ -324,8 +304,9 @@ public final class Board extends JPanel implements Observer {
      * of the non visual piece then redraws its view as needed
      */
     public void redrawPieces() {
-        for (int x = 0; x < ChessGameConstants.gridDimension; x++) {
-        	for (int y = 0; y < ChessGameConstants.gridDimension; y++) {
+    	int size = Chess_Data.getChessData().getDimension();
+        for (int x = 0; x < size; x++) {
+        	for (int y = 0; y < size; y++) {
         		Piece piece = this.squares[x][y].getPiece();
         		if(piece != null)
         		{

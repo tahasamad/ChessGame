@@ -16,7 +16,9 @@ import javax.swing.JPanel;
 
 import ChessGameKenai.Board;
 import ChessGameKenai.ChessGameConstants;
+import ChessGameKenai.Chess_Data;
 import ChessGameKenai.PurposedMoveResult;
+import ChessGameKenai.SquareModel;
 import GameElements.Behaviors.Behavior;
 import Utils.ChessGamePoint;
 import Utils.ChessGameRect;
@@ -55,8 +57,7 @@ public class Piece extends JPanel {
         this.setOpaque(false);
         this.setPreferredSize(new Dimension(ChessGameConstants.pieceDimension, ChessGameConstants.pieceDimension));
         ChessGameRect bounds = ChessGameConstants.pieceBounds.clone();
-        ChessGamePoint position = this.pieceModel.getPosition();
-        this.setBounds((position.x * ChessGameConstants.squareSize) + bounds.point.x, (position.y * ChessGameConstants.squareSize) + bounds.point.y, bounds.size.width, bounds.size.height);
+        this.setBounds(bounds.point.x, bounds.point.y, bounds.size.width, bounds.size.height);
     }
 
     /**
@@ -75,41 +76,33 @@ public class Piece extends JPanel {
         return this.pieceModel.getColor();
     }
 
-    /**
-     * The method setColor sets Color
-     * @param color sets Color of the object
-     */
-    public void setColor(PieceColor color) {
-        this.pieceModel.setColor(color);
-    }
-
-    /**
-     * The method getPosition returns Position
-     * @return position of the object
-     */
-    public ChessGamePoint getPosition() {
-        return this.pieceModel.getPosition();
-    }
-
-    /**
-     * The method setPosition sets object's position
-     * @param position position of the object
-     */
-    public void setPosition(ChessGamePoint position) {
-        this.pieceModel.setPosition(position);
-    }
-    
-    public void setPositionOnBoard(ChessGamePoint position) throws Error {
-    	if(this.board == null)
-    	{
-    		throw new Error("Board is null.");
-    	}
-    	else
-    	{
-    		this.pieceModel.setPosition(position);
-    		this.board.addPiece(this);
-    	}
-    }
+//    /**
+//     * The method getPosition returns Position
+//     * @return position of the object
+//     */
+//    public ChessGamePoint getPosition() {
+//        return this.pieceModel.getPosition();
+//    }
+//
+//    /**
+//     * The method setPosition sets object's position
+//     * @param position position of the object
+//     */
+//    public void setPosition(ChessGamePoint position) {
+//        this.pieceModel.setPosition(position);
+//    }
+//    
+//    public void setPositionOnBoard(ChessGamePoint position) throws Error {
+//    	if(this.board == null)
+//    	{
+//    		throw new Error("Board is null.");
+//    	}
+//    	else
+//    	{
+//    		this.pieceModel.setPosition(position);
+//    		this.board.addPiece(this);
+//    	}
+//    }
 
     /**
      * The method getType returns type as a String
@@ -139,7 +132,7 @@ public class Piece extends JPanel {
     @Override
     public String toString() {
         String s = "";
-        s += this.getType() + ", " + this.getTextColor() + ", " + this.getPosition();
+        s += this.getType() + ", " + this.getTextColor();
         return s;
     }
 
@@ -164,8 +157,27 @@ public class Piece extends JPanel {
     	{
     		PurposedMoveResult result = this.behavior.purposeMove(position, this.getPieceModel());
     		//Read result here.
-    		if(result.isValidMove())
+    		if(result != null && result.isValidMove())
     		{
+    			Chess_Data data = Chess_Data.getChessData();
+				if(data.posHasPiece(newPosition))
+				{
+					Non_Visual_Piece killedPiece = data.getPieceModel(newPosition);
+					killedPiece.setIsCaptured(true);
+				}
+				SquareModel square1 = data.getSquareModel(currentPosition);
+				square1.setPiece(null);
+				SquareModel square2 = data.getSquareModel(newPosition);
+				square2.setPiece(piece);
+				
+    			if(result.hasKilled())
+    			{
+    				Piece killedPiece = result.getKilledPiece();
+    				//ChessGamePoint pos = killedPiece.getPosition();
+    				board.removePiece(killedPiece);
+    				killedPiece.getPieceModel().setIsCaptured(true);
+    				Chess_Data.getChessData();
+    			}
     			return true;
     		}
     	}
