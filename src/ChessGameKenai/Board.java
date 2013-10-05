@@ -171,46 +171,67 @@ public final class Board extends JPanel implements Observer {
      */
     public void flipBoard() {
 
-//        //SWITCH STATEMENT FOR CURRENT BOARD VARIABLE IT'S EITHER NORMAL OR FLIPPED
-//        switch (this.currentBoard) {
-//
-//            //IF NORMAL_BOARD EXECUTE THE CASE STATEMENT
-//            case Board.NORMAL_BOARD:
+    	int size = Chess_Data.getChessData().getDimension();
+        //SWITCH STATEMENT FOR CURRENT BOARD VARIABLE IT'S EITHER NORMAL OR FLIPPED
+        switch (this.currentBoard) {
+
+            //IF NORMAL_BOARD EXECUTE THE CASE STATEMENT
+        
+            case Normal:
 //                for (int i = 0; i < squares.size(); i++) {
 //                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
 //                    squares.get(i).repaint();
 //                    this.add(squares.get(i));
 //                }
-//                break;
-//
-//            //IF FLIPPED_BOARD EXECUTE THE CASE STATEMENT
-//            case Board.FLIPPED_BOARD:
+                
+                for(int x = 0; x < size; x++)
+                {
+                	for(int y = 0; y < size; y++)
+                    {
+                		squares[x][y].setBounds((int)(455 - squares[x][y].getBounds().getX()),  (int)(455 - squares[x][y].getBounds().getY()), 65, 65);
+                		squares[x][y].repaint();
+                		this.add(squares[x][y]);
+                    }
+                }
+                break;
+
+            //IF FLIPPED_BOARD EXECUTE THE CASE STATEMENT
+            case Flipped:
 //                for (int i = squares.size() - 1; i > -1; i--) {
 //                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
 //                    squares.get(i).repaint();
 //                    this.add(squares.get(i));
 //                }
-//                break;
-//        }
-//        this.revalidate();
-//        this.repaint();
+                for(int x = size - 1; x >= 0; x--)
+                {
+                	for(int y = size - 1; y >= 0; y--)
+                    {
+                		squares[x][y].setBounds((int)(455 - squares[x][y].getBounds().getX()),  (int)(455 - squares[x][y].getBounds().getY()), 65, 65);
+                		squares[x][y].repaint();
+                		this.add(squares[x][y]);
+                    }
+                }
+                break;
+        }
+        this.revalidate();
+        this.repaint();
     }
 
     /**
      * The method getCurrentBoard simply returns the current board to the caller
      * @return currentBoard as an integer
      */
-//    public int getCurrentBoard() {
-//        return currentBoard;
-//    }
+    public BoardFlipMode getCurrentBoard() {
+        return currentBoard;
+    }
 
     /**
      * The method setCurrentBoard sets the current board
      * it is either flipped or normal
      * @param currentBoard as an integer
      */
-    public void setCurrentBoard(int currentBoard) {
-//        this.currentBoard = currentBoard;
+    public void setCurrentBoard(BoardFlipMode currentBoard) {
+    		this.currentBoard = currentBoard;
     }
 
     /**
