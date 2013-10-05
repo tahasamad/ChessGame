@@ -7,13 +7,14 @@
 package ChessGameKenai;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
-import GameElements.Piece;
 import GameElements.ElementColor;
+import GameElements.Piece;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
@@ -104,12 +105,40 @@ public class Square extends JPanel {
 		return this.squareModel.getPiece();
 	}
 
-	public void setPiece(Piece piece) {
+    //Note update view yourself.
+	public void setPieceWithoutUpdatingView(Piece piece) {
 		this.squareModel.setPiece(piece);
+		this.squareModel.setViewDirty(false);
 	}
 
 	public ElementColor getBaseColor() {
 		return this.squareModel.getBaseColor();
+	}
+	
+	public void updateView() {
+		if(this.squareModel.getViewDirty())
+		{
+			this.squareModel.setViewDirty(false);
+			try
+			{
+				Component comp = this.getComponent(ChessGameConstants.pieceIndex);
+				if(comp != null)
+				{
+					this.remove(comp);
+				}
+			}
+			catch(Exception ex)
+			{
+				//do nothing
+			}
+			Piece piece = this.squareModel.getPiece();
+			if(piece != null)
+			{
+				this.add(piece);
+			}
+			this.revalidate();
+			this.repaint();
+		}
 	}
 
 	/**
@@ -156,6 +185,7 @@ public class Square extends JPanel {
             		}
             		Square.this.setBackground(Color.BLUE);
             		Chess_Data.getChessData().setSelectedSquare(Square.this);
+            		selectedSquare = Square.this;
             	}
             	else if(selectedSquare != null)
             	{
@@ -171,10 +201,12 @@ public class Square extends JPanel {
         private void tryToCompleteMove(Square selectedSquare)
         {
         	Piece selectedPiece = selectedSquare.getPiece();
-        	boolean hasMoved = selectedPiece.tryToMove(selectedSquare.getPosition(), Square.this.getPosition().clone());
+        	boolean hasMoved = selectedPiece.tryToMove(selectedSquare.getPosition().clone(), Square.this.getPosition().clone());
         	if(hasMoved)
         	{
         		Chess_Data.getChessData().changeTurn();
+        		selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
+        		Chess_Data.getChessData().setSelectedSquare(null);
         	}
         }
     }

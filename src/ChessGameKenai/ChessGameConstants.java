@@ -14,4 +14,5 @@ public class ChessGameConstants {
 	public static final int gridDimension = 8;
 	public static final ChessGameRect pieceBounds = new ChessGameRect(5, 5, 55, 55);
 	public static final int squareSize = 65;
+	public static final int pieceIndex = 0;
 }

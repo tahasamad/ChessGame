@@ -57,6 +57,7 @@ public final class Board extends JPanel implements Observer {
         this.setupSquares();
         this.setOpaque(false);
         this.populateBoard();
+        Chess_Data.getChessData().discardActivePiecesInSavedState();
     }
 
     /**
@@ -68,12 +69,11 @@ public final class Board extends JPanel implements Observer {
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
-        		Non_Visual_Piece activePieceModel = Chess_Data.getChessData().getPieceModel(x, y);
+        		Non_Visual_Piece activePieceModel = Chess_Data.getChessData().getPieceModelFromSaveState(x, y);
         		if(activePieceModel != null)
         		{
-	            	Piece piece = new Piece(activePieceModel, this);
+	            	Piece piece = new Piece(activePieceModel);
 	            	this.addPiece(piece, new ChessGamePoint(x, y));
-	                piece.repaint();
         		}
         	}
         	
@@ -90,7 +90,6 @@ public final class Board extends JPanel implements Observer {
     private void addPiece(Piece piece, ChessGamePoint piecePosition) {
     	if(piece != null)
     	{
-    		int index = 2;
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
 	    		Piece prevPiece = this.squares[piecePosition.x][piecePosition.y].getPiece();
@@ -98,8 +97,10 @@ public final class Board extends JPanel implements Observer {
 	    		{
 	    			throw new RuntimeException("Trying to add a piece on top of an existing piece.");
 	    		}
-	    		this.squares[piecePosition.x][piecePosition.y].setPiece(piece);
-	    		this.squares[piecePosition.x][piecePosition.y].add(piece);
+	    		this.squares[piecePosition.x][piecePosition.y].setPieceWithoutUpdatingView(piece);
+	    		this.squares[piecePosition.x][piecePosition.y].add(piece, ChessGameConstants.pieceIndex);
+	    		this.squares[piecePosition.x][piecePosition.y].revalidate();
+	    		this.squares[piecePosition.x][piecePosition.y].repaint();
     		}
     		else
     		{
@@ -118,7 +119,7 @@ public final class Board extends JPanel implements Observer {
 	    		{
 	    			throw new RuntimeException("Piece Model Square Out of Synch");
 	    		}
-	    		this.squares[piecePosition.x][piecePosition.y].setPiece(null);
+	    		this.squares[piecePosition.x][piecePosition.y].setPieceWithoutUpdatingView(null);
 	    		this.squares[piecePosition.x][piecePosition.y].remove(piece);
     		}
     		else
@@ -151,7 +152,6 @@ public final class Board extends JPanel implements Observer {
      * As well as this method also adds the pieces to the squares
      */
     public void setupSquares() {
-    	int index = 0;
     	int size = Chess_Data.getChessData().getDimension();
     	for(int x = 0; x < size; x++)
         {
@@ -160,7 +160,7 @@ public final class Board extends JPanel implements Observer {
         		Square 	 square = new Square(Chess_Data.getChessData().getSquareModel(x, y));
         		squares[x][y] = square;
                 this.mapPositions(x, y);
-        		this.add(square, index);
+        		this.add(square);
             }
         }
     }
@@ -280,9 +280,8 @@ public final class Board extends JPanel implements Observer {
 //            view.getMoves().append("--------------------------\n");
 //            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
 //        }
-//        this.removeCapturedPieces();
-//        this.revalidate();
-//        this.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -307,32 +306,18 @@ public final class Board extends JPanel implements Observer {
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
-        		Piece piece = this.squares[x][y].getPiece();
-        		if(piece != null)
-        		{
-                    piece.revalidate();
-                    piece.repaint();
-                    //piece.removeListener();
-        		}
+        		this.squares[x][y].updateView();
+//        		Piece piece = 
+//        		Piece piece = this.squares[x][y].updateView();
+//        		if(piece != null)
+//        		{
+//                    piece.revalidate();
+//                    piece.repaint();
+//                    //piece.removeListener();
+//        		}
         	}  
         }
     }
-
-    /**
-     * The method removeCapturedPieces simply removes the captured pieces from
-     * the array list of pieces so it is no longer on the board
-     * the piece will be added to the captured pieces panel
-     */
-//    public void removeCapturedPieces() {
-//        if (!data.getCapturedPieces().isEmpty()) {
-//            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
-//            for (int i = 0; i < pieces.size(); i++) {
-//                if (pieces.get(i).getPiece().equals(p)) {
-//                    pieces.remove(pieces.get(i));
-//                }
-//            }
-//        }
-//    }
 
     /**
      * The method distributeOnLineListeners simply distribute listeners

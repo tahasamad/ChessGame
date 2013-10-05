@@ -14,11 +14,14 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
 
@@ -35,8 +38,7 @@ import GameElements.Piece;
  */
 public class CapturedPieces extends JPanel implements Observer {
 
-    private Color color;
-    private Board board;
+    private ElementColor color;
 
     /**
      * Overloaded constructor of the class when the object
@@ -46,9 +48,8 @@ public class CapturedPieces extends JPanel implements Observer {
      * @param color as a Color
      * @param board as a Board
      */
-    public CapturedPieces(Color color, Board board) {
+    public CapturedPieces(ElementColor color) {
         this.color = color;
-        this.board = board;
         this.setLayout(new FlowLayout());
         this.setPreferredSize(new Dimension(188, 750));
         this.setOpaque(false);
@@ -76,7 +77,7 @@ public class CapturedPieces extends JPanel implements Observer {
      * The method getColor simply returns the color to the caller
      * @return color as a Color
      */
-    public Color getColor() {
+    public ElementColor getColor() {
         return color;
     }
 
@@ -84,7 +85,7 @@ public class CapturedPieces extends JPanel implements Observer {
      * The method setColor simply sets the color of this object
      * @param color as a Color
      */
-    public void setColor(Color color) {
+    public void setColor(ElementColor color) {
         this.color = color;
     }
 
@@ -95,7 +96,7 @@ public class CapturedPieces extends JPanel implements Observer {
      */
     private String getTitle() {
         String title = "";
-        if (color == Color.WHITE) {
+        if (this.color == ElementColor.White) {
             title = "White Captured Pieces";
             return title;
         } else {
@@ -131,21 +132,17 @@ public class CapturedPieces extends JPanel implements Observer {
      * @param arg as an Object any object passed in
      */
     public void update(Observable o, Object arg) {
-//        Chess_Data data = (Chess_Data) o;
-//        Piece pi = null;
-//        if (!data.getCapturedPieces().isEmpty()) {
-//            Non_Visual_Piece p = (Non_Visual_Piece) data.getCapturedPieces().get(data.getCapturedPieces().size() - 1);
-//            if (board.getSquares().get(p.getPosition() - 1).getComponentCount() > 0) {
-//                pi = (Piece) board.getSquares().get(p.getPosition() - 1).getComponent(0);
-//                if (this.getColor() == Color.WHITE && p.getColor() == Color.WHITE && p.isCaptured() && pi.getColor() == Color.WHITE) {
-//                    pi.setPreferredSize(new Dimension(64, 64));
-//                    this.add(pi);
-//                } else if (this.getColor() == Color.BLACK && p.getColor() == Color.BLACK && p.isCaptured() && pi.getColor() == Color.BLACK) {
-//                    pi.setPreferredSize(new Dimension(64, 64));
-//                    this.add(pi);
-//                }
-//            }
-//        }
+        Chess_Data data = Chess_Data.getChessData();
+        ArrayList<Non_Visual_Piece> capturedPieces = data.getCapturedPieces();
+        if (!capturedPieces.isEmpty()) {
+        	int size = capturedPieces.size();
+            Non_Visual_Piece pieceModel = capturedPieces.get(size - 1);
+        	if(pieceModel.getViewDirty() && this.color == pieceModel.getColor() && pieceModel.isCaptured())
+        	{
+        		pieceModel.setViewDirty(false);
+        		this.add(new Piece(pieceModel));
+        	}
+        }
         this.revalidate();
         this.repaint();
     }

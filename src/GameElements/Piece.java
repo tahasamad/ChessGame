@@ -14,11 +14,7 @@ import java.net.URL;
 
 import javax.swing.JPanel;
 
-import ChessGameKenai.Board;
 import ChessGameKenai.ChessGameConstants;
-import ChessGameKenai.Chess_Data;
-import ChessGameKenai.PurposedMoveResult;
-import ChessGameKenai.SquareModel;
 import GameElements.Behaviors.Behavior;
 import Utils.ChessGamePoint;
 import Utils.ChessGameRect;
@@ -43,16 +39,13 @@ public class Piece extends JPanel {
 
     private String imagePath;
 	private Non_Visual_Piece pieceModel;
-	private Board board;
-	protected Behavior behavior;
 
     /**
      * Overloaded constructor of our class receives the path to its image
      * @param imagePath as a String
      */
-    public Piece(Non_Visual_Piece pieceModel, Board board) {
+    public Piece(Non_Visual_Piece pieceModel) {
     	this.pieceModel = pieceModel;
-    	this.board = board;
         this.imagePath = ChessGameUtils.getPieceImageFilePathForTypeAndColor(this.pieceModel.getType(), this.pieceModel.getColor());
         this.setOpaque(false);
         this.setPreferredSize(new Dimension(ChessGameConstants.pieceDimension, ChessGameConstants.pieceDimension));
@@ -64,7 +57,7 @@ public class Piece extends JPanel {
      * The method getPiece returns the non visual piece that represents this object
      * @return piece as Non_Visual_Piece
      */
-    protected Non_Visual_Piece getPieceModel() {
+    public Non_Visual_Piece getPieceModel() {
         return pieceModel;
     }
 
@@ -153,10 +146,12 @@ public class Piece extends JPanel {
     
     public boolean tryToMove(ChessGamePoint originalPosition, ChessGamePoint destinationPosition)
     {
-    	if(this.behavior != null)
+    	Behavior behavior = this.getPieceModel().getBehavior(); 
+    	if(behavior != null)
     	{
-    		return this.behavior.purposeMove(originalPosition, destinationPosition, this);
+    		return behavior.purposeMove(originalPosition, destinationPosition, this);
     	}
     	return false;
     }
+    
 }

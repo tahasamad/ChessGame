@@ -40,6 +40,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
+import GameElements.ElementColor;
+
 /**
  * The ChessBoardView Class is main view of the chess game it consists of the
  * chess board, squares and pieces.This view is an observer so each time the change
@@ -485,7 +487,7 @@ public class ChessBoardView extends JFrame implements Observer {
         menuBar.add(helpMenu);
 
 
-        whiteCapturedPiecesPanel = new CapturedPieces(Color.WHITE, board);
+        whiteCapturedPiecesPanel = new CapturedPieces(ElementColor.White);
         whiteCapturedPiecesScroll = new JScrollPane(whiteCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         whiteCapturedPiecesScroll.setOpaque(false);
 
@@ -493,7 +495,7 @@ public class ChessBoardView extends JFrame implements Observer {
         mainPanel = new JPanel(new GridLayout(1, 1));
         mainPanel.add(board);
 
-        blackCapturedPiecesPanel = new CapturedPieces(Color.BLACK, board);
+        blackCapturedPiecesPanel = new CapturedPieces(ElementColor.Black);
 
         //CREATE JSCROLLPANE AND ADD JPANEL TO IT
         blackCapturedPiecesScroll = new JScrollPane(blackCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

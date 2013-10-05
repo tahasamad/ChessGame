@@ -9,6 +9,7 @@ public class SquareModel {
     private ChessGamePoint position;
     private ElementColor baseColor;
     private Piece piece;
+    private boolean viewDirty;
     
     public SquareModel(ChessGamePoint position, ElementColor baseColor, Piece piece)
     {
@@ -34,7 +35,19 @@ public class SquareModel {
 	}
 
 	public void setPiece(Piece piece) {
+		if(this.piece != piece)
+		{
+			this.viewDirty = true;
+		}
 		this.piece = piece;
 	}
-    
+
+	public boolean getViewDirty() {
+		return viewDirty;
+	}
+
+	public void setViewDirty(boolean viewDirty) {
+		this.viewDirty = viewDirty;
+	}
+	
 }

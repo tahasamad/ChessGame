@@ -31,6 +31,7 @@ public class Non_Visual_Piece implements Serializable {
     private boolean isCaptured;
     private boolean isMoved;
     private boolean isQueenFromPawn;
+    private boolean viewDirty;
 	private Behavior behavior;
 
     /**
@@ -46,7 +47,8 @@ public class Non_Visual_Piece implements Serializable {
     public Non_Visual_Piece(PieceType type, ElementColor color) {
         this.type = type;
         this.color = color;
-        BehaviorFactory.makeBehaviorForType(this);
+        this.behavior = BehaviorFactory.makeBehaviorForType(this);
+        this.viewDirty = false;
     }
 
     /**
@@ -84,7 +86,11 @@ public class Non_Visual_Piece implements Serializable {
      * default is false to tell the game that this piece was moved
      * @param isMoved as a boolean
      */
-    public void isMoved(boolean isMoved) {
+    public void setIsMoved(boolean isMoved) {
+    	if(this.isMoved != isMoved)
+    	{
+    		this.viewDirty = true;
+    	}
         this.isMoved = isMoved;
     }
 
@@ -102,6 +108,10 @@ public class Non_Visual_Piece implements Serializable {
      * @param isCaptured as a boolean
      */
     public void setIsCaptured(boolean isCaptured) {
+    	if(this.isCaptured != isCaptured)
+    	{
+    		this.viewDirty = true;
+    	}
         this.isCaptured = isCaptured;
     }
 
@@ -122,12 +132,23 @@ public class Non_Visual_Piece implements Serializable {
         return type;
     }
 
-    @Override
+    public Behavior getBehavior() {
+		return this.behavior;
+	}
+
+	@Override
     public String toString() {
         String s = "";
         s += "Type: " + this.getType() + ", Color:" + this.getColor();
         return s;
     }
-    
-    
+	
+	public boolean getViewDirty() {
+		return viewDirty;
+	}
+
+	public void setViewDirty(boolean viewDirty) {
+		this.viewDirty = viewDirty;
+	}
+
 }

@@ -33,11 +33,11 @@ public class Start_Game {
         ChessBoardView cbv = new ChessBoardView();
 
         //USE A SQUARE OBJECT TO CONSTRUCT AN OBJECT OUT OF ITS NESTED CLASS
-        Square square = new Square();
-        Square.SendData sd = square.new SendData();
+        //Square square = new Square();
+        //Square.SendData sd = square.new SendData();
 
         //CALL THE MODEL METHOD IN ORDER TO BE NOTIFIED OF THE STATE OF THE CHESS BOARD
-        data.notifyView();
+        //data.notifyView();
 
     }
 }
