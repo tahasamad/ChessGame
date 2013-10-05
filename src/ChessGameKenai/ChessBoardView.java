@@ -420,6 +420,16 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
+            	if (board.getCurrentBoard() == BoardFlipMode.Normal)
+            	{
+            		board.setCurrentBoard(BoardFlipMode.Flipped);
+            	}
+            	else 
+            	{
+            		board.setCurrentBoard(BoardFlipMode.Normal);
+            	}
+            	
+            	board.flipBoard();
                 /*if (board.getCurrentBoard() == Board.NORMAL_BOARD) {
                     board.setBoard(Board.FLIPPED_BOARD);
                 } else {
