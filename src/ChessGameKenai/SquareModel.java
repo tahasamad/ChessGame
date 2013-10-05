@@ -1,16 +1,16 @@
 package ChessGameKenai;
 
 import GameElements.Piece;
-import GameElements.PieceColor;
+import GameElements.ElementColor;
 import Utils.ChessGamePoint;
 
 public class SquareModel {
 	
     private ChessGamePoint position;
-    private PieceColor baseColor;
+    private ElementColor baseColor;
     private Piece piece;
     
-    public SquareModel(ChessGamePoint position, PieceColor baseColor, Piece piece)
+    public SquareModel(ChessGamePoint position, ElementColor baseColor, Piece piece)
     {
     	if(position == null)
     	{
@@ -25,7 +25,7 @@ public class SquareModel {
 		return this.position.clone();
 	}
 
-	public PieceColor getBaseColor() {
+	public ElementColor getBaseColor() {
 		return this.baseColor;
 	}
 

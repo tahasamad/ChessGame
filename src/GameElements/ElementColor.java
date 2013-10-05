@@ -1,12 +1,12 @@
 package GameElements;
 
-public enum PieceColor {
+public enum ElementColor {
 	Black(1),
 	White(2); 
 
 	public int currentValue = 0;
 
-	private PieceColor(int value) {
+	private ElementColor(int value) {
 		currentValue = value;
 	}
 

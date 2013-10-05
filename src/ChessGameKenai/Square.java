@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 import GameElements.Piece;
-import GameElements.PieceColor;
+import GameElements.ElementColor;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
@@ -108,7 +108,7 @@ public class Square extends JPanel {
 		this.squareModel.setPiece(piece);
 	}
 
-	public PieceColor getBaseColor() {
+	public ElementColor getBaseColor() {
 		return this.squareModel.getBaseColor();
 	}
 
@@ -142,17 +142,17 @@ public class Square extends JPanel {
             if(piece != null)
             {
             	boolean whiteTurn = Chess_Data.getChessData().isWhiteTurn();
-            	PieceColor turnColor = PieceColor.Black;
+            	ElementColor turnColor = ElementColor.Black;
             	if(whiteTurn)
             	{
-            		turnColor = PieceColor.White;
+            		turnColor = ElementColor.White;
             	}
-            	PieceColor pieceColor = piece.getPieceColor();
+            	ElementColor pieceColor = piece.getPieceColor();
             	if(pieceColor == turnColor)
             	{
             		if(selectedSquare != null)
             		{
-            			selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(Square.this.getBaseColor()));
+            			selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
             		}
             		Square.this.setBackground(Color.BLUE);
             		Chess_Data.getChessData().setSelectedSquare(Square.this);

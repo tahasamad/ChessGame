@@ -26,7 +26,7 @@ import GameElements.Behaviors.BehaviorFactory;
  */
 public class Non_Visual_Piece implements Serializable {
 
-	private PieceColor color;
+	private ElementColor color;
 	private PieceType type;
     private boolean isCaptured;
     private boolean isMoved;
@@ -43,7 +43,7 @@ public class Non_Visual_Piece implements Serializable {
      * @param position as an integer
      * @param color as Color
      */
-    public Non_Visual_Piece(PieceType type, PieceColor color) {
+    public Non_Visual_Piece(PieceType type, ElementColor color) {
         this.type = type;
         this.color = color;
         BehaviorFactory.makeBehaviorForType(this);
@@ -110,7 +110,7 @@ public class Non_Visual_Piece implements Serializable {
      * current piece to the caller
      * @return color as a Color
      */
-    public PieceColor getColor() {
+    public ElementColor getColor() {
         return color;
     }
 

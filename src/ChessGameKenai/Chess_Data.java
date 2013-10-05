@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
-import GameElements.PieceColor;
+import GameElements.ElementColor;
 import GameElements.PieceType;
 import Utils.ChessGamePoint;
 
@@ -89,8 +89,8 @@ public final class Chess_Data extends Observable {
     		this.squareModels = new SquareModel[size][size];
         }
         
-        PieceColor columnStartColor = PieceColor.Black;
-    	PieceColor columnAlternateColor = PieceColor.White;
+        ElementColor columnStartColor = ElementColor.Black;
+    	ElementColor columnAlternateColor = ElementColor.White;
         
     	for(int x = 0; x < size; x++)
         {
@@ -98,12 +98,12 @@ public final class Chess_Data extends Observable {
             {
         		this.setSquareModel(x, y, new SquareModel(new ChessGamePoint(x, y), columnStartColor, null));
         		//Row Color Switch
-        		PieceColor prevColumnStartColor = columnStartColor;
+        		ElementColor prevColumnStartColor = columnStartColor;
             	columnStartColor = columnAlternateColor;
             	columnAlternateColor = prevColumnStartColor;
             }
         	//Column Color Switch
-        	PieceColor prevColumnStartColor = columnStartColor;
+        	ElementColor prevColumnStartColor = columnStartColor;
         	columnStartColor = columnAlternateColor;
         	columnAlternateColor = prevColumnStartColor;
         }    	
@@ -160,10 +160,10 @@ public final class Chess_Data extends Observable {
 	        //FILL NON VISUAL PIECES INTO THE ARRAY OF THE DATA CLASS
 	        for (int x = 0; x < size; x++) {
 	        	for (int y = 0; y < 2; y++) {
-	        		addPieceInActivePieces (x, y, PieceColor.Black);
+	        		addPieceInActivePieces (x, y, ElementColor.Black);
 	        	}
 	        	for (int y = size - 2; y < size; y++) {
-		            addPieceInActivePieces (x, y, PieceColor.White);
+		            addPieceInActivePieces (x, y, ElementColor.White);
 	        	}
 	        }
     	}
@@ -208,7 +208,7 @@ public final class Chess_Data extends Observable {
     	}
     }
     
-    private void addPieceInActivePieces (int xPos, int yPos, PieceColor color)
+    private void addPieceInActivePieces (int xPos, int yPos, ElementColor color)
     {
     	if(yPos == 1 || yPos == this.getDimension() - 2)
         {

@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import ChessGameKenai.ChessGameConstants;
 import ChessGameKenai.Chess_Data;
-import GameElements.PieceColor;
+import GameElements.ElementColor;
 import GameElements.PieceType;
 
 public class ChessGameUtils { // Applying Utility Pattern
@@ -77,9 +77,9 @@ public class ChessGameUtils { // Applying Utility Pattern
 		return ((x >= 0 && x < ChessGameConstants.gridDimension) && (y >= 0 && y < ChessGameConstants.gridDimension)); 
 	}
 	
-	public static Color getColorFromElementColor(PieceColor pieceColor)
+	public static Color getColorFromElementColor(ElementColor pieceColor)
 	{
-		if(pieceColor == PieceColor.White)
+		if(pieceColor == ElementColor.White)
 		{
 			return Color.WHITE;
 		}
@@ -89,10 +89,10 @@ public class ChessGameUtils { // Applying Utility Pattern
 		}
 	}
 	
-	public static String getPieceImageFilePathForTypeAndColor(PieceType type, PieceColor color)
+	public static String getPieceImageFilePathForTypeAndColor(PieceType type, ElementColor color)
 	{
 		String path = "/ChessGameKenai/ChessPieces/";
-		if(color == PieceColor.White)
+		if(color == ElementColor.White)
 		{
 			path += "w";
 		}

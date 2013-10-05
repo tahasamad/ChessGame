@@ -72,7 +72,7 @@ public class Piece extends JPanel {
      * The method getColor returns color of the object
      * @return color
      */
-    public PieceColor getPieceColor() {
+    public ElementColor getPieceColor() {
         return this.pieceModel.getColor();
     }
 
@@ -117,7 +117,7 @@ public class Piece extends JPanel {
      * @return color as a String
      */
     public String getTextColor() {
-        if (this.getPieceColor() == PieceColor.White) {
+        if (this.getPieceColor() == ElementColor.White) {
             return "White";
         } else {
             return "Black";
