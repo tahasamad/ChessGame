@@ -171,10 +171,10 @@ public class Square extends JPanel {
         private void tryToCompleteMove(Square selectedSquare)
         {
         	Piece selectedPiece = selectedSquare.getPiece();
-        	boolean hasMoved = selectedPiece.tryToMove(Square.this.getPosition().clone());
+        	boolean hasMoved = selectedPiece.tryToMove(selectedSquare.getPosition(), Square.this.getPosition().clone());
         	if(hasMoved)
         	{
-        		Chess_Data.getChessData().changeTurn(whiteTurn);
+        		Chess_Data.getChessData().changeTurn();
         	}
         }
     }

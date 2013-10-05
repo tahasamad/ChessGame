@@ -64,7 +64,7 @@ public class Piece extends JPanel {
      * The method getPiece returns the non visual piece that represents this object
      * @return piece as Non_Visual_Piece
      */
-    public Non_Visual_Piece getPieceModel() {
+    protected Non_Visual_Piece getPieceModel() {
         return pieceModel;
     }
 
@@ -151,35 +151,11 @@ public class Piece extends JPanel {
         g.drawImage(image, 0, 0, w, h, this);
     }
     
-    public boolean tryToMove(ChessGamePoint position)
+    public boolean tryToMove(ChessGamePoint originalPosition, ChessGamePoint destinationPosition)
     {
     	if(this.behavior != null)
     	{
-    		PurposedMoveResult result = this.behavior.purposeMove(position, this.getPieceModel());
-    		//Read result here.
-    		if(result != null && result.isValidMove())
-    		{
-    			Chess_Data data = Chess_Data.getChessData();
-				if(data.posHasPiece(newPosition))
-				{
-					Non_Visual_Piece killedPiece = data.getPieceModel(newPosition);
-					killedPiece.setIsCaptured(true);
-				}
-				SquareModel square1 = data.getSquareModel(currentPosition);
-				square1.setPiece(null);
-				SquareModel square2 = data.getSquareModel(newPosition);
-				square2.setPiece(piece);
-				
-    			if(result.hasKilled())
-    			{
-    				Piece killedPiece = result.getKilledPiece();
-    				//ChessGamePoint pos = killedPiece.getPosition();
-    				board.removePiece(killedPiece);
-    				killedPiece.getPieceModel().setIsCaptured(true);
-    				Chess_Data.getChessData();
-    			}
-    			return true;
-    		}
+    		return this.behavior.purposeMove(originalPosition, destinationPosition, this);
     	}
     	return false;
     }

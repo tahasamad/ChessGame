@@ -99,7 +99,7 @@ public final class Board extends JPanel implements Observer {
 	    			throw new RuntimeException("Trying to add a piece on top of an existing piece.");
 	    		}
 	    		this.squares[piecePosition.x][piecePosition.y].setPiece(piece);
-	    		this.add(piece, index);
+	    		this.squares[piecePosition.x][piecePosition.y].add(piece);
     		}
     		else
     		{
@@ -119,7 +119,7 @@ public final class Board extends JPanel implements Observer {
 	    			throw new RuntimeException("Piece Model Square Out of Synch");
 	    		}
 	    		this.squares[piecePosition.x][piecePosition.y].setPiece(null);
-	    		this.remove(piece);
+	    		this.squares[piecePosition.x][piecePosition.y].remove(piece);
     		}
     		else
     		{
