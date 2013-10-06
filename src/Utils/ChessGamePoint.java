@@ -1,6 +1,8 @@
 package Utils;
 
-public class ChessGamePoint {
+import java.io.Serializable;
+
+public class ChessGamePoint implements Serializable{
 	public int x;
 	public int y;
 	
