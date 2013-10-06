@@ -34,9 +34,10 @@ public class Square extends JPanel {
     private Color previousColor;
     private SquareModel squareModel;
     private MouseEventHandler handler;
+    private boolean handlerAdded;
 
     /**
-     * OverLoaded Constructor for creating square objects
+     * OverLoaded Constructor for cr2eating square objects
      * @param color Square object color
      * @param position Square object position on the ChessBoardView's MainPanel
      * @see ChessBoardView Class
@@ -53,7 +54,10 @@ public class Square extends JPanel {
         this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);        
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
         this.handler = new MouseEventHandler();
-        this.addMouseListener(this.handler);
+        this.handlerAdded = false;
+        System.out.println("Adding In Constructor");
+        this.addHandler();
+        System.out.println("**********************");
     }
 
     /**
@@ -146,12 +150,17 @@ public class Square extends JPanel {
 		
 	public void addHandler()
 	{
-		this.addMouseListener(this.handler);
+		if(!this.handlerAdded)
+		{
+			this.addMouseListener(this.handler);
+			this.handlerAdded = true;
+		}
 	}
 	
 	public void removeHandler()
 	{
 		this.removeMouseListener(this.handler);
+		this.handlerAdded = false;
 	}
 
 	/**

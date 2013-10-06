@@ -573,7 +573,7 @@ public class ChessBoardView extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
     	this.setupTextOfWhoseTurnLabel();
-    	this.adjustHandlerAndTimers();
+    	this.adjustHandlerAndTimers(arg);
         player1InfoPanel.resetPanelInformation();
         player2InfoPanel.resetPanelInformation();
     }
@@ -584,21 +584,24 @@ public class ChessBoardView extends JFrame implements Observer {
     	this.whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (data.getPlayers().get(0).getName() + ChessGameConstants.turnToPlay) : (data.getPlayers().get(1).getName() + ChessGameConstants.turnToPlay));
     }
     
-    private void adjustHandlerAndTimers()
+    private void adjustHandlerAndTimers(Object obj)
     {
     	Chess_Data data = Chess_Data.getChessData();
     	if (data.isWinner()) {
-	        if (data.getCapturedPieces().get(data.getCapturedPieces().size() - 1).getColor() == ElementColor.Black) {
-	            whoseTurnLabel.setText(data.getPlayers().get(0).getName() + ChessGameConstants.hasWon);
-	            int wins = data.getPlayers().get(0).getNumberOfWins();
-	            data.getPlayers().get(0).setNumberOfWins(++wins);
-	        } else {
-	            whoseTurnLabel.setText(data.getPlayers().get(1).getName() + ChessGameConstants.hasWon);
-	            int wins = data.getPlayers().get(1).getNumberOfWins();
-	            data.getPlayers().get(1).setNumberOfWins(++wins);
-	        }
-	        this.board.removeHandlers();
-	        this.stopTimer();
+    		if(obj != null)
+    		{
+		        if (data.getCapturedPieces().get(data.getCapturedPieces().size() - 1).getColor() == ElementColor.Black) {
+		            whoseTurnLabel.setText(data.getPlayers().get(0).getName() + ChessGameConstants.hasWon);
+		            int wins = data.getPlayers().get(0).getNumberOfWins();
+		            data.getPlayers().get(0).setNumberOfWins(++wins);
+		        } else {
+		            whoseTurnLabel.setText(data.getPlayers().get(1).getName() + ChessGameConstants.hasWon);
+		            int wins = data.getPlayers().get(1).getNumberOfWins();
+		            data.getPlayers().get(1).setNumberOfWins(++wins);
+		        }
+		        this.board.removeHandlers();
+		        this.stopTimer();
+    		}
 	    }
     	else
     	{
@@ -767,7 +770,7 @@ public class ChessBoardView extends JFrame implements Observer {
     	Chess_Data data = Chess_Data.getChessData();
         data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
-        this.adjustHandlerAndTimers();
+        this.adjustHandlerAndTimers(null);
     }
 
     /**

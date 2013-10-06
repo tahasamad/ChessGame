@@ -233,6 +233,7 @@ public final class Board extends JPanel implements Observer {
         		this.squares[x][y].addHandler();
         	}
         }
+        System.out.println("---------------------");
     }
 
     public void removeHandlers() {
@@ -243,6 +244,7 @@ public final class Board extends JPanel implements Observer {
         		this.squares[x][y].removeHandler();
         	}
         }
+        System.out.println("++++++++++++++++++++++++");
     }
 
     /**
@@ -256,11 +258,6 @@ public final class Board extends JPanel implements Observer {
      */
     public void update(Observable observable, Object data) {
         this.redrawPieces();
-//        if (!data.isServer() && isFirstTime) {
-//            this.removeListeners(Color.BLACK);
-//            this.removeListeners(Color.WHITE);
-//            isFirstTime = false;
-//        }
         if (data != null && data instanceof BehaviorResult) {
             @SuppressWarnings("unchecked")
             BehaviorResult result = (BehaviorResult) data;
