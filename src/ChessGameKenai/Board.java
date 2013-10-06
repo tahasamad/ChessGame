@@ -226,6 +226,7 @@ public final class Board extends JPanel implements Observer {
     }
 
     public void addHandlers() {
+    	System.out.println("Adding");
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
@@ -235,6 +236,7 @@ public final class Board extends JPanel implements Observer {
     }
 
     public void removeHandlers() {
+    	System.out.println("Removing");
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
