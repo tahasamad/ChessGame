@@ -24,6 +24,7 @@ import javax.swing.text.SimpleAttributeSet;
 
 import GameElements.Piece;
 import GameElements.Behaviors.BehaviorResult;
+import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
 /**
@@ -203,8 +204,9 @@ public class ConnectionBridge implements Observer {
                 ArrayList<SquareModel> squareModels = result.getSquareModels();
                 SquareModel squareModel1 = squareModels.get(0);
                 SquareModel squareModel2 = squareModels.get(1);
-                Piece piece = squareModel1.getPiece();
-                piece.tryToMove(squareModel1.getPosition(), squareModel2.getPosition());
+                ChessGamePoint srcPoint = squareModel1.getPosition();
+                Piece piece = Chess_Data.getChessData().getSquareModel(srcPoint.x, srcPoint.y).getPiece();
+                piece.tryToMove(srcPoint, squareModel2.getPosition());
                 //data.move((Integer) list.get(0), (Integer) list.get(1));TODO:
             }
         }
