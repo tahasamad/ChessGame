@@ -367,8 +367,8 @@ public final class Board extends JPanel implements Observer {
      */
     public void mapPositions(int x, int y) {
     	int asciiForSmallA = 97;
-    	String string = "" + (Chess_Data.getChessData().getDimension() - y);
-    	string += Character.toString((char) (asciiForSmallA + x));
+    	String string = "" + Character.toString((char) (asciiForSmallA + x));
+    	string += (Chess_Data.getChessData().getDimension() - y);
     	this.mapPositions.put(this.getMapPositionKey(x, y), string);
     }
     
