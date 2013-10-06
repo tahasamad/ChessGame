@@ -439,11 +439,12 @@ public class Chat extends JPanel {
         out.flush();
         
         name = ChessGameUtils.getCurrentPlayerName();
-//        if (data.isServer()) {
-//            name = data.getPlayers().get(0).getName();
-//        } else {
-//            name = data.getPlayers().get(1).getName();
-//        }
+        
+        if (Chess_Data.getChessData().isServer()) {
+            name = Chess_Data.getChessData().getPlayers().get(0).getName();
+        } else {
+            name = Chess_Data.getChessData().getPlayers().get(1).getName();
+        }
         if (!chatF.getText().trim().equals("") || imgPath != null) {
             appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);
             if (imgPath != null) {
