@@ -761,7 +761,7 @@ public class ChessBoardView extends JFrame implements Observer {
         data.notifyView();
         data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
-        this.board.addHandlers();
+        this.adjustHandlerAndTimers();
     }
 
     /**
@@ -833,11 +833,10 @@ public class ChessBoardView extends JFrame implements Observer {
      * and calls another method of this class which is restartLocalGame to complete the job
      */
     public void playOnLine() {
-        player1InfoPanel.stopTimer();
+    	this.restartClientGame();
         Chess_Data.getChessData().isGameOnLine(true);
-        Chess_Data.getChessData().isWhiteTurn(true);
         board.isFirstTime(true);
-        this.restartClientGame();
+        player1InfoPanel.stopTimer();
     }
 
     /**
@@ -847,11 +846,12 @@ public class ChessBoardView extends JFrame implements Observer {
      * back the view he would simply go in the options menu and change the flip back
      */
     public void flipClientBoard() {
-//        if (!data.isServer()) {
-//            board.removeAll();
-//            board.setBoard(Board.FLIPPED_BOARD);
-//            board.flipBoard();
-//        }
+    	Chess_Data data = Chess_Data.getChessData();
+        if (!data.isServer()) {
+            //board.removeAll();
+            board.setCurrentBoard(BoardFlipMode.Flipped);
+            board.flipBoard();
+        }
     }
 
     /**

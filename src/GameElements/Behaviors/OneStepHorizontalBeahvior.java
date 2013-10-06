@@ -8,17 +8,18 @@ public class OneStepHorizontalBeahvior implements Behavior {
 	HorizontalBehavior horizontalBehavior = new HorizontalBehavior();
 	
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		int diffX = Math.abs(currentPosition.x - newPosition.x);
 		if(diffX == 1)
 		{
-			if(this.horizontalBehavior.purposeMove(currentPosition, newPosition, piece))
+			BehaviorResult result = this.horizontalBehavior.purposeMove(currentPosition, newPosition, piece);
+			if(result != null)
 			{
-				return true;
+				return result;
 			}
 		}
-		return false;
+		return null;
 	}
 
 }

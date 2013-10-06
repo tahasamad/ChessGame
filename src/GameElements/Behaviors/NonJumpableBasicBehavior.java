@@ -7,7 +7,7 @@ import Utils.ChessGamePoint;
 public class NonJumpableBasicBehavior implements Behavior {
 	private Behavior behavior = new BasicBehavior();
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Chess_Data data = Chess_Data.getChessData();
 		int diffX = newPosition.x - currentPosition.x;
 		int diffY = newPosition.y - currentPosition.y;
@@ -19,7 +19,7 @@ public class NonJumpableBasicBehavior implements Behavior {
 		{
 			if(data.posHasPiece(new ChessGamePoint(x, y)))
 			{
-				return false;
+				return null;
 			}
 		}
 		return this.behavior.purposeMove(currentPosition, newPosition, piece);

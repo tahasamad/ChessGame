@@ -7,5 +7,5 @@ import Utils.ChessGamePoint;
 
 public interface Behavior {
 	
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece);
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece);
 }

@@ -12,7 +12,7 @@ import Utils.ChessGamePoint;
 public class BasicBehavior implements Behavior{
 	
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		Chess_Data data = Chess_Data.getChessData();
 		if(data.posHasPiece(newPosition))
@@ -27,9 +27,9 @@ public class BasicBehavior implements Behavior{
 		SquareModel squareModel1 = data.getSquareModel(currentPosition);
 		squareModel1.setPiece(null);
 		piece.getPieceModel().setIsMoved(true);
-		ArrayList<ChessGamePoint> list = new ArrayList<ChessGamePoint>();
-		list.add(squareModel1.getPosition());//src
-		list.add(squareModel2.getPosition());//dst
+		ArrayList<SquareModel> list = new ArrayList<SquareModel>();
+		list.add(squareModel1);//src
+		list.add(squareModel2);//dst
 		data.changeTurn();
 		if(piece.getPieceModel().getColor() == ElementColor.White)
 		{
@@ -39,7 +39,6 @@ public class BasicBehavior implements Behavior{
 		{
 			data.setEnPessant(ElementColor.White, null);
 		}
-		data.notifyView(list);
-		return true;
+		return (new BehaviorResult(true, list));
 	}
 }

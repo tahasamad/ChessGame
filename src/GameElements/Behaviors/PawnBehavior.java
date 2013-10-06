@@ -11,11 +11,11 @@ public class PawnBehavior implements Behavior{
 	private VerticalBehavior verticalBehavior = new VerticalBehavior();
 	private OneStepDiagonalBehavior oneStepDiagonalBehavior = new OneStepDiagonalBehavior();
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.y - currentPosition.y;
-		boolean retVal = false;
+		BehaviorResult retVal = null;
 		if(data.posHasPiece(newPosition))
 		{
 			if(pieceModel.getColor() == ElementColor.White)
@@ -51,7 +51,7 @@ public class PawnBehavior implements Behavior{
 				}
 			}
 			///////EnPassant Move/////////
-			if(!retVal)
+			if(retVal == null)
 			{
 				if(pieceModel.getColor() == ElementColor.White)
 				{
@@ -71,19 +71,25 @@ public class PawnBehavior implements Behavior{
 				}
 			}
 		}
-		if(retVal)
+		if(retVal != null)
 		{
 			int yPos = this.getYPosForPromotion(pieceModel.getColor());
 			if(yPos == newPosition.y)
 			{
 				pieceModel.isQueenFromPawn(true);
 				piece.updateView();
+				SquareModel pawnToQueenSquareModel = data.getSquareModel(newPosition.x, newPosition.y);
+				pawnToQueenSquareModel.setPiece(piece);
+				if(!retVal.getSquareModels().contains(pawnToQueenSquareModel))
+				{
+					retVal.getSquareModels().add(pawnToQueenSquareModel);
+				}
 			}
 		}
 		return retVal;
 	}
 	
-	private boolean normalMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	private BehaviorResult normalMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
@@ -96,39 +102,40 @@ public class PawnBehavior implements Behavior{
 		int adsDiffY = Math.abs(diffY);
 		if(adsDiffY > 0 && adsDiffY <= range)
 		{
-			if(this.verticalBehavior.purposeMove(currentPosition, newPosition, piece))
+			BehaviorResult result = this.verticalBehavior.purposeMove(currentPosition, newPosition, piece);
+			if(result != null)
 			{
 				if(adsDiffY == 2)
 				{
 					data.setEnPessant(pieceModel.getColor(), newPosition.clone());
 				}
-				return true;
+				return result;
 			}
 		}
-		return false;
+		return null;
 	}
 	
-	private boolean enPassantMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece, ChessGamePoint enPassantPoint, int diff)
+	private BehaviorResult enPassantMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece, ChessGamePoint enPassantPoint, int diff)
 	{
 		Chess_Data data = Chess_Data.getChessData();
 		if(enPassantPoint != null)
 		{
 			if(newPosition.x == enPassantPoint.x && newPosition.y == (enPassantPoint.y + diff))
 			{
-				if(this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece))
+				BehaviorResult result = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+				if(result != null)
 				{
 					SquareModel enPassantSquareModel = data.getSquareModel(enPassantPoint.x, enPassantPoint.y);
 					Non_Visual_Piece enPassantPieceModel = enPassantSquareModel.getPiece().getPieceModel();
 					enPassantPieceModel.setIsCaptured(true);
 					data.addToCapturedPieces(enPassantPieceModel);
 					enPassantSquareModel.setPiece(null);
-					//Not a wining move
-					data.notifyView();
-					return true;
+					result.getSquareModels().add(enPassantSquareModel);
+					return result;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	private int getYPosForPromotion(ElementColor color)

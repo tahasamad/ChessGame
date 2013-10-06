@@ -93,6 +93,10 @@ public class Non_Visual_Piece implements Serializable {
      * @param isMoved as a boolean
      */
     public void setIsMoved(boolean isMoved) {
+    	if(this.isMoved != isMoved)
+    	{
+    		this.viewDirty = true;
+    	}
         this.isMoved = isMoved;
     }
 
@@ -101,7 +105,7 @@ public class Non_Visual_Piece implements Serializable {
      * @return isCaptured as a boolean
      */
     public boolean isCaptured() {
-        return isCaptured;
+    	return isCaptured;
     }
 
     /**
@@ -110,6 +114,10 @@ public class Non_Visual_Piece implements Serializable {
      * @param isCaptured as a boolean
      */
     public void setIsCaptured(boolean isCaptured) {
+    	if(this.isCaptured != isCaptured)
+    	{
+    		this.viewDirty = true;
+    	}
         this.isCaptured = isCaptured;
     }
 

@@ -9,7 +9,7 @@ public class DiagonalBehavior implements Behavior {
 	private Behavior basicBehavior = new NonJumpableBasicBehavior();
 	
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		if(ChessGameUtils.isInGridBounds(newPosition))
 		{
@@ -20,6 +20,6 @@ public class DiagonalBehavior implements Behavior {
 				return this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
 			}
 		}	
-		return false;
+		return null;
 	}
 }

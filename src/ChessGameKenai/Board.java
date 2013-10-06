@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
+import GameElements.Behaviors.BehaviorResult;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
@@ -258,12 +259,12 @@ public final class Board extends JPanel implements Observer {
 //            this.removeListeners(Color.WHITE);
 //            isFirstTime = false;
 //        }
-        if (data != null && data instanceof ArrayList) {
+        if (data != null && data instanceof BehaviorResult) {
             @SuppressWarnings("unchecked")
-			ArrayList<ChessGamePoint> list = (ArrayList<ChessGamePoint>) data;
-            Chess_Data chessData = Chess_Data.getChessData();
+            BehaviorResult result = (BehaviorResult) data;
+			ArrayList<SquareModel> list = result.getSquareModels();
             String turn = "";
-            SquareModel squareModel2 = chessData.getSquareModel(list.get(1));
+            SquareModel squareModel2 = list.get(1);
             if(squareModel2 != null)
             {
                 Non_Visual_Piece pieceModel = squareModel2.getPiece().getPieceModel();
@@ -273,7 +274,7 @@ public final class Board extends JPanel implements Observer {
                     turn = "B" + pieceModel.getType();
                 }
             }
-            SquareModel squareModel1 = chessData.getSquareModel(list.get(0));
+            SquareModel squareModel1 = list.get(0);
             ChessGamePoint srcPosition = squareModel1.getPosition();
             ChessGamePoint dstPosition = squareModel2.getPosition();
             view.getMoves().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.x, srcPosition.y)) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.x, dstPosition.y)) + "\n");

@@ -11,17 +11,18 @@ public class CompositeBehavior implements Behavior{
 	private ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
 	
 	@Override
-	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
+	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Iterator<Behavior> it = this.behaviors.iterator();
 		while(it.hasNext())
 		{
 			Behavior behavior = it.next();
-			if(behavior.purposeMove(currentPosition, newPosition, piece))
+			BehaviorResult result = behavior.purposeMove(currentPosition, newPosition, piece);
+			if(result != null)
 			{
-				return true;
+				return result;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public void addBehavior(Behavior behavior) {
