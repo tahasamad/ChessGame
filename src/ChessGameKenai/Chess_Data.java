@@ -214,7 +214,7 @@ public final class Chess_Data extends Observable {
     {
     	if(yPos == 1 || yPos == this.getDimension() - 2)
         {
-    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Pawn, color);
+    		Non_Visual_Piece  nonVisualPiece = new Non_Visual_Piece(PieceType.Pawn, color);
     		this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
     	else if (xPos == 0 || xPos == 7) 
@@ -407,7 +407,10 @@ public final class Chess_Data extends Observable {
         	{
         		for(int y = 0; y < size; y++)
         		{
-        			this.activePiecesInSavedState[x][y] = this.squareModels[x][y].getPiece().getPieceModel();
+        			if (this.squareModels[x][y] != null && this.squareModels[x][y].getPiece() != null)
+        			{
+        				this.activePiecesInSavedState[x][y] = this.squareModels[x][y].getPiece().getPieceModel();
+        			}
         		}
         	}
         }
