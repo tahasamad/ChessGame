@@ -8,7 +8,6 @@ package GameElements;
 
 import java.io.Serializable;
 
-import GameElements.Behaviors.BasicBehavior;
 import GameElements.Behaviors.Behavior;
 import GameElements.Behaviors.BehaviorFactory;
 
@@ -67,11 +66,15 @@ public class Non_Visual_Piece implements Serializable {
      * @param isQueenFromPawn as a boolean
      */
     public void isQueenFromPawn(boolean isQueenFromPawn) {
-        this.isQueenFromPawn = isQueenFromPawn;
-        if(this.isQueenFromPawn)
+        if(this.isQueenFromPawn != isQueenFromPawn)
         {
-	        this.type = PieceType.Queen;
-	        this.behavior = BehaviorFactory.makeBehaviorForType(this);
+	        if(isQueenFromPawn)
+	        {
+		        this.type = PieceType.Queen;
+		        this.behavior = BehaviorFactory.makeBehaviorForType(this);
+		        this.viewDirty = true;
+	        }
+	        this.isQueenFromPawn = isQueenFromPawn;
         }
     }
 
@@ -90,10 +93,6 @@ public class Non_Visual_Piece implements Serializable {
      * @param isMoved as a boolean
      */
     public void setIsMoved(boolean isMoved) {
-    	if(this.isMoved != isMoved)
-    	{
-    		this.viewDirty = true;
-    	}
         this.isMoved = isMoved;
     }
 
@@ -111,10 +110,6 @@ public class Non_Visual_Piece implements Serializable {
      * @param isCaptured as a boolean
      */
     public void setIsCaptured(boolean isCaptured) {
-    	if(this.isCaptured != isCaptured)
-    	{
-    		this.viewDirty = true;
-    	}
         this.isCaptured = isCaptured;
     }
 

@@ -13,8 +13,7 @@ public class VerticalBehavior implements Behavior {
 	{	
 		if((ChessGameUtils.isInGridBounds(newPosition)) && newPosition.x == currentPosition.x && newPosition.y != currentPosition.y)
 		{
-			this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
-			return true;
+			return this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
 		}
 		return false;
 	}

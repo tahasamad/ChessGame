@@ -15,20 +15,21 @@ public class PawnBehavior implements Behavior{
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.y - currentPosition.y;
+		boolean retVal = false;
 		if(data.posHasPiece(newPosition))
 		{
 			if(pieceModel.getColor() == ElementColor.White)
 			{
 				if(diffY < 0)
 				{
-					return this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+					retVal = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
 				}
 			}
 			else
 			{
 				if(diffY > 0)
 				{
-					return this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+					retVal = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
 				}
 			}
 		}
@@ -39,35 +40,47 @@ public class PawnBehavior implements Behavior{
 			{
 				if(diffY < 0)//Correct Direction
 				{
-					return this.normalMove(currentPosition, newPosition, piece);
+					retVal = this.normalMove(currentPosition, newPosition, piece);
 				}
 			}
 			else
 			{
 				if(diffY > 0)//Correct Direction
 				{
-					return this.normalMove(currentPosition, newPosition, piece);
+					retVal = this.normalMove(currentPosition, newPosition, piece);
 				}
 			}
 			///////EnPassant Move/////////
-			if(pieceModel.getColor() == ElementColor.White)
+			if(!retVal)
 			{
-				if(diffY < 0)
+				if(pieceModel.getColor() == ElementColor.White)
 				{
-					ChessGamePoint enPassantPoint = data.getEnPessant(ElementColor.Black);			
-					return this.enPassantMove(currentPosition, newPosition, piece, enPassantPoint, -1);
+					if(diffY < 0)
+					{
+						ChessGamePoint enPassantPoint = data.getEnPessant(ElementColor.Black);			
+						retVal = this.enPassantMove(currentPosition, newPosition, piece, enPassantPoint, -1);
+					}
 				}
-			}
-			else
-			{	
-				if(diffY > 0)
-				{
-					ChessGamePoint enPassantPoint = data.getEnPessant(ElementColor.White);
-					return this.enPassantMove(currentPosition, newPosition, piece, enPassantPoint, +1);
+				else
+				{	
+					if(diffY > 0)
+					{
+						ChessGamePoint enPassantPoint = data.getEnPessant(ElementColor.White);
+						retVal = this.enPassantMove(currentPosition, newPosition, piece, enPassantPoint, +1);
+					}
 				}
 			}
 		}
-		return false;
+		if(retVal)
+		{
+			int yPos = this.getYPosForPromotion(pieceModel.getColor());
+			if(yPos == newPosition.y)
+			{
+				pieceModel.isQueenFromPawn(true);
+				piece.updateView();
+			}
+		}
+		return retVal;
 	}
 	
 	private boolean normalMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
@@ -85,7 +98,7 @@ public class PawnBehavior implements Behavior{
 		{
 			if(this.verticalBehavior.purposeMove(currentPosition, newPosition, piece))
 			{
-				if(diffY == 2)
+				if(adsDiffY == 2)
 				{
 					data.setEnPessant(pieceModel.getColor(), newPosition.clone());
 				}
@@ -108,10 +121,26 @@ public class PawnBehavior implements Behavior{
 					Non_Visual_Piece enPassantPieceModel = enPassantSquareModel.getPiece().getPieceModel();
 					enPassantPieceModel.setIsCaptured(true);
 					data.addToCapturedPieces(enPassantPieceModel);
+					enPassantSquareModel.setPiece(null);
+					//Not a wining move
+					data.notifyView();
 					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
+	
+	private int getYPosForPromotion(ElementColor color)
+	{
+		if(color == ElementColor.White)
+		{
+			return 0;
+		}
+		else
+		{
+			return (Chess_Data.getChessData().getDimension() - 1);
+		}
+	}
+	
 }

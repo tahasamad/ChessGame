@@ -137,6 +137,7 @@ public class Square extends JPanel {
 			if(piece != null)
 			{
 				this.add(piece);
+				piece.updateView();
 			}
 			this.revalidate();
 			this.repaint();

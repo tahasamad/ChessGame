@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ChessGameKenai.Chess_Data;
 import ChessGameKenai.SquareModel;
+import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
 import Utils.ChessGamePoint;
@@ -25,10 +26,19 @@ public class BasicBehavior implements Behavior{
 		squareModel2.setPiece(piece);
 		SquareModel squareModel1 = data.getSquareModel(currentPosition);
 		squareModel1.setPiece(null);
+		piece.getPieceModel().setIsMoved(true);
 		ArrayList<ChessGamePoint> list = new ArrayList<ChessGamePoint>();
 		list.add(squareModel1.getPosition());//src
 		list.add(squareModel2.getPosition());//dst
 		data.changeTurn();
+		if(piece.getPieceModel().getColor() == ElementColor.White)
+		{
+			data.setEnPessant(ElementColor.Black, null);
+		}
+		else
+		{
+			data.setEnPessant(ElementColor.White, null);
+		}
 		data.notifyView(list);
 		return true;
 	}

@@ -69,34 +69,6 @@ public class Piece extends JPanel {
         return this.pieceModel.getColor();
     }
 
-//    /**
-//     * The method getPosition returns Position
-//     * @return position of the object
-//     */
-//    public ChessGamePoint getPosition() {
-//        return this.pieceModel.getPosition();
-//    }
-//
-//    /**
-//     * The method setPosition sets object's position
-//     * @param position position of the object
-//     */
-//    public void setPosition(ChessGamePoint position) {
-//        this.pieceModel.setPosition(position);
-//    }
-//    
-//    public void setPositionOnBoard(ChessGamePoint position) throws Error {
-//    	if(this.board == null)
-//    	{
-//    		throw new Error("Board is null.");
-//    	}
-//    	else
-//    	{
-//    		this.pieceModel.setPosition(position);
-//    		this.board.addPiece(this);
-//    	}
-//    }
-
     /**
      * The method getType returns type as a String
      * @return the type of object
@@ -152,6 +124,15 @@ public class Piece extends JPanel {
     		return behavior.purposeMove(originalPosition, destinationPosition, this);
     	}
     	return false;
+    }
+    
+    public void updateView()
+    {
+    	if(this.pieceModel.getViewDirty() && this.pieceModel.isQueenFromPawn())
+    	{
+    		this.imagePath = ChessGameUtils.getPieceImageFilePathForTypeAndColor(this.pieceModel.getType(), this.pieceModel.getColor());
+    		this.pieceModel.setViewDirty(false);
+    	}
     }
     
 }
