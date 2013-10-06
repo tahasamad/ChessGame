@@ -198,7 +198,7 @@ public class ConnectionBridge implements Observer {
                 }
             } else if (object instanceof ArrayList) {
                 ArrayList list = (ArrayList) object;
-                data.move((Integer) list.get(0), (Integer) list.get(1));
+                //data.move((Integer) list.get(0), (Integer) list.get(1));TODO:
             }
         }
     }

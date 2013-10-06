@@ -65,7 +65,6 @@ public class ChessBoardView extends JFrame implements Observer {
     private CapturedPieces whiteCapturedPiecesPanel, blackCapturedPiecesPanel;
     private JLabel whoseTurnLabel;
     private PlayerInfoPanel player1InfoPanel, player2InfoPanel;
-    private int numberOfWins;
     private JButton restartButton;
     private JTabbedPane tabs;
     private JFileChooser fileChooser = new JFileChooser(".");
@@ -85,7 +84,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * @param Chess_Data.getChessData() address of the Chess_Data object
      */
      public ChessBoardView() {
-        tArea.setText("--------Moves Made-------\n");
+        tArea.setText(ChessGameConstants.tAreaTopString);
         tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         tArea.setOpaque(false);
         tArea.setEditable(false);
@@ -148,56 +147,22 @@ public class ChessBoardView extends JFrame implements Observer {
         mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
 
         //CREATE AND INITILALIZE WHOSE TURN LABEL
-        whoseTurnLabel = new JLabel(Chess_Data.getChessData().getPlayers().get(0).getName(), SwingConstants.CENTER);
+        whoseTurnLabel = new JLabel("", SwingConstants.CENTER);
         whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
         whoseTurnLabel.setForeground(Color.WHITE);
+        this.setupTextOfWhoseTurnLabel();
 
         //CREATE AND INITIALIZE PLAYER INFO PANEL
         
         //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        ActionListener player1TimerAction = new ActionListener() {
 
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-
-                if (Chess_Data.getChessData().isWhiteTurn()) {            
-                	player1InfoPanel.updateTimerLabel();
-                }
-                else if (!Chess_Data.getChessData().isWhiteTurn()) {
-                    player1InfoPanel.stopTimer();
-                    player2InfoPanel.startTimer();
-                }
-            }
-        };
         player1InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(0));
-        player1InfoPanel.createTimer(player1TimerAction);
+        player1InfoPanel.createTimer();
+        player1InfoPanel.startTimer();
 
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
-        ActionListener player2TimerAction = new ActionListener() {
-
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if (!Chess_Data.getChessData().isWhiteTurn()) 
-                {
-                	player2InfoPanel.updateTimerLabel();
-                } 
-                else if (Chess_Data.getChessData().isWhiteTurn()) 
-                {
-                	player2InfoPanel.stopTimer();
-                	player1InfoPanel.startTimer();
-                }
-            }
-        };
         player2InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(1));
-        player2InfoPanel.createTimer(player2TimerAction);
+        player2InfoPanel.createTimer();
+        player2InfoPanel.stopTimer();
         
         //CREATE AND INITIALIZE NORTH PANEL
         northPanel = new JPanel(new GridLayout(1, 2));
@@ -237,6 +202,7 @@ public class ChessBoardView extends JFrame implements Observer {
                 if (Chess_Data.getChessData().isGameOnLine()) {
                     int returnValue = JOptionPane.showConfirmDialog(ChessBoardView.this, "The Connection will be lost would you like to proceed?Y/N", "Confirmation Message", JOptionPane.YES_NO_OPTION);
                     if (returnValue == JOptionPane.YES_OPTION) {
+                    	Chess_Data.destroy();
                         ChessBoardView.this.dispose();
                         EventQueue.invokeLater(new Runnable() {
 
@@ -246,6 +212,7 @@ public class ChessBoardView extends JFrame implements Observer {
                         });
                     }
                 } else {
+                	Chess_Data.destroy();
                     ChessBoardView.this.dispose();
                     EventQueue.invokeLater(new Runnable() {
 
@@ -594,26 +561,53 @@ public class ChessBoardView extends JFrame implements Observer {
      * @param arg any object
      */
     public void update(Observable o, Object arg) {
-
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-        whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
-
-        /*if (data.isWinner()) {
-            if (data.getCapturedPieces().get(data.getCapturedPieces().size() - 1).getColor() == Color.BLACK) {
-                whoseTurnLabel.setText(data.getPlayers().get(0).getName() + " has won the game!");
-                data.getPlayers().get(0).setNumberOfWins(++numberOfWins);
-            } else {
-                whoseTurnLabel.setText(data.getPlayers().get(1).getName() + " has won the game!");
-                data.getPlayers().get(1).setNumberOfWins(++numberOfWins);
-            }
-            board.removeListeners(Color.WHITE);
-            board.removeListeners(Color.BLACK);
-            this.stopTimer();
-        }
-       player1InfoPanel.resetPanelInformation();
-       player2InfoPanel.resetPanelInformation();*/
+    	this.setupTextOfWhoseTurnLabel();
+    	this.adjustHandlerAndTimers();
+        player1InfoPanel.resetPanelInformation();
+        player2InfoPanel.resetPanelInformation();
     }
-
+    
+    private void setupTextOfWhoseTurnLabel()
+    {
+    	Chess_Data data = Chess_Data.getChessData();
+    	this.whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (data.getPlayers().get(0).getName() + ChessGameConstants.turnToPlay) : (data.getPlayers().get(1).getName() + ChessGameConstants.turnToPlay));
+    }
+    
+    private void adjustHandlerAndTimers()
+    {
+    	Chess_Data data = Chess_Data.getChessData();
+    	if (data.isWinner()) {
+	        if (data.getCapturedPieces().get(data.getCapturedPieces().size() - 1).getColor() == ElementColor.Black) {
+	            whoseTurnLabel.setText(data.getPlayers().get(0).getName() + ChessGameConstants.hasWon);
+	            int wins = data.getPlayers().get(0).getNumberOfWins();
+	            data.getPlayers().get(0).setNumberOfWins(++wins);
+	        } else {
+	            whoseTurnLabel.setText(data.getPlayers().get(1).getName() + ChessGameConstants.hasWon);
+	            int wins = data.getPlayers().get(1).getNumberOfWins();
+	            data.getPlayers().get(1).setNumberOfWins(++wins);
+	        }
+	        this.board.removeHandlers();
+	        this.stopTimer();
+	    }
+    	else
+    	{
+		    if (data.isGameOnLine()) {
+			    this.board.distributeOnLineListeners();
+		    }
+		    if(data.isWhiteTurn())
+		    {
+		    	this.player1InfoPanel.startTimer();
+		    	this.player2InfoPanel.stopTimer();
+		    }
+		    else
+		    {
+		    	this.player1InfoPanel.stopTimer();
+		    	this.player2InfoPanel.startTimer();
+		    }
+    	}
+    }
+	    
     /**
      * The method chooseNameLocal is used if the user
      * wants to change its name and the game is local game
@@ -712,24 +706,18 @@ public class ChessBoardView extends JFrame implements Observer {
      * on the same computer locally
      */
     public void restartLocalGame() {
-/*        Chess_Data.getChessData().getActivePieces().clear();
-        Chess_Data.getChessData().getCapturedPieces().clear();
-        Chess_Data.getChessData().createNonVisualPieces();
-        board.removeAllPieces();
-        //board.getPieces().clear();
-        board.populateBoard();
-        stopTimer();
-        player1InfoPanel.resetTimerLabel();
-        player2InfoPanel.resetTimerLabel();
-        tArea.setText("");
-        whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
-        this.resetAllSquares();
-        chat.getTxtPane().setText("");
-        Chess_Data.getChessData().getCapturedPieces().clear();
-        board.removeListeners(Color.BLACK);
-        board.addListeners(Color.WHITE);
-        whiteCapturedPiecesPanel.removeAll();
-        blackCapturedPiecesPanel.removeAll();*/
+    	this.board.resetSelectedSquare();
+    	Chess_Data data = Chess_Data.getChessData();
+        data.discardState();
+        this.whiteCapturedPiecesPanel.removeAll();
+        this.blackCapturedPiecesPanel.removeAll();
+        this.tArea.setText(ChessGameConstants.tAreaTopString);
+        this.player1InfoPanel.resetTimerLabel();
+        this.player2InfoPanel.resetTimerLabel();
+        data.notifyView();
+        data.loadActivePiecesFromSavedState();
+        this.board.populateBoard();
+        this.board.addHandlers();
     }
 
     /**
@@ -756,28 +744,18 @@ public class ChessBoardView extends JFrame implements Observer {
      * adds and removes listeners depending on who's server or a client
      */
     public void restartClientGame() {
-/*        this.resetAllSquares();
-        Chess_Data.getChessData().getActivePieces().clear();
-        Chess_Data.getChessData().getCapturedPieces().clear();
-        Chess_Data.getChessData().createNonVisualPieces();
-        board.removeAllPieces();
-        //board.getPieces().clear();
-        board.populateBoard();
-        tArea.setText("");
-        player1InfoPanel.resetTimerLabel();
-        player2InfoPanel.resetTimerLabel();
-        player1InfoPanel.startTimer();
-        player2InfoPanel.stopTimer();
-        whoseTurnLabel.setText(Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play");
-        if (Chess_Data.getChessData().isServer()) {
-            board.removeListeners(Color.BLACK);
-            board.addListeners(Color.WHITE);
-        } else {
-            board.removeListeners(Color.WHITE);
-            board.removeListeners(Color.BLACK);
-        }
-        whiteCapturedPiecesPanel.removeAll();
-        blackCapturedPiecesPanel.removeAll();*/
+    	this.board.resetSelectedSquare();
+    	Chess_Data data = Chess_Data.getChessData();
+        data.discardState();
+        this.whiteCapturedPiecesPanel.removeAll();
+        this.blackCapturedPiecesPanel.removeAll();
+        this.tArea.setText(ChessGameConstants.tAreaTopString);
+        this.player1InfoPanel.resetTimerLabel();
+        this.player2InfoPanel.resetTimerLabel();
+        data.notifyView();
+        data.loadActivePiecesFromSavedState();
+        this.board.populateBoard();
+        this.board.addHandlers();
     }
 
     /**
@@ -841,19 +819,6 @@ public class ChessBoardView extends JFrame implements Observer {
         } else if (returnValue == JOptionPane.NO_OPTION) {
             System.exit(0);
         }
-    }
-
-    /**
-     * The method resetAllSquares simply resets all squares to their
-     * original color checks each square for their background color
-     * and if the background is blue then it switches the background back to original color
-     */
-    public void resetAllSquares() {
-        /*for (Square s : board.getSquares()) {
-            if (s.getBackground() == Color.BLUE) {
-                s.setBackground(s.getColor());
-            }
-        }*/
     }
 
     /**

@@ -6,13 +6,14 @@
  */
 package ChessGameKenai;
 
-import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
 import Utils.ChessGamePoint;
@@ -178,12 +179,6 @@ public final class Board extends JPanel implements Observer {
             //IF NORMAL_BOARD EXECUTE THE CASE STATEMENT
         
             case Normal:
-//                for (int i = 0; i < squares.size(); i++) {
-//                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
-//                    squares.get(i).repaint();
-//                    this.add(squares.get(i));
-//                }
-                
                 for(int x = 0; x < size; x++)
                 {
                 	for(int y = 0; y < size; y++)
@@ -197,11 +192,6 @@ public final class Board extends JPanel implements Observer {
 
             //IF FLIPPED_BOARD EXECUTE THE CASE STATEMENT
             case Flipped:
-//                for (int i = squares.size() - 1; i > -1; i--) {
-//                    squares.get(i).setBounds((int) (455 - squares.get(i).getBounds().getX()), (int) (455 - squares.get(i).getBounds().getY()), 65, 65);
-//                    squares.get(i).repaint();
-//                    this.add(squares.get(i));
-//                }
                 for(int x = size - 1; x >= 0; x--)
                 {
                 	for(int y = size - 1; y >= 0; y--)
@@ -234,34 +224,22 @@ public final class Board extends JPanel implements Observer {
     		this.currentBoard = currentBoard;
     }
 
-    /**
-     * The method addListeners adds the listeners to the specified color
-     * it loops through the list of visual pieces and adds the listeners to the specified color pieces
-     * @param color as a Color
-     */
-    public void addListeners(Color color) {
-    	
-    	
-//        for (int i = 0; i < pieces.size(); i++) {
-//            Piece p = pieces.get(i);
-//            if (p.getColor() == color) {
-//                p.addListener();
-//            }
-//        }
+    public void addHandlers() {
+    	int size = Chess_Data.getChessData().getDimension();
+        for (int x = 0; x < size; x++) {
+        	for (int y = 0; y < size; y++) {
+        		this.squares[x][y].addHandler();
+        	}
+        }
     }
 
-    /**
-     * The method removeListeners removes the listeners to the specified color
-     * it loops through the list of visual pieces and removes the listeners from the specified color pieces
-     * @param color as a Color
-     */
-    public void removeListeners(Color color) {
-//        for (int i = 0; i < pieces.size(); i++) {
-//            Piece p = pieces.get(i);
-//            if (p.getColor() == color) {
-//                p.removeListener();
-//            }
-//        }
+    public void removeHandlers() {
+    	int size = Chess_Data.getChessData().getDimension();
+        for (int x = 0; x < size; x++) {
+        	for (int y = 0; y < size; y++) {
+        		this.squares[x][y].removeHandler();
+        	}
+        }
     }
 
     /**
@@ -270,37 +248,38 @@ public final class Board extends JPanel implements Observer {
      * it can in turn display changes to the view that happened in data
      * It redraws pieces then it distributes the listeners accordingly
      * and if any pieces were captured they are removed from the array list of pieces
-     * @param o as an Observable object
-     * @param arg as an Object any object
+     * @param observable as an Observable object
+     * @param data as an Object any object
      */
-    public void update(Observable o, Object arg) {
+    public void update(Observable observable, Object data) {
         this.redrawPieces();
-//        if (!data.isWinner() && !data.isGameOnLine()) {
-//            //this.distributeListeners();
-//        }
-//        if (data.isGameOnLine()) {
-//            //this.distributeOnLineListeners();
-//        }
 //        if (!data.isServer() && isFirstTime) {
 //            this.removeListeners(Color.BLACK);
 //            this.removeListeners(Color.WHITE);
 //            isFirstTime = false;
 //        }
-//        if (arg != null) {
-//            ArrayList list = (ArrayList) arg;
-//            String turn = "";
-//            if (squares.get((Integer) list.get(1) - 1).getComponentCount() > 0) {
-//                Piece p = ((Piece) squares.get((Integer) list.get(1) - 1).getComponent(0));
-//                if (p.getColor() == Color.WHITE) {
-//                    turn = "W" + p.getType();
-//                } else {
-//                    turn = "B" + p.getType();
-//                }
-//            }
-//            view.getMoves().append(turn + " from: " + mapPositions.get(list.get(0)) + " to " + mapPositions.get(list.get(1)) + "\n");
-//            view.getMoves().append("--------------------------\n");
-//            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
-//        }
+        if (data != null && data instanceof ArrayList) {
+            @SuppressWarnings("unchecked")
+			ArrayList<ChessGamePoint> list = (ArrayList<ChessGamePoint>) data;
+            Chess_Data chessData = Chess_Data.getChessData();
+            String turn = "";
+            SquareModel squareModel2 = chessData.getSquareModel(list.get(1));
+            if(squareModel2 != null)
+            {
+                Non_Visual_Piece pieceModel = squareModel2.getPiece().getPieceModel();
+                if (pieceModel.getColor() == ElementColor.White) {
+                    turn = "W" + pieceModel.getType();
+                } else {
+                    turn = "B" + pieceModel.getType();
+                }
+            }
+            SquareModel squareModel1 = chessData.getSquareModel(list.get(0));
+            ChessGamePoint srcPosition = squareModel1.getPosition();
+            ChessGamePoint dstPosition = squareModel2.getPosition();
+            view.getMoves().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.x, srcPosition.y)) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.x, dstPosition.y)) + "\n");
+            view.getMoves().append("--------------------------\n");
+            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
+        }
         this.revalidate();
         this.repaint();
     }
@@ -345,25 +324,22 @@ public final class Board extends JPanel implements Observer {
      * depending on who's turn it is adds or removes listeners
      * This method is only used if the game is played online
      */
-//    public void distributeOnLineListeners() {
-//        if (data.isServer()) {
-//            if (data.isWhiteTurn()) {
-//                this.addListeners(Color.WHITE);
-//                this.removeListeners(Color.BLACK);
-//            } else {
-//                this.removeListeners(Color.WHITE);
-//                this.removeListeners(Color.BLACK);
-//            }
-//        } else {
-//            if (!data.isWhiteTurn()) {
-//                this.addListeners(Color.BLACK);
-//                this.removeListeners(Color.WHITE);
-//            } else {
-//                this.removeListeners(Color.BLACK);
-//                this.removeListeners(Color.WHITE);
-//            }
-//        }
-//    }
+    public void distributeOnLineListeners() {
+    	Chess_Data data = Chess_Data.getChessData();
+        if (data.isServer()) {
+            if (data.isWhiteTurn()) {
+                this.addHandlers();
+            } else {
+                this.removeHandlers();
+            }
+        } else {
+            if (!data.isWhiteTurn()) {
+                this.addHandlers();
+            } else {
+                this.removeHandlers();
+            }
+        }
+    }
 
     /**
      * This method only notifies the view to update the display
@@ -391,8 +367,8 @@ public final class Board extends JPanel implements Observer {
      */
     public void mapPositions(int x, int y) {
     	int asciiForSmallA = 97;
-    	String string = Character.toString((char) (asciiForSmallA + x));
-    	string += y;
+    	String string = "" + (Chess_Data.getChessData().getDimension() - y);
+    	string += Character.toString((char) (asciiForSmallA + x));
     	this.mapPositions.put(this.getMapPositionKey(x, y), string);
     }
     
@@ -400,4 +376,15 @@ public final class Board extends JPanel implements Observer {
     {
     	return "" + x + ":" + y;
     }
+    
+    public void resetSelectedSquare() {
+    	Chess_Data data = Chess_Data.getChessData();
+    	Square selectedSquare = data.getSelectedSquare();
+    	if(selectedSquare != null)
+    	{
+    		selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
+    		data.setSelectedSquare(null);
+    	}
+    }
+
 }

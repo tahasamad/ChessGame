@@ -7,6 +7,7 @@
 package ChessGameKenai;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 /**
  * The Player class implements Serializable
@@ -16,7 +17,7 @@ import java.io.Serializable;
  * @see Serializable
  * @version 1.01
  */
-public class Player implements Serializable {
+public class Player extends Observable implements Serializable {
 
     private String name;
     private int numberOfWins;

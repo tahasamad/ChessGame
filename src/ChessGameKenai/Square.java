@@ -33,6 +33,7 @@ public class Square extends JPanel {
     private Color currentColor;
     private Color previousColor;
     private SquareModel squareModel;
+    private MouseEventHandler handler;
 
     /**
      * OverLoaded Constructor for creating square objects
@@ -51,7 +52,8 @@ public class Square extends JPanel {
         ChessGamePoint position = this.getPosition();
         this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);        
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
-        this.addMouseListener(new SendData());
+        this.handler = new MouseEventHandler();
+        this.addMouseListener(this.handler);
     }
 
     /**
@@ -140,6 +142,16 @@ public class Square extends JPanel {
 			this.repaint();
 		}
 	}
+		
+	public void addHandler()
+	{
+		this.addMouseListener(this.handler);
+	}
+	
+	public void removeHandler()
+	{
+		this.removeMouseListener(this.handler);
+	}
 
 	/**
      * The SendData Class is a nested inner class of our object
@@ -150,13 +162,13 @@ public class Square extends JPanel {
      * @see Square Class
      * @version 1.0
      */
-    protected class SendData extends MouseAdapter {
+    protected class MouseEventHandler extends MouseAdapter {
 
         /**
          * Overloaded Constructor of the inner class
          * @param data the address of the model for later communication purposes
          */
-        protected SendData() {
+        protected MouseEventHandler() {
 
         }
 
@@ -183,7 +195,7 @@ public class Square extends JPanel {
             		{
             			selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
             		}
-            		Square.this.setBackground(Color.BLUE);
+            		Square.this.setBackground(ChessGameConstants.selectedSquareColor);
             		Chess_Data.getChessData().setSelectedSquare(Square.this);
             		selectedSquare = Square.this;
             	}
@@ -204,7 +216,6 @@ public class Square extends JPanel {
         	boolean hasMoved = selectedPiece.tryToMove(selectedSquare.getPosition().clone(), Square.this.getPosition().clone());
         	if(hasMoved)
         	{
-        		Chess_Data.getChessData().changeTurn();
         		selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
         		Chess_Data.getChessData().setSelectedSquare(null);
         	}

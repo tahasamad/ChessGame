@@ -1,6 +1,6 @@
 package GameElements.Behaviors;
 
-import java.awt.Container;
+import java.util.ArrayList;
 
 import ChessGameKenai.Chess_Data;
 import ChessGameKenai.SquareModel;
@@ -23,9 +23,13 @@ public class BasicBehavior implements Behavior{
 		}
 		SquareModel squareModel2 = data.getSquareModel(newPosition);
 		squareModel2.setPiece(piece);
-		SquareModel square1 = data.getSquareModel(currentPosition);
-		square1.setPiece(null);
-		data.notifyView();
+		SquareModel squareModel1 = data.getSquareModel(currentPosition);
+		squareModel1.setPiece(null);
+		ArrayList<ChessGamePoint> list = new ArrayList<ChessGamePoint>();
+		list.add(squareModel1.getPosition());//src
+		list.add(squareModel2.getPosition());//dst
+		data.changeTurn();
+		data.notifyView(list);
 		return true;
 	}
 }

@@ -3,7 +3,10 @@ package ChessGameKenai;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -11,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-public class PlayerInfoPanel extends JPanel {
+public class PlayerInfoPanel extends JPanel implements Observer{
 	
 	private JLabel playerNameLabel, numberOfWinsLabel, timerLabel, playerIcon;
 	private Player playerInfo;
@@ -24,6 +27,7 @@ public class PlayerInfoPanel extends JPanel {
 		
 		playerInfo = data;
 		setUpInfoLayer();
+		this.playerInfo.addObserver(this);
 	}
 	private void setUpInfoLayer()
 	{
@@ -36,7 +40,7 @@ public class PlayerInfoPanel extends JPanel {
 		propetiesPanel.setOpaque(false);
 		
 		playerNameLabel =getLabelWithString(playerInfo.getName(), 20);		
-		numberOfWinsLabel = getLabelWithString("Number of wins: "+playerInfo.getNumberOfWins(), 20);
+		numberOfWinsLabel = getLabelWithString("Number of wins: " + playerInfo.getNumberOfWins(), 20);
 		timerLabel = getLabelWithString("00:00:00", 20);
 
         propetiesPanel.add(playerNameLabel);
@@ -45,8 +49,14 @@ public class PlayerInfoPanel extends JPanel {
 		
 		add(propetiesPanel);
 	}
-	public void createTimer(ActionListener listener)
+	public void createTimer()
 	{
+        ActionListener listener = new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                PlayerInfoPanel.this.updateTimerLabel();
+            }
+        };
 		playerTimer = new javax.swing.Timer(1000, listener);
 	}
 	private void addPlayerIcon()
@@ -67,7 +77,7 @@ public class PlayerInfoPanel extends JPanel {
 	}
 	public void resetPanelInformation()
 	{
-		numberOfWinsLabel.setText("Number of wins: "+playerInfo.getNumberOfWins());
+		numberOfWinsLabel.setText("Number of wins: " + playerInfo.getNumberOfWins());
 		playerIcon.setIcon(new ImageIcon(getClass().getResource(playerInfo.getIconPath())));
 		updatePlayerName();
 	}
@@ -86,27 +96,48 @@ public class PlayerInfoPanel extends JPanel {
 		int seconds = playerInfo.getSeconds();
 		int minutes = playerInfo.getMinutes();
 		int hours = playerInfo.getHours();
-		String txt = "00:00:00";
-		if (seconds < 10 && minutes < 10 && hours < 10) 
+		String txt = "";
+		if(hours < 10)
 		{
-			txt = "0" + hours + ":" + "0" + minutes + ":" + "0" + seconds;
+			txt = txt + "0" + hours +  ":";
 		}
-		else if (minutes < 10 && hours < 10 && seconds >= 10) 
+		else
 		{
-			txt = "0" + hours + ":" + "0" + minutes + ":" + seconds;
-		} 
-		else if (minutes >= 10 && hours < 10 && seconds >= 10) 
+			txt = txt + hours +  ":";
+		}
+		if(minutes < 10)
 		{
-			txt = "0" + hours + ":" + minutes + ":" + seconds;
+			txt = txt + "0" + minutes +  ":";
+		}
+		else
+		{
+			txt = txt + minutes +  ":";
+		}
+		if(seconds < 10)
+		{
+			txt = txt + "0" + seconds;
+		}
+		else
+		{
+			txt = txt + seconds;
 		}
 		timerLabel.setText(txt);
 	}
+
 	public void stopTimer()
 	{
 		playerTimer.stop();
 	}
+	
 	public void startTimer()
 	{
 		playerTimer.start();
 	}
+	
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		this.resetPanelInformation();
+		
+	}
+	
 }
