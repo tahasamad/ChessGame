@@ -151,4 +151,14 @@ public class Non_Visual_Piece implements Serializable {
 		this.viewDirty = viewDirty;
 	}
 
+	public Non_Visual_Piece copy()
+    {
+		Non_Visual_Piece newModel = new Non_Visual_Piece(this.getType(), this.getColor());
+		newModel.setIsMoved(this.isMoved());
+		newModel.setIsCaptured(this.isCaptured());
+		newModel.isQueenFromPawn(this.isQueenFromPawn());
+		newModel.setViewDirty(this.getViewDirty());
+		return newModel;
+    }
+    
 }

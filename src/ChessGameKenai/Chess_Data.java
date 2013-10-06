@@ -394,6 +394,25 @@ public final class Chess_Data extends Observable {
         this.isWhiteTurn(true);
     }
     
+    private void makeActivePiecesFromSquareModels() {
+    	if(this.squareModels != null)
+        {
+	    	this.discardActivePiecesInSavedState();
+	    	int size = this.getDimension();
+	    	if(this.activePiecesInSavedState == null)
+	    	{
+	    		this.activePiecesInSavedState = new Non_Visual_Piece[size][size];
+	    	}
+        	for(int x = 0; x < size; x++)
+        	{
+        		for(int y = 0; y < size; y++)
+        		{
+        			this.activePiecesInSavedState[x][y] = this.squareModels[x][y].getPiece().getPieceModel();
+        		}
+        	}
+        }
+    }
+    
     public static void destroy() {
         Chess_Data.chessData = null;
     }
@@ -435,13 +454,11 @@ public final class Chess_Data extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("player.dat")));
             loadedPlayer = (ArrayList<Player>) ois.readObject();
-            players.clear();
             this.setPlayers(loadedPlayer);
             ois.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error " + e.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
         }
-        //this.notifyView();TODO:
     }
     
     /**
@@ -451,6 +468,7 @@ public final class Chess_Data extends Observable {
      */
     public void save() {
         try {
+        	this.makeActivePiecesFromSquareModels();
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("saved_game.dat")));
             ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream(new File("saved_game_captured_pieces.dat")));
             oos.writeObject(activePiecesInSavedState);
@@ -459,6 +477,7 @@ public final class Chess_Data extends Observable {
             oos.flush();
             oss.close();
             oos.close();
+            this.discardActivePiecesInSavedState();
         } catch (IOException ioe) {
             JOptionPane.showMessageDialog(null, "Error " + ioe.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
         }
@@ -472,6 +491,7 @@ public final class Chess_Data extends Observable {
      */
     public void save(File file) {
         try {
+        	this.makeActivePiecesFromSquareModels();
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream(file.getName() + ".bak"));
             oos.writeObject(activePiecesInSavedState);
@@ -480,6 +500,7 @@ public final class Chess_Data extends Observable {
             oos.flush();
             oss.close();
             oos.close();
+            this.discardActivePiecesInSavedState();
         } catch (IOException ioe) {
             JOptionPane.showMessageDialog(null, "Error " + ioe.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
         }
@@ -494,8 +515,8 @@ public final class Chess_Data extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("saved_game.dat")));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(new File("saved_game_captured_pieces.dat")));
-            activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
-            capturedPieces = (ArrayList) iis.readObject();
+            this.activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
+            this.capturedPieces = (ArrayList) iis.readObject();
             this.setPieces();
             iis.close();
             ois.close();
@@ -515,9 +536,9 @@ public final class Chess_Data extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(file + ".bak"));
-            activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
+            this.activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
             this.setPieces();
-            capturedPieces = (ArrayList<Non_Visual_Piece>) iis.readObject();
+            this.capturedPieces = (ArrayList<Non_Visual_Piece>) iis.readObject();
             iis.close();
             ois.close();
         } catch (Exception ioe) {
@@ -532,11 +553,17 @@ public final class Chess_Data extends Observable {
     private void setPieces() {
     	int size = this.getDimension();
         for (int x = 0; x < size; x++) {
-        	for (int y = 0; y < size; y++) {      		
-//        		this.activePiecesInSavedState[x][y] = new Non_Visual_Piece()
+        	for (int y = 0; y < size; y++) {
+        		if(this.activePiecesInSavedState != null)
+        		{
+        			Non_Visual_Piece oldModel = this.activePiecesInSavedState[x][y];
+        			if(oldModel != null)
+        			{
+        				this.activePiecesInSavedState[x][y] = oldModel.copy();
+        			}
+        		}
         	}
-        }
-        
+        }        
     }
     
 }

@@ -19,6 +19,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -41,6 +42,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
 import GameElements.ElementColor;
+import GameElements.Non_Visual_Piece;
+import GameElements.Piece;
+import GameElements.PieceType;
 
 /**
  * The ChessBoardView Class is main view of the chess game it consists of the
@@ -277,7 +281,6 @@ public class ChessBoardView extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 Chess_Data.getChessData().load();
                 ChessBoardView.this.board.removeAllPieces();
-                //ChessBoardView.this.board.getPieces().clear();
                 ChessBoardView.this.board.populateBoard();
                 ChessBoardView.this.loadCapturedPieces();
             }
@@ -687,16 +690,19 @@ public class ChessBoardView extends JFrame implements Observer {
      * captured pieces panel white or black
      */
     public void loadCapturedPieces() {
-        for (int i = 0; i < Chess_Data.getChessData().getCapturedPieces().size(); i++) {
-            /*if (data.getCapturedPieces().get(i).getType().startsWith("W")) {
-                whiteCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
+    	Chess_Data data = Chess_Data.getChessData();
+    	ArrayList<Non_Visual_Piece> capturedPiece = data.getCapturedPieces();
+        for (int i = 0; i < capturedPiece.size(); i++) {
+        	Non_Visual_Piece pieceModel = data.getCapturedPieces().get(i); 
+            if (pieceModel.getColor() == ElementColor.White) {
+                whiteCapturedPiecesPanel.add(new Piece(pieceModel));
                 whiteCapturedPiecesPanel.revalidate();
                 whiteCapturedPiecesPanel.repaint();
             } else {
-                blackCapturedPiecesPanel.add(new Piece(board.getImageMap().get(data.getCapturedPieces().get(i).getType())));
+                blackCapturedPiecesPanel.add(new Piece(pieceModel));
                 blackCapturedPiecesPanel.revalidate();
                 blackCapturedPiecesPanel.repaint();
-            }*/
+            }
         }
     }
 

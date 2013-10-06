@@ -159,8 +159,5 @@ public class Player implements Serializable {
     	this.name = player.getName();
         this.numberOfWins = player.getNumberOfWins();
         this.imagePath = player.getIconPath();
-        this.seconds = player.getHours();
-        this.minutes = player.getMinutes();
-        this.hours = player.getSeconds();
     }
 }
