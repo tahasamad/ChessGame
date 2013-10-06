@@ -226,25 +226,21 @@ public final class Board extends JPanel implements Observer {
     }
 
     public void addHandlers() {
-    	System.out.println("Adding");
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
         		this.squares[x][y].addHandler();
         	}
         }
-        System.out.println("---------------------");
     }
 
     public void removeHandlers() {
-    	System.out.println("Removing");
     	int size = Chess_Data.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
         		this.squares[x][y].removeHandler();
         	}
         }
-        System.out.println("++++++++++++++++++++++++");
     }
 
     /**

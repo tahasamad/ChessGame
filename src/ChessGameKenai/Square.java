@@ -55,9 +55,7 @@ public class Square extends JPanel {
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
         this.handler = new MouseEventHandler();
         this.handlerAdded = false;
-        System.out.println("Adding In Constructor");
         this.addHandler();
-        System.out.println("**********************");
     }
 
     /**
