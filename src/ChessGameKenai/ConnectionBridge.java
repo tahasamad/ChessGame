@@ -206,7 +206,9 @@ public class ConnectionBridge implements Observer {
                 SquareModel squareModel2 = squareModels.get(1);
                 ChessGamePoint srcPoint = squareModel1.getPosition();
                 Piece piece = Chess_Data.getChessData().getSquareModel(srcPoint.x, srcPoint.y).getPiece();
+                Chess_Data.getChessData().deleteObserver(ConnectionBridge.this);
                 piece.tryToMove(srcPoint, squareModel2.getPosition());
+                Chess_Data.getChessData().addObserver(ConnectionBridge.this);
                 //data.move((Integer) list.get(0), (Integer) list.get(1));TODO:
             }
         }

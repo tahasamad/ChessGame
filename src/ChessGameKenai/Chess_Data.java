@@ -38,7 +38,7 @@ public final class Chess_Data extends Observable {
     private ArrayList<Player> loadedPlayer = new ArrayList<Player>();
     private Non_Visual_Piece[][] activePiecesInSavedState;
     private boolean isWhiteTurn = true;
-    private boolean isServer = true;
+    private boolean isServer = false;
     private boolean isGameOnLine = false;
     private SquareModel[][] squareModels;
     private Square selectedSquare;
