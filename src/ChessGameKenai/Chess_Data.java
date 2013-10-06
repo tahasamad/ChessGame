@@ -42,6 +42,8 @@ public final class Chess_Data extends Observable {
     private boolean isGameOnLine = false;
     private SquareModel[][] squareModels;
     private Square selectedSquare;
+    private ChessGamePoint whiteEnPessant;
+    private ChessGamePoint blackEnPessant;
     
 	private static Chess_Data chessData;
 	
@@ -344,7 +346,30 @@ public final class Chess_Data extends Observable {
 		this.selectedSquare = selectedSquare;
 	}
 
-    /**
+	
+    public ChessGamePoint getEnPessant(ElementColor color) {
+		if(color == ElementColor.White)
+		{
+			return whiteEnPessant;
+		}
+		else
+		{
+			return blackEnPessant;
+		}
+	}
+
+	public void setEnPessant(ElementColor color, ChessGamePoint enPessant) {
+		if(color == ElementColor.White)
+		{
+			this.whiteEnPessant = enPessant;
+		}
+		else
+		{
+			this.blackEnPessant = enPessant;
+		}
+	}
+
+	/**
      * The method isWinner checks if there is a winner in the game
      * @return boolean value true if isWinner and false otherwise
      */

@@ -4,9 +4,9 @@ import GameElements.Piece;
 import Utils.ChessGamePoint;
 import Utils.ChessGameUtils;
 
-public class DiagnolBehavior implements Behavior {
+public class DiagonalBehavior implements Behavior {
 	
-	private Behavior basicBehavior = new BasicBehavior();
+	private Behavior basicBehavior = new NonJumpableBasicBehavior();
 	
 	@Override
 	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
@@ -17,8 +17,7 @@ public class DiagnolBehavior implements Behavior {
 			int yDiff = Math.abs(newPosition.y - currentPosition.y);
 			if(xDiff == yDiff)
 			{
-				this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
-				return true;
+				return this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
 			}
 		}	
 		return false;

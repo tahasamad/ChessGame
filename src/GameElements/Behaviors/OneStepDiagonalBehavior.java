@@ -5,7 +5,7 @@ import Utils.ChessGamePoint;
 
 public class OneStepDiagonalBehavior implements Behavior{
 
-	BasicBehavior basicBehavior = new BasicBehavior();
+	private Behavior basicBehavior = new NonJumpableBasicBehavior();
 
 	@Override
 	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
@@ -14,8 +14,7 @@ public class OneStepDiagonalBehavior implements Behavior{
 		int diffY = Math.abs(currentPosition.y - newPosition.y);
 		if(diffX == 1 && diffY == 1)
 		{
-			this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
-			return true;
+			return this.basicBehavior.purposeMove(currentPosition, newPosition, piece);
 		}
 		return false;
 	}

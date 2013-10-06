@@ -15,7 +15,7 @@ public class OneStepVerticalBehavior implements Behavior{
 		{
 			if(this.verticalBehavior.purposeMove(currentPosition, newPosition, piece))
 			{
-					return true;
+				return true;
 			}
 		}
 		return false;

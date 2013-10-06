@@ -6,7 +6,7 @@ import Utils.ChessGameUtils;
 
 public class VerticalBehavior implements Behavior {
 
-	private Behavior basicBehavior = new BasicBehavior();
+	private Behavior basicBehavior = new NonJumpableBasicBehavior();
 	
 	@Override
 	public boolean purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)

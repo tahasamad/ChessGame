@@ -8,7 +8,7 @@ public class BehaviorFactory {
 	{
 		Behavior behavior;
 		CompositeBehavior compositeBehavior;
-		DiagnolBehavior diagnolBehavior;
+		DiagonalBehavior diagnolBehavior;
 		HorizontalBehavior horizontalBehavior;
 		VerticalBehavior verticalBehavior;
 		if (model != null) 
@@ -16,12 +16,7 @@ public class BehaviorFactory {
         	switch (model.getType())
         	{
             	case Pawn:
-            		horizontalBehavior = new HorizontalBehavior();
-            		verticalBehavior = new VerticalBehavior();
-            		compositeBehavior = new CompositeBehavior();
-            		compositeBehavior.addBehavior(horizontalBehavior);
-            		compositeBehavior.addBehavior(verticalBehavior);
-            		behavior = compositeBehavior;
+            		behavior = new PawnBehavior();
             		break;
             	case Rook:
             		horizontalBehavior = new HorizontalBehavior();
@@ -32,7 +27,7 @@ public class BehaviorFactory {
             		behavior = compositeBehavior;
             		break;
             	case Bishop:
-            		behavior = new DiagnolBehavior();
+            		behavior = new DiagonalBehavior();
             		break;
             	case Knight:
             		behavior = new HorizontalBehavior();
@@ -48,7 +43,7 @@ public class BehaviorFactory {
             		behavior = compositeBehavior;
             		break;
             	case Queen:
-            		diagnolBehavior = new DiagnolBehavior();
+            		diagnolBehavior = new DiagonalBehavior();
             		horizontalBehavior = new HorizontalBehavior();
             		verticalBehavior = new VerticalBehavior();
             		compositeBehavior = new CompositeBehavior();

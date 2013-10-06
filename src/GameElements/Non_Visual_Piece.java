@@ -68,8 +68,11 @@ public class Non_Visual_Piece implements Serializable {
      */
     public void isQueenFromPawn(boolean isQueenFromPawn) {
         this.isQueenFromPawn = isQueenFromPawn;
-        this.type = PieceType.Queen;
-        this.behavior = BehaviorFactory.makeBehaviorForType(this);
+        if(this.isQueenFromPawn)
+        {
+	        this.type = PieceType.Queen;
+	        this.behavior = BehaviorFactory.makeBehaviorForType(this);
+        }
     }
 
     /**
