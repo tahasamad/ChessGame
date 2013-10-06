@@ -151,7 +151,7 @@ public class ConnectionBridge implements Observer {
                     this.analyzeAndExecute(object);
                 }
             } catch (SocketException e) {
-            	String clientPlayerName = ChessGameUtils.getCurrentPlayerName();
+            	String clientPlayerName = ChessGameUtils.getOtherPlayerName();
                 chat.appendStr("\n" + clientPlayerName + " Has left the game", smpSet, color);
                 chat.setButtons(false);
                 data.isGameOnLine(false);
@@ -176,7 +176,7 @@ public class ConnectionBridge implements Observer {
             if (object instanceof Packet) {
                 Packet packet = (Packet) object;
                 if (packet.getMessage() != null) {
-                	String clientPlayerName = ChessGameUtils.getCurrentPlayerName();
+                	String clientPlayerName = ChessGameUtils.getOtherPlayerName();
                     chat.appendStr("\n" + clientPlayerName + ": " + packet.getMessage(), packet.getSmpSet(), packet.getColor());
                     chat.getTxtPane().setCaretPosition(chat.getTxtPane().getDocument().getLength());
                 }
