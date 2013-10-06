@@ -17,7 +17,7 @@ import java.util.Observable;
  * @see Serializable
  * @version 1.01
  */
-public class Player extends Observable implements Serializable {
+public class Player implements Serializable {
 
     private String name;
     private int numberOfWins;
@@ -152,5 +152,15 @@ public class Player extends Observable implements Serializable {
         String s = "";
         s += "Name: " + this.getName() + ", Wins: " + this.getNumberOfWins() + ", Icon: " + this.getIconPath();
         return s;
+    }
+    
+    public void updateInfo(Player player)
+    {
+    	this.name = player.getName();
+        this.numberOfWins = player.getNumberOfWins();
+        this.imagePath = player.getIconPath();
+        this.seconds = player.getHours();
+        this.minutes = player.getMinutes();
+        this.hours = player.getSeconds();
     }
 }

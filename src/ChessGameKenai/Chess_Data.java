@@ -315,8 +315,16 @@ public final class Chess_Data extends Observable {
      * @param players Player objects in the ArrayList<Player> players
      */
     public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-        this.notifyView();
+    	if(players != null)
+    	{
+	    	for(int i = 0; i < players.size(); i++)
+	    	{
+	    		Player newPlayer = players.get(i);
+	    		Player currentPlayer = this.players.get(i);
+	    		currentPlayer.updateInfo(newPlayer);
+	    	}
+	    	this.notifyView();
+    	}
     }
 
     /**

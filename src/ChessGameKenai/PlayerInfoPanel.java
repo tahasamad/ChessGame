@@ -5,8 +5,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -14,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-public class PlayerInfoPanel extends JPanel implements Observer{
+public class PlayerInfoPanel extends JPanel {
 	
 	private JLabel playerNameLabel, numberOfWinsLabel, timerLabel, playerIcon;
 	private Player playerInfo;
@@ -27,7 +25,6 @@ public class PlayerInfoPanel extends JPanel implements Observer{
 		
 		playerInfo = data;
 		setUpInfoLayer();
-		this.playerInfo.addObserver(this);
 	}
 	private void setUpInfoLayer()
 	{
@@ -132,12 +129,6 @@ public class PlayerInfoPanel extends JPanel implements Observer{
 	public void startTimer()
 	{
 		playerTimer.start();
-	}
-	
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		this.resetPanelInformation();
-		
 	}
 	
 }
