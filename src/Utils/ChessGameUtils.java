@@ -31,6 +31,20 @@ public class ChessGameUtils { // Applying Utility Pattern
 		return playerName;
 	}
 	
+	public static String getOtherPlayerName ()
+	{
+		String playerName = "";
+		if (Chess_Data.getChessData().isServer()) 
+		{
+			playerName = Chess_Data.getChessData().getPlayers().get(1).getName();
+		} 
+		else 
+		{
+			playerName = Chess_Data.getChessData().getPlayers().get(0).getName();
+		}
+		return playerName;
+	}
+	
 	public static JButton getButtonWithText (String buttonText)
 	{
 		JButton button = new JButton ( buttonText );
