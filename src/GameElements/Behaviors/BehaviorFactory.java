@@ -30,7 +30,7 @@ public class BehaviorFactory {
             		behavior = new DiagonalBehavior();
             		break;
             	case Knight:
-            		behavior = new HorizontalBehavior();
+            		behavior = new KnghtBehavior();
             		break;
             	case King:
             		OneStepDiagonalBehavior oneStepDiagonalBehavior = new OneStepDiagonalBehavior();
