@@ -1,10 +1,12 @@
 package ChessGameKenai;
 
+import java.io.Serializable;
+
 import GameElements.Piece;
 import GameElements.ElementColor;
 import Utils.ChessGamePoint;
 
-public class SquareModel {
+public class SquareModel implements Serializable{
 	
     private ChessGamePoint position;
     private ElementColor baseColor;

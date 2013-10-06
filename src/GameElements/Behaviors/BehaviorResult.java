@@ -1,10 +1,11 @@
 package GameElements.Behaviors;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ChessGameKenai.SquareModel;
 
-public class BehaviorResult {
+public class BehaviorResult implements Serializable{
 	
 	private boolean validMove;
 	private ArrayList<SquareModel> squareModels;
