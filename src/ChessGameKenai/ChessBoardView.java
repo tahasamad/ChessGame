@@ -279,9 +279,13 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                Chess_Data.getChessData().load();
-                ChessBoardView.this.board.removeAllPieces();
-                ChessBoardView.this.board.populateBoard();
+            	ChessBoardView.this.clearLocalGame();
+            	if(!Chess_Data.getChessData().load())
+                {
+            		Chess_Data.getChessData().discardActivePiecesInSavedState();
+            		Chess_Data.getChessData().loadActivePiecesFromSavedState();
+                }
+            	ChessBoardView.this.board.populateBoard();
                 ChessBoardView.this.loadCapturedPieces();
             }
         });
@@ -311,10 +315,13 @@ public class ChessBoardView extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if ((returnValue = fileChooser.showOpenDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    Chess_Data.getChessData().load(file);
-                    ChessBoardView.this.board.removeAllPieces();
-                    //ChessBoardView.this.board.getPieces().clear();
-                    ChessBoardView.this.board.populateBoard();
+                	ChessBoardView.this.clearLocalGame();
+                	if(!Chess_Data.getChessData().load(file))
+                    {
+                		Chess_Data.getChessData().discardActivePiecesInSavedState();
+                		Chess_Data.getChessData().loadActivePiecesFromSavedState();
+                    }
+                	ChessBoardView.this.board.populateBoard();
                     ChessBoardView.this.loadCapturedPieces();
                 }
             }
@@ -706,12 +713,8 @@ public class ChessBoardView extends JFrame implements Observer {
         }
     }
 
-    /**
-     * The method restartLocalGame restarts local game that means
-     * that if the user plays locally we use this method if the user plays
-     * on the same computer locally
-     */
-    public void restartLocalGame() {
+    public void clearLocalGame()
+    {
     	this.board.resetSelectedSquare();
     	Chess_Data data = Chess_Data.getChessData();
         data.discardState();
@@ -721,7 +724,17 @@ public class ChessBoardView extends JFrame implements Observer {
         this.player1InfoPanel.resetTimerLabel();
         this.player2InfoPanel.resetTimerLabel();
         data.notifyView();
-        data.loadActivePiecesFromSavedState();
+        
+    }
+    /**
+     * The method restartLocalGame restarts local game that means
+     * that if the user plays locally we use this method if the user plays
+     * on the same computer locally
+     */
+    public void restartLocalGame() {
+    	this.clearLocalGame();
+    	Chess_Data data = Chess_Data.getChessData();
+    	data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
         this.board.addHandlers();
     }
@@ -750,15 +763,8 @@ public class ChessBoardView extends JFrame implements Observer {
      * adds and removes listeners depending on who's server or a client
      */
     public void restartClientGame() {
-    	this.board.resetSelectedSquare();
+    	this.clearLocalGame();
     	Chess_Data data = Chess_Data.getChessData();
-        data.discardState();
-        this.whiteCapturedPiecesPanel.removeAll();
-        this.blackCapturedPiecesPanel.removeAll();
-        this.tArea.setText(ChessGameConstants.tAreaTopString);
-        this.player1InfoPanel.resetTimerLabel();
-        this.player2InfoPanel.resetTimerLabel();
-        data.notifyView();
         data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
         this.adjustHandlerAndTimers();

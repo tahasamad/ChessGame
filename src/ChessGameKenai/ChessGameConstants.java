@@ -12,6 +12,8 @@ public class ChessGameConstants {
 	public static final String turnToPlay = " turn to play";
 	public static final String tAreaTopString = "--------Moves Made-------\n";
 	public static final String hasWon = " has won!";
+	public static final String saveFile = "saved_game.dat";
+	public static final String saveFileCapturedPieces = "saved_game_captured_pieces.dat";
 	//Values
 	public static final int pieceDimension = 64;
 	public static final int gridDimension = 8;

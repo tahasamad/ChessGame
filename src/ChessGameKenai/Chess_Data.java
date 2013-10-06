@@ -497,8 +497,8 @@ public final class Chess_Data extends Observable {
     public void save() {
         try {
         	this.makeActivePiecesFromSquareModels();
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("saved_game.dat")));
-            ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream(new File("saved_game_captured_pieces.dat")));
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(ChessGameConstants.saveFile)));
+            ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream(new File(ChessGameConstants.saveFileCapturedPieces)));
             oos.writeObject(activePiecesInSavedState);
             oss.writeObject(capturedPieces);
             oss.flush();
@@ -539,17 +539,19 @@ public final class Chess_Data extends Observable {
      * Using ObjectInputStream it loads the game from the file
      * into an ArrayList and then notifies observers which in turn update their views
      */
-    public void load() {
+    public boolean load() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("saved_game.dat")));
-            ObjectInputStream iis = new ObjectInputStream(new FileInputStream(new File("saved_game_captured_pieces.dat")));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(ChessGameConstants.saveFile)));
+            ObjectInputStream iis = new ObjectInputStream(new FileInputStream(new File(ChessGameConstants.saveFileCapturedPieces)));
             this.activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
             this.capturedPieces = (ArrayList) iis.readObject();
             this.setPieces();
             iis.close();
             ois.close();
+            return true;
         } catch (Exception ioe) {
             JOptionPane.showMessageDialog(null, "Error " + ioe.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 
@@ -560,7 +562,7 @@ public final class Chess_Data extends Observable {
      * @param file to load from the System
      */
     @SuppressWarnings("unchecked")
-	public void load(File file) {
+	public boolean load(File file) {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(file + ".bak"));
@@ -569,8 +571,10 @@ public final class Chess_Data extends Observable {
             this.capturedPieces = (ArrayList<Non_Visual_Piece>) iis.readObject();
             iis.close();
             ois.close();
+            return true;
         } catch (Exception ioe) {
             JOptionPane.showMessageDialog(null, "Error " + ioe.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
     

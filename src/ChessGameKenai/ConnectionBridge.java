@@ -22,6 +22,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.text.SimpleAttributeSet;
 
+import GameElements.Piece;
+import GameElements.Behaviors.BehaviorResult;
 import Utils.ChessGameUtils;
 
 /**
@@ -110,9 +112,9 @@ public class ConnectionBridge implements Observer {
      * @param arg as an Object we send a list using this argument
      */
     public void update(Observable o, Object arg) {
-        if (arg != null) {
+        if (arg != null && arg instanceof BehaviorResult) {
             try {
-                oos.writeObject((ArrayList) arg);
+                oos.writeObject((BehaviorResult) arg);
                 oos.flush();
             } catch (Exception e) {
                 chat.appendStr(e.getMessage(), smpSet, color);
@@ -196,8 +198,13 @@ public class ConnectionBridge implements Observer {
                 if (packet.getConfirmRestart() != null) {
                     view.restartClientGame();
                 }
-            } else if (object instanceof ArrayList) {
-                ArrayList list = (ArrayList) object;
+            } else if (object instanceof BehaviorResult) {
+                BehaviorResult result = (BehaviorResult) object;
+                ArrayList<SquareModel> squareModels = result.getSquareModels();
+                SquareModel squareModel1 = squareModels.get(0);
+                SquareModel squareModel2 = squareModels.get(1);
+                Piece piece = squareModel1.getPiece();
+                piece.tryToMove(squareModel1.getPosition(), squareModel2.getPosition());
                 //data.move((Integer) list.get(0), (Integer) list.get(1));TODO:
             }
         }
