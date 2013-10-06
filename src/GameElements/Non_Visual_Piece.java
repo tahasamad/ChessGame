@@ -32,7 +32,7 @@ public class Non_Visual_Piece implements Serializable {
     private boolean isMoved;
     private boolean isQueenFromPawn;
     private boolean viewDirty;
-	private Behavior behavior;
+	private transient Behavior behavior;
 
     /**
      * Overloaded constructor of our class it receives all needed references
