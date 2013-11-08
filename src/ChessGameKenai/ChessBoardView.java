@@ -361,6 +361,7 @@ public class ChessBoardView extends JFrame implements Observer {
                             ChessBoardView.this.reEnableMenuItems(false);
                             bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, false, ipAddress, chat);
                             Chess_Data.getChessData().addObserver(bridge);
+                            Chess_Data.getChessData().setIsClientConnected(true);
                         }
                     }).start();
                 } catch (UnknownHostException ex) {
@@ -384,6 +385,7 @@ public class ChessBoardView extends JFrame implements Observer {
                         ChessBoardView.this.reEnableMenuItems(false);
                         bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, true, null, chat);
                         Chess_Data.getChessData().addObserver(bridge);
+                        Chess_Data.getChessData().setIsClientConnected(false);
                     }
                 }).start();
             }
@@ -424,7 +426,7 @@ public class ChessBoardView extends JFrame implements Observer {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                new Choose_Icon(Chess_Data.getChessData(), bridge);
+                new ChoosePlayerIcon(bridge);
             }
         });
 

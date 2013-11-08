@@ -267,6 +267,23 @@ public class ConnectionBridge implements Observer {
         data.notifyView();
     }
 
+    public void sendPlayerIconInfo(String info)
+    {
+        try {
+        	Packet packet = new Packet();
+            packet.setPlayerIconPath(info);
+        	ObjectOutputStream outputStream = getOutputStream();
+        	if(outputStream != null)
+        	{
+        		outputStream.writeObject(packet);
+        		outputStream.flush();
+        	}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	
+    }
     /**
      * The method setGuestName simply sets the guest name
      * of the player this method is used to update the view of the client

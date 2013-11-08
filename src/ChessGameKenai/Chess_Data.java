@@ -39,7 +39,7 @@ public final class Chess_Data extends Observable {
     private Non_Visual_Piece[][] activePiecesInSavedState;
     private boolean isWhiteTurn = true;
     private boolean isServer = false;
-    private boolean isGameOnLine = false;
+    private boolean isGameOnLine = false, isClientConnected;
     private SquareModel[][] squareModels;
     private Square selectedSquare;
     private ChessGamePoint whiteEnPessant;
@@ -596,6 +596,14 @@ public final class Chess_Data extends Observable {
         		}
         	}
         }        
+    }
+    public boolean getIsClientConnected()
+    {
+    	return isClientConnected;
+    }
+    public void setIsClientConnected(boolean isConnected)
+    {
+    	isClientConnected = isConnected;
     }
     
 }
