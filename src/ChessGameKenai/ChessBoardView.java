@@ -42,6 +42,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
 import UIMenus.FileMenu;
+import UIMenus.HelpMenu;
 import UIMenus.OptionsMenu;
 
 import GameElements.ElementColor;
@@ -66,7 +67,7 @@ public class ChessBoardView extends JFrame implements Observer {
     private JComponent mainPanel, northPanel;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
-    private JMenu helpMenu;
+    private HelpMenu helpMenu;
     private OptionsMenu optionsMenu;
     private FileMenu fileMenu;
     private JScrollPane whiteCapturedPiecesScroll, blackCapturedPiecesScroll;
@@ -213,28 +214,10 @@ public class ChessBoardView extends JFrame implements Observer {
         
 
         //CREATE JMENU
-        helpMenu = new JMenu("Help");
+        helpMenu = new HelpMenu("Help", this);
+        helpMenu.createView();
 
-        //ADD JMENUITEMS TO THE HELP MENU
-        helpMenu.add(new JMenuItem("Chess Rules")).addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                new HelpTopics(ChessBoardView.this);
-            }
-        });
-         helpMenu.add(new JMenuItem("User Guide")).addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                new UserManual(ChessBoardView.this);
-            }
-        });
-
-        helpMenu.add(new JMenuItem("About")).addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                new About(ChessBoardView.this);
-            }
-        });
+   
 
         //ADD MENUS TO THE MENUBAR
         menuBar.add(fileMenu);
