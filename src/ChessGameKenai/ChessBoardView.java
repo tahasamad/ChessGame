@@ -85,234 +85,278 @@ public class ChessBoardView extends JFrame implements Observer {
     private Color color = Color.ORANGE;
     private SimpleAttributeSet smpSet = new SimpleAttributeSet();
     private JMenuItem optionsMenuConnectAsServer, optionsMenuConnectAsClient;
-    private JTextArea tArea = new JTextArea();
-    private JScrollPane scroll = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private JTextArea tArea;
+    private JPanel mainContainer;
+    private JScrollPane scroll;
 
     /**
      * OverLoaded constructor that receives Chess_Data object's address in the system
      * for later communication with the object
      * @param Chess_Data.getChessData() address of the Chess_Data object
      */
-     public ChessBoardView() {
-        tArea.setText(ChessGameConstants.tAreaTopString);
-        tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
-        tArea.setOpaque(false);
-        tArea.setEditable(false);
-        board = new Board(ChessBoardView.this);
-        Chess_Data.getChessData().addObserver(board);
-        Chess_Data.getChessData().addObserver(this);
-        //Chess_Data.getChessData().setSquares(board.getSquares());
-        
-        chat = new Chat(this);
+    
 
-        //ADD A WINDOW LISTENER TO THE JFRAME
-        this.addWindowListener(new WindowAdapter() {
+    
+    public ChessBoardView() {
 
-            /**
-             * The method windowClosing is executed when the user
-             * clicks on the window closing button at the top right corner
-             * @param e WindowEvent object that is generated when window is being closed
-             */
-            @Override
-            public void windowClosing(WindowEvent e) {
-                ChessBoardView.this.promptUserOnExit();
-            }
-        });
+    	setHistoryTabTextView();
+    	board = new Board(ChessBoardView.this);
+    	Chess_Data.getChessData().addObserver(board);
+    	Chess_Data.getChessData().addObserver(this);
 
-        //LOADS THE ARRAY LIST WITH TWO PLAYER OBJECTS AND GIVES THEM INITIAL VALUES
-        Chess_Data.getChessData().getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
-        Chess_Data.getChessData().getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
+    	chat = new Chat(this);
 
-        //CREATE JBUTTON RESTART AND ADD ACTION LISTENER TO IT THROUGH THE ANONYMOUS CLASS
-        restartButton = new JButton("Restart", new ImageIcon(getClass().getResource("Icons/start.png")));
-        restartButton.addActionListener(new ActionListener() {
+    	addExitButton ();
+    	loadDefaultPlayers ();
+    	addRestartButton ();
 
-            /**
-             * The method actionPerformed is the method
-             * that is inherited from ActionListener Interface
-             * @param e ActionEvent object that is generated when listener detects an action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if (!Chess_Data.getChessData().isGameOnLine()) {
-                    ChessBoardView.this.restartLocalGame();
-                } else {
-                    ChessBoardView.this.restartOnlineGame();
-                }
-            }
-        });
+    	buttonPanel = new JPanel();
+    	buttonPanel.setOpaque(false);
 
-        //SET BUTTON'S PREFERRED SIZE
-        restartButton.setPreferredSize(new Dimension(114, 44));
+    	createTurnLabel ();
+    	createPlayersInfoPannel ();
+    	createMenuTabs ();
+    	createCapturedPiecesPanelAndAddObservers ();
 
-        //CREATE JPANEL
-        buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
+    	//CREATE AND SET JPANEL'S LAYOUT
+    	mainPanel = new JPanel(new GridLayout(1, 1));
+    	mainPanel.add(board);
 
-        //CREATE JPANEL
-        northButtonPanel = new JPanel(new GridLayout(1, 2));
-        northButtonPanel.setOpaque(false);
+    	addHistoryPannel ();
+    	addSmiliesPannel ();
+    	addCapturedPiecesPannel ();
+    	addComponentsToTabs ();
+    	this.setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
+    	addToMainContainer ();
+    	setBoundsOfPannels ();
+    	setLayOutProperties ();
+    }
 
+    private void createMenuTabs ()
+    {
+    	menuBar = new JMenuBar();
+    	this.setJMenuBar(menuBar);
 
-        //CREATE AND INITILAIZE MAIN NORTH PANEL
-        mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
+    	//CREATE JMENU CALLED FILE
+    	fileMenu = new FileMenu("File", this, fileChooser, returnValue);
+    	fileMenu.createView();
 
-        //CREATE AND INITILALIZE WHOSE TURN LABEL
-        whoseTurnLabel = new JLabel("", SwingConstants.CENTER);
-        whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
-        whoseTurnLabel.setForeground(Color.WHITE);
-        this.setupTextOfWhoseTurnLabel();
+    	optionsMenu = new OptionsMenu("Options", this, chat);
+    	optionsMenu.createView();
+    	optionsMenuConnectAsClient = optionsMenu.getConnectAsClientRef();
+    	optionsMenuConnectAsServer = optionsMenu.getConnectAsServerRef();
 
-        //CREATE AND INITIALIZE PLAYER INFO PANEL
-        
-        //CREATE AN ANONYMOUS CLASS THAT IMPLEMENTS ACTION LISTENER
+    	//CREATE JMENU
+    	helpMenu = new HelpMenu("Help", this);
+    	helpMenu.createView();
 
-        player1InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(0));
-        player1InfoPanel.createTimer();
-        player1InfoPanel.startTimer();
+    	//ADD MENUS TO THE MENUBAR
+    	menuBar.add(fileMenu);
+    	menuBar.add(optionsMenu);
+    	menuBar.add(helpMenu);
+    }
 
-        player2InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(1));
-        player2InfoPanel.createTimer();
-        player2InfoPanel.stopTimer();
-        
-        //CREATE AND INITIALIZE NORTH PANEL
-        northPanel = new JPanel(new GridLayout(1, 2));
-        northPanel.setOpaque(false);
-        //northPanel.setBackground(Color.WHITE);
+    private void addExitButton ()
+    {
+    	this.addWindowListener(new WindowAdapter() {
 
-        //ADD ALL THE COMPONENTS TO THE NORTH PANEL
-        northPanel.add(player1InfoPanel);
-        northPanel.add(player2InfoPanel);
+    		/**
+    		 * The method windowClosing is executed when the user
+    		 * clicks on the window closing button at the top right corner
+    		 * @param e WindowEvent object that is generated when window is being closed
+    		 */
+    		@Override
+    		public void windowClosing(WindowEvent e) {
+    			ChessBoardView.this.promptUserOnExit();
+    		}
+    	});
+    }
 
-        buttonPanel.add(restartButton);
+    private void setBoundsOfPannels ()
+    {
+    	mainNorthPanel.setBounds(0, 0, 757, 170);
+    	mainNorthPanel.repaint();
+    	mainEastPanel.setBounds(520, 170, 230, 531);
+    	mainEastPanel.repaint();
+    	board.setBounds(0, 170, 583, 592);
+    	board.repaint();
+    	chat.setBounds(0, 693, 757, 211);
+    	chat.repaint();
+    }
 
-        //ADD ALL THE COMPONENTS TO THE NORTH BUTTON PANEL
-        northButtonPanel.add(whoseTurnLabel);
-        northButtonPanel.add(buttonPanel,BorderLayout.LINE_END);
+    private void addToMainContainer ()
+    {
+    	mainContainer = new JPanel();
+    	mainContainer.setLayout(null);        
+    	JScrollPane mainScrollPane = new JScrollPane(mainContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    	getContentPane().add(mainScrollPane);
 
-        //ADD ALL THE COMPONENTS TO THE MAIN NORTH PANEL
-        mainNorthPanel.add(northPanel, BorderLayout.BEFORE_LINE_BEGINS);
-        mainNorthPanel.add(northButtonPanel, BorderLayout.SOUTH);
-
-        //CREATE JMENUBAR AND SET IT TO THE JFRAME
-        menuBar = new JMenuBar();
-        this.setJMenuBar(menuBar);
-
-
-        //CREATE JMENU CALLED FILE
-        fileMenu = new FileMenu("File", this, fileChooser, returnValue);
-        ((FileMenu) fileMenu).createView();
+    	mainContainer.add(mainNorthPanel);
+    	mainContainer.add(board);
+    	mainContainer.add(mainEastPanel);
+    	mainContainer.add(chat);
+    }
 
 
-//        optionsMenu = new JMenu("Options");
-        
-        optionsMenu = new OptionsMenu("Options", this, chat);
-        optionsMenu.createView();
-        optionsMenuConnectAsClient = optionsMenu.getConnectAsClientRef();
-        optionsMenuConnectAsServer = optionsMenu.getConnectAsServerRef();
-        
+    private void addCapturedPiecesPannel ()
+    {
+    	eastPanel1 = new JPanel(new GridLayout(2, 1));
+    	eastPanel1.add(whiteCapturedPiecesScroll);
+    	eastPanel1.add(blackCapturedPiecesScroll);
+    }
 
-        
+    private void addHistoryPannel ()
+    {
+    	scroll = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    	eastPanel3 = new CostumPanel("Icons/background.jpg", new BorderLayout());
 
-        //CREATE JMENU
-        helpMenu = new HelpMenu("Help", this);
-        helpMenu.createView();
+    	//SET BORDER FOR EAST PANEL 3
+    	TitledBorder t = new TitledBorder("History Tab");
+    	t.setTitleColor(Color.WHITE);
+    	t.setTitleFont(new Font("New Times Roman", Font.PLAIN, 18));
+    	eastPanel3.setBorder(t);
+    	eastPanel3.add(scroll);
+    }
 
-   
+    private void addSmiliesPannel ()
+    {
+    	eastPanel2 = new CostumPanel("Icons/background.jpg", new GridLayout(8, 4));
 
-        //ADD MENUS TO THE MENUBAR
-        menuBar.add(fileMenu);
-        menuBar.add(optionsMenu);
-        menuBar.add(helpMenu);
+    	//SET BORDER  FOR EAST PANEL 2
+    	TitledBorder t1 = new TitledBorder("Smilies");
+    	t1.setTitleColor(Color.WHITE);
+    	t1.setTitleFont(new Font("New Times Roman", Font.PLAIN, 18));
+    	eastPanel2.setBorder(t1);
 
+    	//ADD SMILIES TO THE PANEL
+    	for (int i = 0; i < 32; i++) {
+    		eastPanel2.add(new Emoticons(ChessBoardView.this, "smileys/smiley" + (i + 1) + ".gif", chat));
+    	}
+    }
 
-        whiteCapturedPiecesPanel = new CapturedPieces(ElementColor.White);
-        whiteCapturedPiecesScroll = new JScrollPane(whiteCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        whiteCapturedPiecesScroll.setOpaque(false);
+    private void setHistoryTabTextView ()
+    {
+    	tArea = new JTextArea();
+    	tArea.setText(ChessGameConstants.tAreaTopString);
+    	tArea.setFont(new Font("Verdana", Font.PLAIN, 16));
+    	tArea.setOpaque(false);
+    	tArea.setEditable(false);
+    }
 
-        //CREATE AND SET JPANEL'S LAYOUT
-        mainPanel = new JPanel(new GridLayout(1, 1));
-        mainPanel.add(board);
+    private void loadDefaultPlayers ()
+    {
+    	//LOADS THE ARRAY LIST WITH TWO PLAYER OBJECTS AND GIVES THEM INITIAL VALUES
+    	Chess_Data.getChessData().getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
+    	Chess_Data.getChessData().getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
+    }
 
-        blackCapturedPiecesPanel = new CapturedPieces(ElementColor.Black);
+    private void addRestartButton ()
+    {
+    	//CREATE JBUTTON RESTART AND ADD ACTION LISTENER TO IT THROUGH THE ANONYMOUS CLASS
+    	restartButton = new JButton("Restart", new ImageIcon(getClass().getResource("Icons/start.png")));
+    	restartButton.addActionListener(new ActionListener() {
 
-        //CREATE JSCROLLPANE AND ADD JPANEL TO IT
-        blackCapturedPiecesScroll = new JScrollPane(blackCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    		/**
+    		 * The method actionPerformed is the method
+    		 * that is inherited from ActionListener Interface
+    		 * @param e ActionEvent object that is generated when listener detects an action
+    		 */
+    		public void actionPerformed(ActionEvent e) {
+    			if (!Chess_Data.getChessData().isGameOnLine()) {
+    				ChessBoardView.this.restartLocalGame();
+    			} else {
+    				ChessBoardView.this.restartOnlineGame();
+    			}
+    		}
+    	});
 
-        //ADD TWO OBSERVERS TO THE DATA WHICH ARE CAPTURED PIECES PANELS
-        Chess_Data.getChessData().addObserver(whiteCapturedPiecesPanel);
-        Chess_Data.getChessData().addObserver(blackCapturedPiecesPanel);
+    	//SET BUTTON'S PREFERRED SIZE
+    	restartButton.setPreferredSize(new Dimension(114, 44));
+    }
 
-        mainEastPanel = new CostumPanel("Icons/background.jpg", new GridLayout(1, 1));
+    private void createPlayersInfoPannel ()
+    {
+    	mainNorthPanel = new CostumPanel("Icons/background.jpg", new BorderLayout());
 
-        //CREATE JTABBED PANE
-        tabs = new JTabbedPane();
-        eastPanel3 = new CostumPanel("Icons/background.jpg", new BorderLayout());
+    	northButtonPanel = new JPanel(new GridLayout(1, 2));
+    	northButtonPanel.setOpaque(false);
 
-        //SET BORDER FOR EAST PANEL 3
-        TitledBorder t = new TitledBorder("History Tab");
-        t.setTitleColor(Color.WHITE);
-        t.setTitleFont(new Font("New Times Roman", Font.PLAIN, 18));
-        eastPanel3.setBorder(t);
-        eastPanel3.add(scroll);
-        eastPanel2 = new CostumPanel("Icons/background.jpg", new GridLayout(8, 4));
+    	player1InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(0));
+    	player1InfoPanel.createTimer();
+    	player1InfoPanel.startTimer();
 
-        //SET BORDER  FOR EAST PANEL 2
-        TitledBorder t1 = new TitledBorder("Smilies");
-        t1.setTitleColor(Color.WHITE);
-        t1.setTitleFont(new Font("New Times Roman", Font.PLAIN, 18));
-        eastPanel2.setBorder(t1);
+    	player2InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(1));
+    	player2InfoPanel.createTimer();
+    	player2InfoPanel.stopTimer();
 
-        //ADD SMILIES TO THE PANEL
-        for (int i = 0; i < 32; i++) {
-            eastPanel2.add(new Emoticons(ChessBoardView.this, "smileys/smiley" + (i + 1) + ".gif", chat));
-        }
+    	//CREATE AND INITIALIZE NORTH PANEL
+    	northPanel = new JPanel(new GridLayout(1, 2));
+    	northPanel.setOpaque(false);
+    	//northPanel.setBackground(Color.WHITE);
 
-        //CREATE EAST PANEL
-        eastPanel1 = new JPanel(new GridLayout(2, 1));
-        eastPanel1.add(whiteCapturedPiecesScroll);
-        eastPanel1.add(blackCapturedPiecesScroll);
+    	//ADD ALL THE COMPONENTS TO THE NORTH PANEL
+    	northPanel.add(player1InfoPanel);
+    	northPanel.add(player2InfoPanel);
 
-        //ADD COMPONENTS TO ALL THE TABS
-        tabs.addTab("Captured", eastPanel1);
-        tabs.addTab("Smilies", eastPanel2);
-        tabs.addTab("History", eastPanel3);
-        tabs.setBackgroundAt(0, Color.ORANGE);
-        tabs.setBackgroundAt(1, Color.ORANGE);
-        tabs.setBackgroundAt(2, Color.ORANGE);
-        mainEastPanel.add(tabs);
+    	buttonPanel.add(restartButton);
 
-        this.setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
+    	//ADD ALL THE COMPONENTS TO THE NORTH BUTTON PANEL
+    	northButtonPanel.add(whoseTurnLabel);
+    	northButtonPanel.add(buttonPanel,BorderLayout.LINE_END);
 
-        //ADD EVERYTHING TO THE CONTAINER
-        
-        JPanel mainContainer = new JPanel();
-        mainContainer.setLayout(null);        
-        JScrollPane mainScrollPane = new JScrollPane(mainContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        getContentPane().add(mainScrollPane);
-        
-        mainContainer.add(mainNorthPanel);
-        mainContainer.add(board);
-        mainContainer.add(mainEastPanel);
-        mainContainer.add(chat);
-        
-        mainNorthPanel.setBounds(0, 0, 757, 170);
-        mainNorthPanel.repaint();
-        mainEastPanel.setBounds(520, 170, 230, 531);
-        mainEastPanel.repaint();
-        board.setBounds(0, 170, 583, 592);
-        board.repaint();
-        chat.setBounds(0, 693, 757, 211);
-        chat.repaint();
+    	//ADD ALL THE COMPONENTS TO THE MAIN NORTH PANEL
+    	mainNorthPanel.add(northPanel, BorderLayout.BEFORE_LINE_BEGINS);
+    	mainNorthPanel.add(northButtonPanel, BorderLayout.SOUTH);
+    }
 
-        //SET LAYOUT PROPERTIES
-        this.setTitle("Chess Game");
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setLocation(333, 6);
-        this.setResizable(false);
-        this.setSize(757, 700);
-        mainContainer.setSize(757, 633);
-        mainContainer.setPreferredSize(new Dimension(757, 870));
-        this.setVisible(true);
+    private void createTurnLabel ()
+    {
+    	whoseTurnLabel = new JLabel("", SwingConstants.CENTER);
+    	whoseTurnLabel.setFont(new Font("Times Roman", Font.PLAIN, 30));
+    	whoseTurnLabel.setForeground(Color.WHITE);
+    	this.setupTextOfWhoseTurnLabel();
+    }
+
+    private void createCapturedPiecesPanelAndAddObservers () 
+    {
+    	whiteCapturedPiecesPanel = new CapturedPieces(ElementColor.White);
+    	whiteCapturedPiecesScroll = new JScrollPane(whiteCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    	whiteCapturedPiecesScroll.setOpaque(false);
+
+    	blackCapturedPiecesPanel = new CapturedPieces(ElementColor.Black);
+
+    	//CREATE JSCROLLPANE AND ADD JPANEL TO IT
+    	blackCapturedPiecesScroll = new JScrollPane(blackCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+    	//ADD TWO OBSERVERS TO THE DATA WHICH ARE CAPTURED PIECES PANELS
+    	Chess_Data.getChessData().addObserver(whiteCapturedPiecesPanel);
+    	Chess_Data.getChessData().addObserver(blackCapturedPiecesPanel);
+
+    }
+
+    private void addComponentsToTabs ()
+    {
+    	mainEastPanel = new CostumPanel("Icons/background.jpg", new GridLayout(1, 1));
+    	tabs = new JTabbedPane();
+    	tabs.addTab("Captured", eastPanel1);
+    	tabs.addTab("Smilies", eastPanel2);
+    	tabs.addTab("History", eastPanel3);
+    	tabs.setBackgroundAt(0, Color.ORANGE);
+    	tabs.setBackgroundAt(1, Color.ORANGE);
+    	tabs.setBackgroundAt(2, Color.ORANGE);
+    	mainEastPanel.add(tabs);
+    }
+
+    private void setLayOutProperties ()
+    {
+    	this.setTitle("Chess Game");
+    	this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    	this.setLocation(333, 6);
+    	this.setResizable(false);
+    	this.setSize(757, 700);
+    	mainContainer.setSize(757, 633);
+    	mainContainer.setPreferredSize(new Dimension(757, 870));
+    	this.setVisible(true);
     }
 
     /**
