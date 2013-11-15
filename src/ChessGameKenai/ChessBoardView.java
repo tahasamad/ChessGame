@@ -41,6 +41,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
+import UIMenus.FileMenu;
+
 import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
 import GameElements.Piece;
@@ -63,7 +65,8 @@ public class ChessBoardView extends JFrame implements Observer {
     private JComponent mainPanel, northPanel;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
-    private JMenu fileMenu, helpMenu, optionsMenu;
+    private JMenu helpMenu, optionsMenu;
+    private FileMenu fileMenu;
     private JScrollPane whiteCapturedPiecesScroll, blackCapturedPiecesScroll;
     private JComponent eastPanel1, northButtonPanel, buttonPanel;
     private CapturedPieces whiteCapturedPiecesPanel, blackCapturedPiecesPanel;
@@ -193,153 +196,9 @@ public class ChessBoardView extends JFrame implements Observer {
 
 
         //CREATE JMENU CALLED FILE
-        fileMenu = new JMenu("File");
+        fileMenu = new FileMenu("File", this, fileChooser, returnValue);
+        ((FileMenu) fileMenu).createView();
 
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM NEW GAME
-        fileMenu.add(new JMenuItem("New Game")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if (Chess_Data.getChessData().isGameOnLine()) {
-                    int returnValue = JOptionPane.showConfirmDialog(ChessBoardView.this, "The Connection will be lost would you like to proceed?Y/N", "Confirmation Message", JOptionPane.YES_NO_OPTION);
-                    if (returnValue == JOptionPane.YES_OPTION) {
-                    	Chess_Data.destroy();
-                        ChessBoardView.this.dispose();
-                        EventQueue.invokeLater(new Runnable() {
-
-                            public void run() {
-                                new Start_Game();
-                            }
-                        });
-                    }
-                } else {
-                	Chess_Data.destroy();
-                    ChessBoardView.this.dispose();
-                    EventQueue.invokeLater(new Runnable() {
-
-                        public void run() {
-                            new Start_Game();
-                        }
-                    });
-                }
-
-            }
-        });
-
-        //ADD SEPARATOR
-        fileMenu.addSeparator();
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM SAVE PLAYER
-        fileMenu.add(new JMenuItem("Save Player")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                Chess_Data.getChessData().savePlayer();
-            }
-        });
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM LOAD PLAYER
-        fileMenu.add(new JMenuItem("Load Player")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                Chess_Data.getChessData().loadPlayer();
-
-            }
-        });
-
-        fileMenu.addSeparator();
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM LOAD
-        fileMenu.add(new JMenuItem("Save Game")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                Chess_Data.getChessData().save();
-            }
-        });
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM SAVE
-        fileMenu.add(new JMenuItem("Load Game")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-            	ChessBoardView.this.clearLocalGame();
-            	if(!Chess_Data.getChessData().load())
-                {
-            		Chess_Data.getChessData().discardActivePiecesInSavedState();
-            		Chess_Data.getChessData().loadActivePiecesFromSavedState();
-                }
-            	ChessBoardView.this.board.populateBoard();
-                ChessBoardView.this.loadCapturedPieces();
-            }
-        });
-
-        fileMenu.addSeparator();
-
-        fileMenu.add(new JMenuItem("Save As...")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if ((returnValue = fileChooser.showSaveDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    Chess_Data.getChessData().save(file);
-                }
-            }
-        });
-
-        fileMenu.add(new JMenuItem("Load from file")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if ((returnValue = fileChooser.showOpenDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                	ChessBoardView.this.clearLocalGame();
-                	if(!Chess_Data.getChessData().load(file))
-                    {
-                		Chess_Data.getChessData().discardActivePiecesInSavedState();
-                		Chess_Data.getChessData().loadActivePiecesFromSavedState();
-                    }
-                	ChessBoardView.this.board.populateBoard();
-                    ChessBoardView.this.loadCapturedPieces();
-                }
-            }
-        });
-
-        fileMenu.addSeparator();
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM EXIT
-        fileMenu.add(new JMenuItem("Exit")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
 
         optionsMenu = new JMenu("Options");
 
@@ -871,6 +730,11 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public JTextArea getMoves() {
         return tArea;
+    }
+    
+    public Board getBoard ()
+    {
+    	return board;
     }
 
     /**
