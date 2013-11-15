@@ -679,7 +679,7 @@ public class ChessBoardView extends JFrame implements Observer {
             bridge.getOutputStream().writeObject(packet);
             bridge.getOutputStream().flush();
         } catch (Exception e) {
-            chat.appendStr(e.getMessage(), smpSet, color);
+            chat.appendStr(new ChatPacket(e.getMessage(), smpSet, color));
         }
 
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
@@ -757,7 +757,7 @@ public class ChessBoardView extends JFrame implements Observer {
                 bridge.getOutputStream().writeObject(packet);
                 bridge.getOutputStream().flush();
             } catch (Exception e) {
-                chat.appendStr(e.getMessage(), smpSet, color);
+            	chat.appendStr(new ChatPacket(e.getMessage(), smpSet, color));
             }
         }
     }

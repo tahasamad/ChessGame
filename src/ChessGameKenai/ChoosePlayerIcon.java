@@ -98,7 +98,7 @@ public class ChoosePlayerIcon extends JDialog {
              * @param e ActionEvent object that is generated when button is clicked
              */
             public void actionPerformed(ActionEvent e) {
-                if (ChoosePlayerIcon.this.chessData.isGameOnLine() && Chess_Data.getChessData().getIsClientConnected()) {
+                if (ChoosePlayerIcon.this.chessData.isGameOnLine()) {
                     sendPlayerIcon();
                 }
                 else
