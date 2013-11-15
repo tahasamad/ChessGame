@@ -311,6 +311,23 @@ public final class Chess_Data extends Observable {
     public ArrayList<Player> getPlayers() {
         return players;
     }
+    public void setPlayerOneImage(Packet packet)
+    {
+    	players.get(0).setImagePath(packet.getPlayerIconPath());
+    }
+    public void setPlayerOneName(Packet packet)
+    {
+    	players.get(0).setName(packet.getGuestName());
+    }
+    public void setPlayerTwoImage(Packet packet)
+    {
+    	players.get(1).setImagePath(packet.getPlayerIconPath());
+    }
+    public void setPlayerTwoName(Packet packet)
+    {
+    	players.get(1).setName(packet.getGuestName());
+    }
+    
 
     /**
      * The method setPlayers sets players

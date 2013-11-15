@@ -142,7 +142,7 @@ public class Chat extends JPanel {
 
 
         chatA.setFont(new Font("Dialog", Font.PLAIN, 16));
-        appendStr("Chess chat", smpSetUnderline, Color.BLACK);
+        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
 
         btnFont = ChessGameUtils.getButtonWithText("Font");
 
@@ -192,7 +192,7 @@ public class Chat extends JPanel {
                         chatF.setText("");
                     } else if (chatF.getText().trim().equals("*clear")) {
                         chatA.setText("");
-                        appendStr("Chess chat", smpSetUnderline, Color.BLACK);
+                        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
                         chatF.setText("");
                     } else {
                         try {
@@ -225,7 +225,7 @@ public class Chat extends JPanel {
                         chatF.setText("");
                     } else if (chatF.getText().trim().equals("*clear")) {
                         chatA.setText("");
-                        appendStr("Chess chat", smpSetUnderline, Color.BLACK);
+                        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
                         chatF.setText("");
                     } else {
                         try {
@@ -364,6 +364,14 @@ public class Chat extends JPanel {
         return chatA;
     }
 
+    public void setTxtPaneCaretPosition()
+    {
+    	chatA.setCaretPosition(chatA.getDocument().getLength());
+    }
+    public void insertTxtPaneIcon(Packet packet)
+    {
+    	chatA.insertIcon(new ImageIcon(getClass().getResource(packet.getImgPath())));
+    }
     /**
      * getTxtField is used to get the JTextField
      * so it can be access in any other class
@@ -380,12 +388,12 @@ public class Chat extends JPanel {
      * @param smpSet the SimpleAttributeSet used
      * @param color Color of the String
      */
-    public final void appendStr(String s, SimpleAttributeSet smpSet, Color color) {
+    public final void appendStr(ChatPacket packet) {
 
         try {
             Document doc = chatA.getDocument();
-            StyleConstants.setForeground(smpSet, color);
-            doc.insertString(doc.getLength(), s, smpSet);
+            StyleConstants.setForeground(smpSet, packet.getColor());
+            doc.insertString(doc.getLength(), packet.getMessage(), packet.getAttributeSet());
 
         } catch (BadLocationException ex) {
             System.out.println(ex.getMessage());
@@ -446,7 +454,8 @@ public class Chat extends JPanel {
             name = Chess_Data.getChessData().getPlayers().get(1).getName();
         }
         if (!chatF.getText().trim().equals("") || imgPath != null) {
-            appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);
+//            appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);
+            appendStr(new ChatPacket("\n" + name + ": " + chatF.getText(), smpSet, color));
             if (imgPath != null) {
                 chatA.insertIcon(new ImageIcon(getClass().getResource(imgPath)));
             }
