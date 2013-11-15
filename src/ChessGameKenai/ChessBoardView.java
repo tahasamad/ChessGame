@@ -42,6 +42,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.SimpleAttributeSet;
 
 import UIMenus.FileMenu;
+import UIMenus.OptionsMenu;
 
 import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
@@ -65,7 +66,8 @@ public class ChessBoardView extends JFrame implements Observer {
     private JComponent mainPanel, northPanel;
     private CostumPanel mainNorthPanel, mainEastPanel, eastPanel3, eastPanel2;
     private JMenuBar menuBar;
-    private JMenu helpMenu, optionsMenu;
+    private JMenu helpMenu;
+    private OptionsMenu optionsMenu;
     private FileMenu fileMenu;
     private JScrollPane whiteCapturedPiecesScroll, blackCapturedPiecesScroll;
     private JComponent eastPanel1, northButtonPanel, buttonPanel;
@@ -77,7 +79,7 @@ public class ChessBoardView extends JFrame implements Observer {
     private JFileChooser fileChooser = new JFileChooser(".");
     private int returnValue = 0;
     private Board board;
-    private static ConnectionBridge bridge;
+    public static ConnectionBridge bridge;
     private Chat chat;
     private Color color = Color.ORANGE;
     private SimpleAttributeSet smpSet = new SimpleAttributeSet();
@@ -200,110 +202,15 @@ public class ChessBoardView extends JFrame implements Observer {
         ((FileMenu) fileMenu).createView();
 
 
-        optionsMenu = new JMenu("Options");
+//        optionsMenu = new JMenu("Options");
+        
+        optionsMenu = new OptionsMenu("Options", this, chat);
+        optionsMenu.createView();
+        optionsMenuConnectAsClient = optionsMenu.getConnectAsClientRef();
+        optionsMenuConnectAsServer = optionsMenu.getConnectAsServerRef();
+        
 
-        optionsMenu.add(optionsMenuConnectAsClient = new JMenuItem("Connect As Client")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-
-                try {
-                    new Thread(new Runnable() {
-
-                        InetAddress ipAddress = InetAddress.getByName(JOptionPane.showInputDialog("Enter Server IP"));
-
-                        public void run() {
-                            ChessBoardView.this.playOnLine();
-                            ChessBoardView.this.reEnableMenuItems(false);
-                            bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, false, ipAddress, chat);
-                            Chess_Data.getChessData().addObserver(bridge);
-                            Chess_Data.getChessData().setIsClientConnected(true);
-                        }
-                    }).start();
-                } catch (UnknownHostException ex) {
-                    JOptionPane.showMessageDialog(ChessBoardView.this, ex.toString());
-                    ChessBoardView.this.reEnableMenuItems(true);
-                }
-            }
-        });
-        optionsMenu.add(optionsMenuConnectAsServer = new JMenuItem("Connect As Server")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-
-                new Thread(new Runnable() {
-
-                    public void run() {
-                        ChessBoardView.this.playOnLine();
-                        ChessBoardView.this.reEnableMenuItems(false);
-                        bridge = new ConnectionBridge(Chess_Data.getChessData(), ChessBoardView.this, true, null, chat);
-                        Chess_Data.getChessData().addObserver(bridge);
-                        Chess_Data.getChessData().setIsClientConnected(false);
-                    }
-                }).start();
-            }
-        });
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM FLIP BOARD
-        optionsMenu.add(new JMenuItem("Flip Board")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-            	if (board.getCurrentBoard() == BoardFlipMode.Normal)
-            	{
-            		board.setCurrentBoard(BoardFlipMode.Flipped);
-            	}
-            	else 
-            	{
-            		board.setCurrentBoard(BoardFlipMode.Normal);
-            	}
-            	
-            	board.flipBoard();
-                /*if (board.getCurrentBoard() == Board.NORMAL_BOARD) {
-                    board.setBoard(Board.FLIPPED_BOARD);
-                } else {
-                    board.setBoard(Board.NORMAL_BOARD);
-                }
-                board.flipBoard();*/
-            }
-        });
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM NEW GAME
-        optionsMenu.add(new JMenuItem("Choose Icon")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                new ChoosePlayerIcon(bridge);
-            }
-        });
-
-        //ADD AN ACTIONLISTENER TO THE JMENU ITEM SET PLAYER NAMES
-        optionsMenu.add(new JMenuItem("Set Player Names")).addActionListener(new ActionListener() {
-
-            /**
-             * The method actionPerformed needs to be overridden in our class
-             * @param e ActionEvent object that is generated when listener detects action
-             */
-            public void actionPerformed(ActionEvent e) {
-                if (!Chess_Data.getChessData().isGameOnLine()) {
-                    ChessBoardView.this.chooseNameLocal();
-                } else {
-                    ChessBoardView.this.chooseNameOnLine();
-                }
-            }
-        });
+        
 
         //CREATE JMENU
         helpMenu = new JMenu("Help");

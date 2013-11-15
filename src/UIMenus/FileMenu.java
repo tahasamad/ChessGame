@@ -84,11 +84,11 @@ public class FileMenu extends JMenu{
 
 		}
 		
-		addActionListenerToSavePlayer(menuItem);
+		addActionListenerToMenuItem(menuItem);
 		this.add(clickableMenuItem);
 	}
 	
-	public void addActionListenerToSavePlayer (final MenuItemType menuItem)
+	public void addActionListenerToMenuItem (final MenuItemType menuItem)
 	{
 		clickableMenuItem.addActionListener(new ActionListener() 
 		{
