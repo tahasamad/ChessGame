@@ -14,11 +14,11 @@ import ChessGameKenai.UserManual;
 
 public class HelpMenu extends JMenu
 {
-	private ChessBoardView refToBoard;
+	private ChessBoardView chessBoard;
 	
 	public HelpMenu (String title, ChessBoardView boardRef) {
 		super (title);
-		refToBoard = boardRef;
+		chessBoard = boardRef;
 	}
 	
 	
@@ -28,20 +28,20 @@ public class HelpMenu extends JMenu
         this.add(new JMenuItem("Chess Rules")).addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                new HelpTopics(refToBoard);
+                new HelpTopics(chessBoard);
             }
         });
          this.add(new JMenuItem("User Guide")).addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                new UserManual(refToBoard);
+                new UserManual(chessBoard);
             }
         });
 
         this.add(new JMenuItem("About")).addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                new About(refToBoard);
+                new About(chessBoard);
             }
         });
 	}

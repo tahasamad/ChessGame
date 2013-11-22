@@ -272,9 +272,9 @@ public final class Board extends JPanel implements Observer {
             SquareModel squareModel1 = list.get(0);
             ChessGamePoint srcPosition = squareModel1.getPosition();
             ChessGamePoint dstPosition = squareModel2.getPosition();
-            view.getMoves().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.x, srcPosition.y)) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.x, dstPosition.y)) + "\n");
-            view.getMoves().append("--------------------------\n");
-            view.getMoves().setCaretPosition(view.getMoves().getDocument().getLength());
+            view.getMovesText().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.x, srcPosition.y)) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.x, dstPosition.y)) + "\n");
+            view.getMovesText().append("--------------------------\n");
+            view.getMovesText().setCaretPosition(view.getMovesText().getDocument().getLength());
         }
         this.revalidate();
         this.repaint();

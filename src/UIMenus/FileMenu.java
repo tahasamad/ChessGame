@@ -18,13 +18,13 @@ public class FileMenu extends JMenu{
 	
 
 	private JMenuItem clickableMenuItem;
-	private ChessBoardView refToBoard;
+	private ChessBoardView chessBoard;
 	private JFileChooser fileChooser;
 	private int returnValue = 0;
 
 	public FileMenu (String title, ChessBoardView boardRef, JFileChooser fileChooserRef, int retVal) {
 		super (title);
-		refToBoard = boardRef;
+		chessBoard = boardRef;
 		fileChooser = fileChooserRef;
 		returnValue = retVal;
 	}
@@ -135,7 +135,7 @@ public class FileMenu extends JMenu{
 	
 	private void saveGameAs ()
 	{
-		 if ((returnValue = fileChooser.showSaveDialog(refToBoard)) == JFileChooser.APPROVE_OPTION) {
+		 if ((returnValue = fileChooser.showSaveDialog(chessBoard)) == JFileChooser.APPROVE_OPTION) {
              File file = fileChooser.getSelectedFile();
              Chess_Data.getChessData().save(file);
          }
@@ -143,14 +143,14 @@ public class FileMenu extends JMenu{
 	
 	private void loadGame ()
 	{
-		refToBoard.clearLocalGame();
+		chessBoard.clearLocalGame();
     	if(!Chess_Data.getChessData().load())
         {
     		Chess_Data.getChessData().discardActivePiecesInSavedState();
     		Chess_Data.getChessData().loadActivePiecesFromSavedState();
         }
-    	refToBoard.getBoard().populateBoard();
-        refToBoard.loadCapturedPieces();
+    	chessBoard.populateChessBoard();
+        chessBoard.loadCapturedPieces();
 	}
 	
 	private void saveGame ()
@@ -166,11 +166,11 @@ public class FileMenu extends JMenu{
 	{
 		if (Chess_Data.getChessData().isGameOnLine()) 
 		{
-			int returnValue = JOptionPane.showConfirmDialog(refToBoard, "The Connection will be lost would you like to proceed?Y/N", "Confirmation Message", JOptionPane.YES_NO_OPTION);
+			int returnValue = JOptionPane.showConfirmDialog(chessBoard, "The Connection will be lost would you like to proceed?Y/N", "Confirmation Message", JOptionPane.YES_NO_OPTION);
 			if (returnValue == JOptionPane.YES_OPTION) 
 			{
 				Chess_Data.destroy();
-				refToBoard.dispose();
+				chessBoard.dispose();
 				EventQueue.invokeLater(new Runnable() 
 				{
 
@@ -184,7 +184,7 @@ public class FileMenu extends JMenu{
 		else 
 		{
 			Chess_Data.destroy();
-			refToBoard.dispose();
+			chessBoard.dispose();
 			EventQueue.invokeLater(new Runnable() 
 			{
 
@@ -203,16 +203,16 @@ public class FileMenu extends JMenu{
 	
 	private void loadFromFile ()
 	{
-		if ((returnValue = fileChooser.showOpenDialog(refToBoard)) == JFileChooser.APPROVE_OPTION) {
+		if ((returnValue = fileChooser.showOpenDialog(chessBoard)) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-        	refToBoard.clearLocalGame();
+        	chessBoard.clearLocalGame();
         	if(!Chess_Data.getChessData().load(file))
             {
         		Chess_Data.getChessData().discardActivePiecesInSavedState();
         		Chess_Data.getChessData().loadActivePiecesFromSavedState();
             }
-        	refToBoard.getBoard().populateBoard();
-            refToBoard.loadCapturedPieces();
+        	chessBoard.populateChessBoard();
+            chessBoard.loadCapturedPieces();
         }
 	}
 	

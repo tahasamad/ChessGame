@@ -23,12 +23,12 @@ public class OptionsMenu extends JMenu
 	private JMenuItem clickableMenuItem;
 	private JMenuItem connectAsClient;
 	private JMenuItem connectAsServer;
-	private ChessBoardView refToBoard;
+	private ChessBoardView chessBoard;
 	private Chat chat;
 	
 	public OptionsMenu (String title, ChessBoardView boardRef, Chat chatRef) {
 		super (title);
-		refToBoard = boardRef;
+		chessBoard = boardRef;
 		chat = chatRef;
 	}
 	
@@ -111,16 +111,16 @@ public class OptionsMenu extends JMenu
 				InetAddress ipAddress = InetAddress.getByName(JOptionPane.showInputDialog("Enter Server IP"));
 
 				public void run() {
-					refToBoard.playOnLine();
-					refToBoard.reEnableMenuItems(false);
-					refToBoard.bridge = new ConnectionBridge(Chess_Data.getChessData(), refToBoard, false, ipAddress, chat);
-					Chess_Data.getChessData().addObserver(refToBoard.bridge);
+					chessBoard.playOnLine();
+					chessBoard.reEnableMenuItems(false);
+					chessBoard.setConnectionBridge(new ConnectionBridge(Chess_Data.getChessData(), chessBoard, false, ipAddress, chat));
+					Chess_Data.getChessData().addObserver(ChessBoardView.getConnectionInstance());
 					Chess_Data.getChessData().setIsClientConnected(true);
 				}
 			}).start();
 		} catch (UnknownHostException ex) {
-			JOptionPane.showMessageDialog(refToBoard, ex.toString());
-			refToBoard.reEnableMenuItems(true);
+			JOptionPane.showMessageDialog(chessBoard, ex.toString());
+			chessBoard.reEnableMenuItems(true);
 		}
 	}
 	
@@ -129,10 +129,10 @@ public class OptionsMenu extends JMenu
 		new Thread(new Runnable() {
 
 			public void run() {
-				refToBoard.playOnLine();
-				refToBoard.reEnableMenuItems(false);
-				refToBoard.bridge = new ConnectionBridge(Chess_Data.getChessData(), refToBoard, true, null, chat);
-				Chess_Data.getChessData().addObserver(refToBoard.bridge);
+				chessBoard.playOnLine();
+				chessBoard.reEnableMenuItems(false);
+				chessBoard.setConnectionBridge(new ConnectionBridge(Chess_Data.getChessData(), chessBoard, true, null, chat));
+				Chess_Data.getChessData().addObserver(ChessBoardView.getConnectionInstance());
 				Chess_Data.getChessData().setIsClientConnected(false);
 			}
 		}).start();
@@ -141,30 +141,30 @@ public class OptionsMenu extends JMenu
 
 	private void flipBoard ()
 	{
-		if (refToBoard.getBoard().getCurrentBoard() == BoardFlipMode.Normal)
+		if (chessBoard.getCurrentFlipMode() == BoardFlipMode.Normal)
 		{
-			refToBoard.getBoard().setCurrentBoard(BoardFlipMode.Flipped);
+			chessBoard.setCurrentFlipMode(BoardFlipMode.Flipped);
 		}
 		else 
 		{
-			refToBoard.getBoard().setCurrentBoard(BoardFlipMode.Normal);
+			chessBoard.setCurrentFlipMode(BoardFlipMode.Normal);
 		}
 
-		refToBoard.getBoard().flipBoard();
+		chessBoard.flipChessBoard();
 
 	}
 	
 	private void chooseIcon ()
 	{
-		new ChoosePlayerIcon(refToBoard.bridge);
+		new ChoosePlayerIcon(ChessBoardView.getConnectionInstance());
 	}
 	
 	private void setPlayerNames ()
 	{
 		 if (!Chess_Data.getChessData().isGameOnLine()) {
-             refToBoard.chooseNameLocal();
+             chessBoard.chooseNameLocal();
          } else {
-             refToBoard.chooseNameOnLine();
+             chessBoard.chooseNameOnLine();
          }
 	}
 	

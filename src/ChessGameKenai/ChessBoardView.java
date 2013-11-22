@@ -80,7 +80,7 @@ public class ChessBoardView extends JFrame implements Observer {
     private JFileChooser fileChooser = new JFileChooser(".");
     private int returnValue = 0;
     private Board board;
-    public static ConnectionBridge bridge;
+    private static ConnectionBridge bridge;
     private Chat chat;
     private Color color = Color.ORANGE;
     private SimpleAttributeSet smpSet = new SimpleAttributeSet();
@@ -100,36 +100,49 @@ public class ChessBoardView extends JFrame implements Observer {
     public ChessBoardView() {
 
     	setHistoryTabTextView();
-    	board = new Board(ChessBoardView.this);
-    	Chess_Data.getChessData().addObserver(board);
-    	Chess_Data.getChessData().addObserver(this);
-
-    	chat = new Chat(this);
-
+    	initializeBoard ();
+    	initializeChat ();
     	addExitButton ();
     	loadDefaultPlayers ();
     	addRestartButton ();
-
-    	buttonPanel = new JPanel();
-    	buttonPanel.setOpaque(false);
-
+    	initializeButtonPanel ();
     	createTurnLabel ();
     	createPlayersInfoPannel ();
     	createMenuTabs ();
     	createCapturedPiecesPanelAndAddObservers ();
-
-    	//CREATE AND SET JPANEL'S LAYOUT
-    	mainPanel = new JPanel(new GridLayout(1, 1));
-    	mainPanel.add(board);
-
+    	initializeMainPanel ();
     	addHistoryPannel ();
     	addSmiliesPannel ();
     	addCapturedPiecesPannel ();
     	addComponentsToTabs ();
-    	this.setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
+    	setIconImage(new ImageIcon("ChessPieces/wking46.gif").getImage());
     	addToMainContainer ();
     	setBoundsOfPannels ();
     	setLayOutProperties ();
+    }
+    
+    private void initializeChat ()
+    {
+    	chat = new Chat(this);
+    }
+    
+    private void initializeBoard ()
+    {
+    	board = new Board(ChessBoardView.this);
+    	Chess_Data.getChessData().addObserver(board);
+    	Chess_Data.getChessData().addObserver(this);
+    }
+    
+    private void initializeButtonPanel ()
+    {
+    	buttonPanel = new JPanel();
+    	buttonPanel.setOpaque(false);
+    }
+    
+    private void initializeMainPanel ()
+    {
+    	mainPanel = new JPanel(new GridLayout(1, 1));
+    	mainPanel.add(board);
     }
 
     private void createMenuTabs ()
@@ -576,12 +589,17 @@ public class ChessBoardView extends JFrame implements Observer {
     public static ConnectionBridge getConnectionInstance() {
         return bridge;
     }
+    
+    public void setConnectionBridge (ConnectionBridge connectionBridge)
+    {
+    	bridge = connectionBridge;
+    }
 
     /**
      * getPanel simply returns a JPanel to the caller
      * @return eastPanel2 as a JPanel
      */
-    public JPanel getPanel() {
+    public JPanel getSmiliesPanel() {
         return eastPanel2;
     }
 
@@ -662,14 +680,14 @@ public class ChessBoardView extends JFrame implements Observer {
      * The method getMoves simply returns the text area of moves to the caller
      * @return as a JTextArea
      */
-    public JTextArea getMoves() {
+    public JTextArea getMovesText() {
         return tArea;
     }
     
-    public Board getBoard ()
-    {
-    	return board;
-    }
+//    public Board getBoard ()
+//    {
+//    	return board;
+//    }
 
     /**
      * The main method of the class
@@ -677,5 +695,25 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public static void main(String args[]) {
         new StartUpWindow();
+    }
+    
+    public void populateChessBoard ()
+    {
+    	board.populateBoard();
+    }
+    
+    public BoardFlipMode getCurrentFlipMode ()
+    {
+    	return board.getCurrentBoard();
+    }
+    
+    public void setCurrentFlipMode (BoardFlipMode mode)
+    {
+    	board.setCurrentBoard(BoardFlipMode.Flipped);
+    }
+    
+    public void flipChessBoard ()
+    {
+    	board.flipBoard();
     }
 }

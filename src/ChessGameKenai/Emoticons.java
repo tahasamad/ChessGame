@@ -67,9 +67,9 @@ public class Emoticons extends JLabel {
      * and then a new one is created on the current smiley.
      */
     public void removeBorder() {
-        for (int i = 0; i < view.getPanel().getComponents().length; i++) {
-            if (((JLabel) (view.getPanel().getComponents()[i])).getBorder() != null && ((JLabel) (view.getPanel().getComponents()[i])).hashCode() != this.hashCode()) {
-                ((JLabel) (view.getPanel().getComponents()[i])).setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new ImageIcon(getClass().getResource("Icons/nothing.gif"))));
+        for (int i = 0; i < view.getSmiliesPanel().getComponents().length; i++) {
+            if (((JLabel) (view.getSmiliesPanel().getComponents()[i])).getBorder() != null && ((JLabel) (view.getSmiliesPanel().getComponents()[i])).hashCode() != this.hashCode()) {
+                ((JLabel) (view.getSmiliesPanel().getComponents()[i])).setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new ImageIcon(getClass().getResource("Icons/nothing.gif"))));
             }
 
         }
