@@ -1,47 +1,48 @@
-/*
- * Class is a JFrame, a scrollabel txtArea that displays a file with the rules
- * of chess whenever the correspondent menuitem is selected from the Chess Game
- * View.
- * Author: Dimitri, Mario, Val
- * Date: 26/1/2011
- */
 package ChessGameKenai;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
-/**
- * HelpTopics class extends JDialog and is the class which creates the Chess Rules
- * windows that you see when the user clicks Chess Rules in the Help menu. It contains
- * a JTextArea and it gets the text from the file ChessRules.txt and appends it to the text area.
- * @author Val
- */
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 public class HelpTopics extends JDialog {
 
-    //INSTANCE VARIABLES
-    private Container c;
-    private JTextArea txtArea;
-    private JScrollPane scrollPane;
-    private ChessBoardView view;
+    private JTextArea txtArea;   
+    private ChessBoardView chessBoardView;
 
-    /**
-     * Empty constructor that creates the graphically objects and has a reference
-     * to the ChessBoardView to set the location of the JDialog.
-     * @param view as a ChessBoardView object
-     */
     public HelpTopics(ChessBoardView view) {
-        this.view = view;
-
-        c = this.getContentPane();
-        txtArea = new JTextArea() {
-
-            /**
-             * The method painComponent of chatA
-             * is used here to paint the JTexchatA as we want
-             * @param g Graphics object used to paint this object
-             */
+        this.chessBoardView = view;
+        
+        createTextArea();
+        addTextAreaToScrollPanel();
+        readChessRulesAndAddToTextArea();
+        setUIProperties();
+        
+    }
+    private void setUIProperties()
+    {
+    	this.setTitle(" CHESS RULES ");
+        this.setSize(800, 400);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(chessBoardView);
+        this.setVisible(true);
+    }
+    private JTextArea createTextArea()
+    {
+    	txtArea = new JTextArea() {
             @Override
             public void paintComponent(Graphics g) {
                 int w = txtArea.getWidth();
@@ -54,48 +55,40 @@ public class HelpTopics extends JDialog {
                 super.paintComponent(g);
             }
         };
-
         txtArea.setForeground(Color.WHITE);
         txtArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         txtArea.setOpaque(false);
         txtArea.setLineWrap(true);
-        //create the file object to contain the text file with the rules.
-
-
-        try {
-            //use the bufferedreader. File will be "read" one line at a time.
+        txtArea.setEditable(false);
+        txtArea.setCaretPosition(0);
+        return txtArea;
+    	
+    }
+    private void addTextAreaToScrollPanel()
+    {
+    	JScrollPane scrollPane = new JScrollPane(txtArea);
+    	Container container = this.getContentPane();
+        container.add(scrollPane);
+    }
+    private void  readChessRulesAndAddToTextArea()
+    {
+    	try {
             BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("TxtFiles/chessrules.txt")));
 
             try {
-                //create a string to contain the reading lines
                 String line = null;
-                //append what is read to the line as long as the readLine method returns something.
                 while ((line = input.readLine()) != null) {
-
                     txtArea.append(line + "\n");
                 }
             } finally {
                 input.close();
             }
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(view, "chessrules.txt Not Found", "File Not Found", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(chessBoardView, "chessrules.txt Not Found", "File Not Found", JOptionPane.ERROR_MESSAGE);
             HelpTopics.this.dispose();
         } catch (IOException ioe) {
             System.err.println(ioe.getMessage());
         }
-        //makes sure the user cannot make changes to the text
-        txtArea.setEditable(false);
 
-        scrollPane = new JScrollPane(txtArea);
-        txtArea.setCaretPosition(0);
-
-        c.add(scrollPane);
-
-        // set the view
-        this.setTitle(" CHESS RULES ");
-        this.setSize(800, 400);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(view);
-        this.setVisible(true);
     }
 }

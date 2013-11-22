@@ -22,23 +22,13 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-/**
- * About class extends JDialog and is used to simply display the about window.
- * The use will see this window when they click Help-About in the game. The about dialog
- * contains simple scrolling animation made in a thread. It draws String and 2 images
- * on the center panel. It also has a close button.
- * @author Mario
- */
 public class About extends JDialog {
 
     //INSTANCE VARIABLES
-    private JButton btnClose = new JButton("Close");
-    private CostumPanel pnlClose, pnlText, pnlTop, pnlAll;
-    private JLabel lblTitle;
-    private Container c;
+    private CostumPanel panelContainer;
     private int Ypos = 200;
     private volatile boolean isKill = true;
-    private ChessBoardView view;
+    private ChessBoardView chessBoardView;
 
     /**
      * Overloaded constructor which receives a reference to the ChessBoardView class
@@ -47,24 +37,33 @@ public class About extends JDialog {
      * @param view ChessBoardView object
      */
     public About(ChessBoardView view) {
-        this.view = view;
+        this.chessBoardView = view;
+        
+        addPanelContainer();
+        createAnimation();
+        addCloseButton();
+        addTitle();
+        addWindowCloseListener();
+        setUIProperties();
+    }
+    private void setUIProperties()
+    {
+        this.setSize(350, 300);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(chessBoardView);
+        this.setTitle("About");
+        this.setVisible(true);
+    }
 
-        c = this.getContentPane();
-
-
-        //Start the animation thread
-        Animation animate = new Animation();
+    private void createAnimation()
+    {
+    	Animation animate = new Animation();
         animate.makePanel();
         animate.start();
-
-        pnlClose = new CostumPanel();
-        pnlClose.setOpaque(false);
-        pnlTop = new CostumPanel();
-        pnlTop.setOpaque(false);
-        pnlAll = new CostumPanel("Icons/background.jpg", new BorderLayout());
-
-        //Window listener that kills the thread once you close the window.
-        this.addWindowListener(new WindowAdapter() {
+    }
+    private void addWindowCloseListener()
+    {
+    	this.addWindowListener(new WindowAdapter() {
 
             @Override
             public void windowClosing(WindowEvent e) {
@@ -72,11 +71,12 @@ public class About extends JDialog {
             }
         });
 
-        lblTitle = new JLabel("Chess'N'Chat");
-        lblTitle.setFont(new Font("Verdana", Font.BOLD, 23));
-        lblTitle.setForeground(Color.WHITE);
-
-        //Action listener when the user clicks the close button. It closed the dialog and kills the thread
+    }
+    private void addCloseButton()
+    {
+    	CostumPanel closeButton = new CostumPanel();
+        closeButton.setOpaque(false);
+        JButton btnClose = new JButton("Close");
         btnClose.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -85,31 +85,26 @@ public class About extends JDialog {
 
             }
         });
-
-        //Add the components to thier panel
-        pnlTop.add(lblTitle);
-        pnlClose.add(btnClose);
-        pnlAll.add(pnlTop, BorderLayout.NORTH);
-        pnlAll.add(pnlText, BorderLayout.CENTER);
-        pnlAll.add(pnlClose, BorderLayout.SOUTH);
-
-        //Add main panel to the container
-        c.add(pnlAll);
-
-        //Set the JDialog properties
-        this.setSize(350, 300);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(view);
-        this.setTitle("About");
-        this.setVisible(true);
-
-
+        closeButton.add(btnClose);
+        panelContainer.add(closeButton, BorderLayout.SOUTH);
     }
-
-    /**
-     * Animation class is a thread used for the vertical scrolling animation.
-     * It works by repainting the panel every 44 milliseconds
-     */
+    private void addTitle()
+    {
+    	CostumPanel topBar = new CostumPanel();
+        topBar.setOpaque(false);
+        
+        JLabel title = new JLabel("Chess'N'Chat");
+        title.setFont(new Font("Verdana", Font.BOLD, 23));
+        title.setForeground(Color.WHITE);
+        
+        topBar.add(title);
+        panelContainer.add(topBar, BorderLayout.NORTH);
+    }
+    private void addPanelContainer()
+    {
+    	panelContainer = new CostumPanel("Icons/background.jpg", new BorderLayout());
+        getContentPane().add(panelContainer);
+    }
     class Animation extends Thread {
 
         @Override
@@ -134,7 +129,7 @@ public class About extends JDialog {
             final Image image = new ImageIcon(getClass().getResource("Icons/logo.gif")).getImage();
             final Image image2 = new ImageIcon(getClass().getResource("Icons/logo.gif")).getImage();
 
-            pnlText = new CostumPanel() {
+            CostumPanel aboutText = new CostumPanel() {
 
                 @Override
                 public void paintComponent(Graphics g) {
@@ -158,7 +153,8 @@ public class About extends JDialog {
                     }
                 }
             };
-            pnlText.setOpaque(false);
+            aboutText.setOpaque(false);
+            panelContainer.add(aboutText, BorderLayout.CENTER);
         }
     }
 }
