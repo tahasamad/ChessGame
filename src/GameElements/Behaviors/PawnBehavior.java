@@ -14,7 +14,7 @@ public class PawnBehavior implements Behavior{
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
-		int diffY = newPosition.y - currentPosition.y;
+		int diffY = newPosition.getY() - currentPosition.getY();
 		BehaviorResult retVal = null;
 		if(data.posHasPiece(newPosition))
 		{
@@ -74,11 +74,11 @@ public class PawnBehavior implements Behavior{
 		if(retVal != null)
 		{
 			int yPos = this.getYPosForPromotion(pieceModel.getColor());
-			if(yPos == newPosition.y)
+			if(yPos == newPosition.getY())
 			{
 				pieceModel.isQueenFromPawn(true);
 				piece.updateView();
-				SquareModel pawnToQueenSquareModel = data.getSquareModel(newPosition.x, newPosition.y);
+				SquareModel pawnToQueenSquareModel = data.getSquareModel(newPosition.getX(), newPosition.getY());
 				pawnToQueenSquareModel.setPiece(piece);
 				if(!retVal.getSquareModels().contains(pawnToQueenSquareModel))
 				{
@@ -93,7 +93,7 @@ public class PawnBehavior implements Behavior{
 	{
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
-		int diffY = newPosition.y - currentPosition.y;
+		int diffY = newPosition.getY() - currentPosition.getY();
 		int range = 1;
 		if(!pieceModel.isMoved())
 		{
@@ -120,12 +120,12 @@ public class PawnBehavior implements Behavior{
 		Chess_Data data = Chess_Data.getChessData();
 		if(enPassantPoint != null)
 		{
-			if(newPosition.x == enPassantPoint.x && newPosition.y == (enPassantPoint.y + diff))
+			if(newPosition.getX() == enPassantPoint.getX() && newPosition.getY() == (enPassantPoint.getY() + diff))
 			{
 				BehaviorResult result = this.oneStepDiagonalBehavior.proposeMove(currentPosition, newPosition, piece);
 				if(result != null)
 				{
-					SquareModel enPassantSquareModel = data.getSquareModel(enPassantPoint.x, enPassantPoint.y);
+					SquareModel enPassantSquareModel = data.getSquareModel(enPassantPoint.getX(), enPassantPoint.getY());
 					Non_Visual_Piece enPassantPieceModel = enPassantSquareModel.getPiece().getPieceModel();
 					enPassantPieceModel.setIsCaptured(true);
 					data.addToCapturedPieces(enPassantPieceModel);

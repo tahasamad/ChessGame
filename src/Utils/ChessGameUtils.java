@@ -83,7 +83,7 @@ public class ChessGameUtils { // Applying Utility Pattern
 	
 	public static boolean isInGridBounds(ChessGamePoint point)
 	{
-		return ChessGameUtils.isInGridBounds(point.x, point.y);
+		return ChessGameUtils.isInGridBounds(point.getX(), point.getY());
 	}
 	
 	public static boolean isInGridBounds(int x, int y)

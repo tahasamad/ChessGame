@@ -94,15 +94,15 @@ public final class Board extends JPanel implements Observer {
     	{
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
-	    		Piece prevPiece = this.squares[piecePosition.x][piecePosition.y].getPiece();
+	    		Piece prevPiece = this.squares[piecePosition.getX()][piecePosition.getY()].getPiece();
 	    		if(prevPiece != null && !prevPiece.equals(piece))
 	    		{
 	    			throw new RuntimeException("Trying to add a piece on top of an existing piece.");
 	    		}
-	    		this.squares[piecePosition.x][piecePosition.y].setPieceWithoutUpdatingView(piece);
-	    		this.squares[piecePosition.x][piecePosition.y].add(piece, ChessGameConstants.pieceIndex);
-	    		this.squares[piecePosition.x][piecePosition.y].revalidate();
-	    		this.squares[piecePosition.x][piecePosition.y].repaint();
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].setPieceWithoutUpdatingView(piece);
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].add(piece, ChessGameConstants.pieceIndex);
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].revalidate();
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].repaint();
     		}
     		else
     		{
@@ -116,13 +116,13 @@ public final class Board extends JPanel implements Observer {
     	{
     		if(ChessGameUtils.isInGridBounds(piecePosition))
     		{
-	    		Piece pieceInSquare = this.squares[piecePosition.x][piecePosition.y].getPiece();
+	    		Piece pieceInSquare = this.squares[piecePosition.getX()][piecePosition.getY()].getPiece();
 	    		if(pieceInSquare == null || !pieceInSquare.equals(piece))
 	    		{
 	    			throw new RuntimeException("Piece Model Square Out of Synch");
 	    		}
-	    		this.squares[piecePosition.x][piecePosition.y].setPieceWithoutUpdatingView(null);
-	    		this.squares[piecePosition.x][piecePosition.y].remove(piece);
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].setPieceWithoutUpdatingView(null);
+	    		this.squares[piecePosition.getX()][piecePosition.getY()].remove(piece);
     		}
     		else
     		{
@@ -272,7 +272,7 @@ public final class Board extends JPanel implements Observer {
             SquareModel squareModel1 = list.get(0);
             ChessGamePoint srcPosition = squareModel1.getPosition();
             ChessGamePoint dstPosition = squareModel2.getPosition();
-            view.getMovesText().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.x, srcPosition.y)) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.x, dstPosition.y)) + "\n");
+            view.getMovesText().append(turn + " from: " + this.mapPositions.get(this.getMapPositionKey(srcPosition.getX(), srcPosition.getY())) + " to " + this.mapPositions.get(this.getMapPositionKey(dstPosition.getX(), dstPosition.getY())) + "\n");
             view.getMovesText().append("--------------------------\n");
             view.getMovesText().setCaretPosition(view.getMovesText().getDocument().getLength());
         }

@@ -74,7 +74,7 @@ public final class Chess_Data extends Observable {
     public boolean posHasPiece(ChessGamePoint point)
     {
     	boolean hasPiece = false;
-		SquareModel selectedSquare = this.getSquareModel(point.x, point.y);
+		SquareModel selectedSquare = this.getSquareModel(point.getX(), point.getY());
 		Piece piece = selectedSquare.getPiece();
 		if(piece != null)
 		{
@@ -130,7 +130,7 @@ public final class Chess_Data extends Observable {
     
     public SquareModel getSquareModel(ChessGamePoint position)
     {
-    	return this.getSquareModel(position.x, position.y);
+    	return this.getSquareModel(position.getX(), position.getY());
     }
         
     private void setSquareModel(int x, int y, SquareModel model)
@@ -184,7 +184,7 @@ public final class Chess_Data extends Observable {
     
     public Non_Visual_Piece getPieceModelFromSavedState(ChessGamePoint position)
     {
-    	return this.getPieceModelFromSaveState(position.x, position.y);
+    	return this.getPieceModelFromSaveState(position.getX(), position.getY());
     }
     
     public void discardActivePiecesInSavedState()

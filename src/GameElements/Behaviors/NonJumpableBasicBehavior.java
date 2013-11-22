@@ -9,13 +9,13 @@ public class NonJumpableBasicBehavior implements Behavior {
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Chess_Data data = Chess_Data.getChessData();
-		int diffX = newPosition.x - currentPosition.x;
-		int diffY = newPosition.y - currentPosition.y;
+		int diffX = newPosition.getX() - currentPosition.getX();
+		int diffY = newPosition.getY() - currentPosition.getY();
 		int dux = diffX != 0 ? diffX / Math.abs(diffX) : 0;
 		int duy = diffY != 0 ? diffY / Math.abs(diffY) : 0;
-		int x = currentPosition.x + dux;
-		int y = currentPosition.y + duy;
-		for(;(x != newPosition.x || y != newPosition.y); x += dux, y += duy)
+		int x = currentPosition.getX() + dux;
+		int y = currentPosition.getY() + duy;
+		for(;(x != newPosition.getX() || y != newPosition.getY()); x += dux, y += duy)
 		{
 			if(data.posHasPiece(new ChessGamePoint(x, y)))
 			{

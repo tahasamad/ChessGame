@@ -13,8 +13,8 @@ public class DiagonalBehavior implements Behavior {
 	{
 		if(ChessGameUtils.isInGridBounds(newPosition))
 		{
-			int xDiff = Math.abs(newPosition.x - currentPosition.x);
-			int yDiff = Math.abs(newPosition.y - currentPosition.y);
+			int xDiff = Math.abs(newPosition.getX() - currentPosition.getX());
+			int yDiff = Math.abs(newPosition.getY() - currentPosition.getY());
 			if(xDiff == yDiff)
 			{
 				return this.basicBehavior.proposeMove(currentPosition, newPosition, piece);

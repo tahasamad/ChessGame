@@ -51,7 +51,7 @@ public class Square extends JPanel {
         this.setBackground(ChessGameUtils.getColorFromElementColor(this.squareModel.getBaseColor()));
         this.setLayout(null);
         ChessGamePoint position = this.getPosition();
-        this.setBounds(position.x * ChessGameConstants.squareSize, position.y * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);        
+        this.setBounds(position.getX() * ChessGameConstants.squareSize, position.getY() * ChessGameConstants.squareSize, ChessGameConstants.squareSize, ChessGameConstants.squareSize);        
         //ADD MOUSELISTENER TO THIS OBJECT AND PASS A REFERENCE TO THE OBJECT THAT HANDLES THE MOUSE EVENTS
         this.handler = new MouseEventHandler();
         this.handlerAdded = false;

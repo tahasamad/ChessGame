@@ -3,8 +3,8 @@ package Utils;
 import java.io.Serializable;
 
 public class ChessGamePoint implements Serializable{
-	public int x;
-	public int y;
+	private int x;
+	private int y;
 	
 	public ChessGamePoint()
 	{
@@ -21,6 +21,16 @@ public class ChessGamePoint implements Serializable{
 	public ChessGamePoint clone()
 	{
 		return new ChessGamePoint(this.x, this.y);
+	}
+	
+	public int getX ()
+	{
+		return x;
+	}
+	
+	public int getY ()
+	{
+		return y;
 	}
 
 }

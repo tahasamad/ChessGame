@@ -11,7 +11,7 @@ public class HorizontalBehavior implements Behavior {
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
-		if( (ChessGameUtils.isInGridBounds(newPosition)) && newPosition.y == currentPosition.y && newPosition.x != newPosition.y)
+		if( (ChessGameUtils.isInGridBounds(newPosition)) && newPosition.getY() == currentPosition.getY() && newPosition.getX() != newPosition.getY())
 		{
 			return this.basicBehavior.proposeMove(currentPosition, newPosition, piece);
 		}

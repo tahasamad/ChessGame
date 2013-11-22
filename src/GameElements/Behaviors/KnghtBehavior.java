@@ -9,8 +9,8 @@ public class KnghtBehavior implements Behavior{
 
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
-		int absDiffX = Math.abs(newPosition.x - currentPosition.x);
-		int absDiffY = Math.abs(newPosition.y - currentPosition.y);
+		int absDiffX = Math.abs(newPosition.getX() - currentPosition.getX());
+		int absDiffY = Math.abs(newPosition.getY() - currentPosition.getY());
 		if((absDiffX == 2 && absDiffY == 1) || (absDiffX == 1 && absDiffY == 2))
 		{
 			return this.basicBehavior.proposeMove(currentPosition, newPosition, piece);

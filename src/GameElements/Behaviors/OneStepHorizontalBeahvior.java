@@ -10,7 +10,7 @@ public class OneStepHorizontalBeahvior implements Behavior {
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
-		int diffX = Math.abs(currentPosition.x - newPosition.x);
+		int diffX = Math.abs(currentPosition.getX() - newPosition.getX());
 		if(diffX == 1)
 		{
 			BehaviorResult result = this.horizontalBehavior.proposeMove(currentPosition, newPosition, piece);

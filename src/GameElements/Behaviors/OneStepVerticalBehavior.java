@@ -10,7 +10,7 @@ public class OneStepVerticalBehavior implements Behavior{
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
-		int diffY = Math.abs(currentPosition.y - newPosition.y);
+		int diffY = Math.abs(currentPosition.getY() - newPosition.getY());
 		if(diffY == 1)
 		{
 			BehaviorResult result = this.verticalBehavior.proposeMove(currentPosition, newPosition, piece);

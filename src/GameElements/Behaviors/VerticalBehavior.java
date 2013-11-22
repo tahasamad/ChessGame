@@ -11,7 +11,7 @@ public class VerticalBehavior implements Behavior {
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{	
-		if((ChessGameUtils.isInGridBounds(newPosition)) && newPosition.x == currentPosition.x && newPosition.y != currentPosition.y)
+		if((ChessGameUtils.isInGridBounds(newPosition)) && newPosition.getX() == currentPosition.getX() && newPosition.getY() != currentPosition.getY())
 		{
 			return this.basicBehavior.proposeMove(currentPosition, newPosition, piece);
 		}
