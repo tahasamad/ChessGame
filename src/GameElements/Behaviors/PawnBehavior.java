@@ -18,7 +18,7 @@ public class PawnBehavior implements Behavior{
 		BehaviorResult retVal = null;
 		if(data.posHasPiece(newPosition))
 		{
-			if(pieceModel.getColor() == ElementColor.White)
+			if(isPieceColorWhite(pieceModel))
 			{
 				if(diffY < 0)
 				{
@@ -36,7 +36,7 @@ public class PawnBehavior implements Behavior{
 		else
 		{
 			//////Normal Move////////
-			if(pieceModel.getColor() == ElementColor.White)
+			if(isPieceColorWhite(pieceModel))
 			{
 				if(diffY < 0)//Correct Direction
 				{
@@ -53,7 +53,7 @@ public class PawnBehavior implements Behavior{
 			///////EnPassant Move/////////
 			if(retVal == null)
 			{
-				if(pieceModel.getColor() == ElementColor.White)
+				if(isPieceColorWhite(pieceModel))
 				{
 					if(diffY < 0)
 					{
@@ -73,7 +73,7 @@ public class PawnBehavior implements Behavior{
 		}
 		if(retVal != null)
 		{
-			int yPos = this.getYPosForPromotion(pieceModel.getColor());
+			int yPos = this.getYPosForPromotion(pieceModel);
 			if(yPos == newPosition.getY())
 			{
 				pieceModel.isQueenFromPawn(true);
@@ -138,9 +138,9 @@ public class PawnBehavior implements Behavior{
 		return null;
 	}
 	
-	private int getYPosForPromotion(ElementColor color)
+	private int getYPosForPromotion(Non_Visual_Piece pieceModel)
 	{
-		if(color == ElementColor.White)
+		if(isPieceColorWhite (pieceModel))
 		{
 			return 0;
 		}
@@ -148,6 +148,11 @@ public class PawnBehavior implements Behavior{
 		{
 			return (Chess_Data.getChessData().getDimension() - 1);
 		}
+	}
+	
+	private boolean isPieceColorWhite (Non_Visual_Piece pieceModel)
+	{
+		return (pieceModel.getColor() == ElementColor.White);
 	}
 	
 }
