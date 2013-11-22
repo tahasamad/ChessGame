@@ -1,8 +1,9 @@
 package Utils;
 
 public class ChessGameRect {
-	public ChessGamePoint point;
-	public ChessGameSize size;
+	private ChessGamePoint point;
+	private ChessGameSize size;
+
 	
 	public ChessGameRect() {
 		this.point = new ChessGamePoint();
@@ -21,5 +22,15 @@ public class ChessGameRect {
 	
 	public ChessGameRect clone() {
 		return new ChessGameRect(this.point, this.size);
+	}
+	
+	public ChessGamePoint getChessGamePoint ()
+	{
+		return point;
+	}
+	
+	public ChessGameSize getChessGameSize ()
+	{
+		return size;
 	}
 }

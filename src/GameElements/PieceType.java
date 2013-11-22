@@ -8,7 +8,7 @@ public enum PieceType {
 	Knight(5),
 	Bishop(6);
 
-	public int currentValue = 0;
+	private int currentValue = 0;
 
 	private PieceType(int value) {
 		currentValue = value;

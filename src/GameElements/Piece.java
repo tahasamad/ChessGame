@@ -52,7 +52,7 @@ public class Piece extends JPanel {
         this.setOpaque(false);
         this.setPreferredSize(new Dimension(ChessGameConstants.pieceDimension, ChessGameConstants.pieceDimension));
         ChessGameRect bounds = ChessGameConstants.pieceBounds.clone();
-        this.setBounds(bounds.point.x, bounds.point.y, bounds.size.width, bounds.size.height);
+        this.setBounds(bounds.getChessGamePoint().x, bounds.getChessGamePoint().y, bounds.getChessGameSize().getWidth(), bounds.getChessGameSize().getHeight());
     }
 
     /**

@@ -1,8 +1,8 @@
 package Utils;
 
 public class ChessGameSize {
-	public int width;
-	public int height;
+	private int width;
+	private int height;
 	
 	public ChessGameSize() {
 		this.width = 0;
@@ -17,5 +17,15 @@ public class ChessGameSize {
 	public ChessGameSize clone()
 	{
 		return new ChessGameSize(this.width, this.height);
+	}
+	
+	public int getWidth ()
+	{
+		return width;
+	}
+	
+	public int getHeight ()
+	{
+		return height;
 	}
 }
