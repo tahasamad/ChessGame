@@ -2,7 +2,7 @@ package ChessGameKenai;
 
 import GameElements.Piece;
 
-public class PurposedMoveResult {
+public class ProposedMoveResult {
 	
 	boolean isValidMove = false, hasKilled = false;
 	Piece killedPiece = null;
@@ -31,7 +31,7 @@ public class PurposedMoveResult {
 		this.killedPiece = killedPiece;
 	}
 
-	public PurposedMoveResult()
+	public ProposedMoveResult()
 	{
 		
 	}

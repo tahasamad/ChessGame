@@ -123,7 +123,7 @@ public class Piece extends JPanel {
     	Behavior behavior = this.getPieceModel().getBehavior(); 
     	if(behavior != null)
     	{
-    		BehaviorResult result = behavior.purposeMove(originalPosition, destinationPosition, this);
+    		BehaviorResult result = behavior.proposeMove(originalPosition, destinationPosition, this);
     		if(result != null)
     		{
     			Chess_Data.getChessData().notifyView(result);

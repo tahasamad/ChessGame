@@ -12,7 +12,7 @@ import Utils.ChessGamePoint;
 public class BasicBehavior implements Behavior{
 	
 	@Override
-	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
+	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		Chess_Data data = Chess_Data.getChessData();
 		if(data.posHasPiece(newPosition))

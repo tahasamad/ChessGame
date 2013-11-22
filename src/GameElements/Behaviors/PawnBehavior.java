@@ -11,7 +11,7 @@ public class PawnBehavior implements Behavior{
 	private VerticalBehavior verticalBehavior = new VerticalBehavior();
 	private OneStepDiagonalBehavior oneStepDiagonalBehavior = new OneStepDiagonalBehavior();
 	@Override
-	public BehaviorResult purposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
+	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		Chess_Data data = Chess_Data.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.y - currentPosition.y;
@@ -22,14 +22,14 @@ public class PawnBehavior implements Behavior{
 			{
 				if(diffY < 0)
 				{
-					retVal = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+					retVal = this.oneStepDiagonalBehavior.proposeMove(currentPosition, newPosition, piece);
 				}
 			}
 			else
 			{
 				if(diffY > 0)
 				{
-					retVal = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+					retVal = this.oneStepDiagonalBehavior.proposeMove(currentPosition, newPosition, piece);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ public class PawnBehavior implements Behavior{
 		int adsDiffY = Math.abs(diffY);
 		if(adsDiffY > 0 && adsDiffY <= range)
 		{
-			BehaviorResult result = this.verticalBehavior.purposeMove(currentPosition, newPosition, piece);
+			BehaviorResult result = this.verticalBehavior.proposeMove(currentPosition, newPosition, piece);
 			if(result != null)
 			{
 				if(adsDiffY == 2)
@@ -122,7 +122,7 @@ public class PawnBehavior implements Behavior{
 		{
 			if(newPosition.x == enPassantPoint.x && newPosition.y == (enPassantPoint.y + diff))
 			{
-				BehaviorResult result = this.oneStepDiagonalBehavior.purposeMove(currentPosition, newPosition, piece);
+				BehaviorResult result = this.oneStepDiagonalBehavior.proposeMove(currentPosition, newPosition, piece);
 				if(result != null)
 				{
 					SquareModel enPassantSquareModel = data.getSquareModel(enPassantPoint.x, enPassantPoint.y);
