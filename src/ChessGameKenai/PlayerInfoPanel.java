@@ -90,35 +90,56 @@ public class PlayerInfoPanel extends JPanel {
 	public void updateTimerLabel()
 	{
 		playerInfo.incrementTime();
-		int seconds = playerInfo.getSeconds();
-		int minutes = playerInfo.getMinutes();
-		int hours = playerInfo.getHours();
-		String txt = "";
-		if(hours < 10)
+		
+		String timerTxt = getLabelForHours ();
+		timerTxt += getLabelForMinutes ();
+		timerTxt += getLabelForSeconds ();
+
+		timerLabel.setText(timerTxt);
+	}
+	
+	private String getLabelForHours ()
+	{
+		String labelWithHours = "";
+		if(playerInfo.getHours() < 10)
 		{
-			txt = txt + "0" + hours +  ":";
+			labelWithHours = "0" + playerInfo.getHours() +  ":";
 		}
 		else
 		{
-			txt = txt + hours +  ":";
+			labelWithHours = playerInfo.getHours() +  ":";
 		}
-		if(minutes < 10)
+		
+		return labelWithHours;
+	}
+	
+	private String getLabelForMinutes ()
+	{
+		String labelForMinutes = "";
+		if(playerInfo.getMinutes() < 10)
 		{
-			txt = txt + "0" + minutes +  ":";
+			labelForMinutes =  "0" + playerInfo.getMinutes() +  ":";
 		}
 		else
 		{
-			txt = txt + minutes +  ":";
+			labelForMinutes = playerInfo.getMinutes() +  ":";
 		}
-		if(seconds < 10)
+		
+		return labelForMinutes;
+	}
+	
+	private String getLabelForSeconds ()
+	{
+		String labelForSeconds = "";
+		if(playerInfo.getSeconds() < 10)
 		{
-			txt = txt + "0" + seconds;
+			labelForSeconds =  "0" + playerInfo.getSeconds();
 		}
 		else
 		{
-			txt = txt + seconds;
+			labelForSeconds =  ""+playerInfo.getSeconds();
 		}
-		timerLabel.setText(txt);
+		return labelForSeconds;
 	}
 
 	public void stopTimer()

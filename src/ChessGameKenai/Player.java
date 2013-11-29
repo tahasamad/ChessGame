@@ -23,6 +23,9 @@ public class Player implements Serializable {
     private int numberOfWins;
     private String imagePath;
     private int seconds, minutes,hours;
+    private int NumOfHoursInADay = 24;
+    private int NumOfSecondsInAMin = 60;
+    private int NumOfMinsInAnHour = 60;
 
     /**
      * OverLoaded Constructor for creating Player object
@@ -65,20 +68,30 @@ public class Player implements Serializable {
 	public void incrementTime()
 	{
 		seconds++;    
-		if (seconds == 60) 
+		if (seconds == NumOfSecondsInAMin) 
 		{
-			seconds = 0;
-	     	minutes++;    
+			incrementMinutes();
 		}		
-		if (minutes == 60) 
+		if (minutes == NumOfMinsInAnHour) 
 		{
-		    minutes = 0;
-		    hours++;
+			incrementHours();
 		}
-		if (hours == 24)
+		if (hours == NumOfHoursInADay)
 		{
 			resetTime();
 		}
+	}
+	
+	private void incrementMinutes ()
+	{
+		seconds = 0;
+     	minutes++;
+	}
+	
+	private void incrementHours ()
+	{
+		 minutes = 0;
+		 hours++;
 	}
 	
 
