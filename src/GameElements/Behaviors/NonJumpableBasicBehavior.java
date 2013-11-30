@@ -1,6 +1,6 @@
 package GameElements.Behaviors;
 
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import GameElements.Piece;
 import Utils.ChessGamePoint;
 
@@ -8,7 +8,7 @@ public class NonJumpableBasicBehavior implements Behavior {
 	private Behavior behavior = new BasicBehavior();
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
-		Chess_Data data = Chess_Data.getChessData();
+		ChessData data = ChessData.getChessData();
 		int diffX = newPosition.getX() - currentPosition.getX();
 		int diffY = newPosition.getY() - currentPosition.getY();
 		int dux = diffX != 0 ? diffX / Math.abs(diffX) : 0;

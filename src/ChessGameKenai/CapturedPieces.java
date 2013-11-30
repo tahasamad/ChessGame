@@ -132,7 +132,7 @@ public class CapturedPieces extends JPanel implements Observer {
      * @param arg as an Object any object passed in
      */
     public void update(Observable o, Object arg) {
-        Chess_Data data = Chess_Data.getChessData();
+        ChessData data = ChessData.getChessData();
         ArrayList<Non_Visual_Piece> capturedPieces = data.getCapturedPieces();
         if (!capturedPieces.isEmpty()) {
         	int size = capturedPieces.size();

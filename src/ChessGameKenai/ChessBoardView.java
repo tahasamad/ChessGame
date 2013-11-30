@@ -129,8 +129,8 @@ public class ChessBoardView extends JFrame implements Observer {
     private void initializeBoard ()
     {
     	board = new Board(ChessBoardView.this);
-    	Chess_Data.getChessData().addObserver(board);
-    	Chess_Data.getChessData().addObserver(this);
+    	ChessData.getChessData().addObserver(board);
+    	ChessData.getChessData().addObserver(this);
     }
     
     private void initializeButtonPanel ()
@@ -259,8 +259,8 @@ public class ChessBoardView extends JFrame implements Observer {
     private void loadDefaultPlayers ()
     {
     	//LOADS THE ARRAY LIST WITH TWO PLAYER OBJECTS AND GIVES THEM INITIAL VALUES
-    	Chess_Data.getChessData().getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
-    	Chess_Data.getChessData().getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
+    	ChessData.getChessData().getPlayers().add(new Player("Player1", "Icons/hercules10.gif"));
+    	ChessData.getChessData().getPlayers().add(new Player("Player2", "Icons/hercules12.gif"));
     }
 
     private void addRestartButton ()
@@ -275,7 +275,7 @@ public class ChessBoardView extends JFrame implements Observer {
     		 * @param e ActionEvent object that is generated when listener detects an action
     		 */
     		public void actionPerformed(ActionEvent e) {
-    			if (!Chess_Data.getChessData().isGameOnLine()) {
+    			if (!ChessData.getChessData().isGameOnLine()) {
     				ChessBoardView.this.restartLocalGame();
     			} else {
     				ChessBoardView.this.restartOnlineGame();
@@ -294,11 +294,11 @@ public class ChessBoardView extends JFrame implements Observer {
     	northButtonPanel = new JPanel(new GridLayout(1, 2));
     	northButtonPanel.setOpaque(false);
 
-    	player1InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(0));
+    	player1InfoPanel = new PlayerInfoPanel(ChessData.getChessData().getPlayers().get(0));
     	player1InfoPanel.createTimer();
     	player1InfoPanel.startTimer();
 
-    	player2InfoPanel = new PlayerInfoPanel(Chess_Data.getChessData().getPlayers().get(1));
+    	player2InfoPanel = new PlayerInfoPanel(ChessData.getChessData().getPlayers().get(1));
     	player2InfoPanel.createTimer();
     	player2InfoPanel.stopTimer();
 
@@ -342,8 +342,8 @@ public class ChessBoardView extends JFrame implements Observer {
     	blackCapturedPiecesScroll = new JScrollPane(blackCapturedPiecesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     	//ADD TWO OBSERVERS TO THE DATA WHICH ARE CAPTURED PIECES PANELS
-    	Chess_Data.getChessData().addObserver(whiteCapturedPiecesPanel);
-    	Chess_Data.getChessData().addObserver(blackCapturedPiecesPanel);
+    	ChessData.getChessData().addObserver(whiteCapturedPiecesPanel);
+    	ChessData.getChessData().addObserver(blackCapturedPiecesPanel);
 
     }
 
@@ -388,13 +388,13 @@ public class ChessBoardView extends JFrame implements Observer {
     
     private void setupTextOfWhoseTurnLabel()
     {
-    	Chess_Data data = Chess_Data.getChessData();
-    	this.whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (data.getPlayers().get(0).getName() + ChessGameConstants.turnToPlay) : (data.getPlayers().get(1).getName() + ChessGameConstants.turnToPlay));
+    	ChessData data = ChessData.getChessData();
+    	this.whoseTurnLabel.setText(ChessData.getChessData().isWhiteTurn() ? (data.getPlayers().get(0).getName() + ChessGameConstants.turnToPlay) : (data.getPlayers().get(1).getName() + ChessGameConstants.turnToPlay));
     }
     
     private void adjustHandlerAndTimers(Object obj)
     {
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
     	if (data.isWinner()) {
     		if(obj != null)
     		{
@@ -435,7 +435,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * this method is used when the user is playing the game locally
      */
     public void chooseNameLocal() {
-        if (!Chess_Data.getChessData().isGameOnLine()) {
+        if (!ChessData.getChessData().isGameOnLine()) {
             String player1Name = "";
             String player2Name = "";
 
@@ -445,11 +445,11 @@ public class ChessBoardView extends JFrame implements Observer {
 
             if (player1Name != null && player2Name != null) {
 
-                Chess_Data.getChessData().getPlayers().get(0).setName(player1Name);
-                Chess_Data.getChessData().getPlayers().get(1).setName(player2Name);
+                ChessData.getChessData().getPlayers().get(0).setName(player1Name);
+                ChessData.getChessData().getPlayers().get(1).setName(player2Name);
 
                 //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-                whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
+                whoseTurnLabel.setText(ChessData.getChessData().isWhiteTurn() ? (ChessData.getChessData().getPlayers().get(0).getName() + " turn to play") : (ChessData.getChessData().getPlayers().get(1).getName() + " turn to play"));
                 
                 player1InfoPanel.updatePlayerName();
                 player2InfoPanel.updatePlayerName();
@@ -466,16 +466,16 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void chooseNameOnLine() {
         String playerName = "";
-        if (Chess_Data.getChessData().isServer()) {
+        if (ChessData.getChessData().isServer()) {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-            	Chess_Data.getChessData().getPlayers().get(0).setName(playerName);
+            	ChessData.getChessData().getPlayers().get(0).setName(playerName);
                 player1InfoPanel.updatePlayerName();
             }
         } else {
             playerName = JOptionPane.showInputDialog("Enter Your Name");
             if (playerName != null) {
-            	Chess_Data.getChessData().getPlayers().get(1).setName(playerName);
+            	ChessData.getChessData().getPlayers().get(1).setName(playerName);
                 player2InfoPanel.updatePlayerName();
             }
         }
@@ -489,7 +489,7 @@ public class ChessBoardView extends JFrame implements Observer {
         }
 
         //SET APROPRIATE LABEL TEXT DEPENDING ON WHOSE TURN IT IS
-        whoseTurnLabel.setText(Chess_Data.getChessData().isWhiteTurn() ? (Chess_Data.getChessData().getPlayers().get(0).getName() + " turn to play") : (Chess_Data.getChessData().getPlayers().get(1).getName() + " turn to play"));
+        whoseTurnLabel.setText(ChessData.getChessData().isWhiteTurn() ? (ChessData.getChessData().getPlayers().get(0).getName() + " turn to play") : (ChessData.getChessData().getPlayers().get(1).getName() + " turn to play"));
     }
 
     /**
@@ -498,7 +498,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * will start the second player timer an so on.....
      */
     public void startTimer() {
-    	Chess_Data.getChessData().isWhiteTurn(true);
+    	ChessData.getChessData().isWhiteTurn(true);
         player1InfoPanel.startTimer();
     }
 
@@ -508,7 +508,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * captured pieces panel white or black
      */
     public void loadCapturedPieces() {
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
     	ArrayList<Non_Visual_Piece> capturedPiece = data.getCapturedPieces();
         for (int i = 0; i < capturedPiece.size(); i++) {
         	Non_Visual_Piece pieceModel = data.getCapturedPieces().get(i); 
@@ -527,7 +527,7 @@ public class ChessBoardView extends JFrame implements Observer {
     public void clearLocalGame()
     {
     	this.board.resetSelectedSquare();
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
         data.discardState();
         this.whiteCapturedPiecesPanel.removeAll();
         this.blackCapturedPiecesPanel.removeAll();
@@ -544,7 +544,7 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void restartLocalGame() {
     	this.clearLocalGame();
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
     	data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
         this.board.addHandlers();
@@ -556,7 +556,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * The information is sent to the client on the other side and restarts its game as well
      */
     public void restartOnlineGame() {
-        if (Chess_Data.getChessData().isGameOnLine()) {
+        if (ChessData.getChessData().isGameOnLine()) {
             try {
                 Packet packet = new Packet();
                 packet.setRestartGame("restart game");
@@ -575,7 +575,7 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void restartClientGame() {
     	this.clearLocalGame();
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
         data.loadActivePiecesFromSavedState();
         this.board.populateBoard();
         this.adjustHandlerAndTimers(null);
@@ -635,7 +635,7 @@ public class ChessBoardView extends JFrame implements Observer {
             if ((returnValue = fileChooser.showSaveDialog(ChessBoardView.this)) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    Chess_Data.getChessData().save(file);
+                    ChessData.getChessData().save(file);
                 } catch (Exception er) {
                     JOptionPane.showMessageDialog(ChessBoardView.this, "Error: " + er.toString(), "Error Message", JOptionPane.ERROR_MESSAGE);
                 }
@@ -656,7 +656,7 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void playOnLine() {
     	this.restartClientGame();
-        Chess_Data.getChessData().isGameOnLine(true);
+        ChessData.getChessData().isGameOnLine(true);
         board.isFirstTime(true);
         player1InfoPanel.stopTimer();
     }
@@ -668,7 +668,7 @@ public class ChessBoardView extends JFrame implements Observer {
      * back the view he would simply go in the options menu and change the flip back
      */
     public void flipClientBoard() {
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
         if (!data.isServer()) {
             //board.removeAll();
             board.setCurrentBoard(BoardFlipMode.Flipped);

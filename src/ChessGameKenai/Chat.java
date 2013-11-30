@@ -465,10 +465,10 @@ public class Chat extends JPanel {
         
         name = ChessGameUtils.getCurrentPlayerName();
         
-        if (Chess_Data.getChessData().isServer()) {
-            name = Chess_Data.getChessData().getPlayers().get(0).getName();
+        if (ChessData.getChessData().isServer()) {
+            name = ChessData.getChessData().getPlayers().get(0).getName();
         } else {
-            name = Chess_Data.getChessData().getPlayers().get(1).getName();
+            name = ChessData.getChessData().getPlayers().get(1).getName();
         }
         if (!messageBox.getText().trim().equals("") || imgPath != null) {
 //            appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);

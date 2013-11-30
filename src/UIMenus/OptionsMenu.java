@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import ChessGameKenai.BoardFlipMode;
 import ChessGameKenai.Chat;
 import ChessGameKenai.ChessBoardView;
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import ChessGameKenai.ChoosePlayerIcon;
 import ChessGameKenai.ConnectionBridge;
 
@@ -113,9 +113,9 @@ public class OptionsMenu extends JMenu
 				public void run() {
 					chessBoard.playOnLine();
 					chessBoard.reEnableMenuItems(false);
-					chessBoard.setConnectionBridge(new ConnectionBridge(Chess_Data.getChessData(), chessBoard, false, ipAddress, chat));
-					Chess_Data.getChessData().addObserver(ChessBoardView.getConnectionInstance());
-					Chess_Data.getChessData().setIsClientConnected(true);
+					chessBoard.setConnectionBridge(new ConnectionBridge(ChessData.getChessData(), chessBoard, false, ipAddress, chat));
+					ChessData.getChessData().addObserver(ChessBoardView.getConnectionInstance());
+					ChessData.getChessData().setIsClientConnected(true);
 				}
 			}).start();
 		} catch (UnknownHostException ex) {
@@ -131,9 +131,9 @@ public class OptionsMenu extends JMenu
 			public void run() {
 				chessBoard.playOnLine();
 				chessBoard.reEnableMenuItems(false);
-				chessBoard.setConnectionBridge(new ConnectionBridge(Chess_Data.getChessData(), chessBoard, true, null, chat));
-				Chess_Data.getChessData().addObserver(ChessBoardView.getConnectionInstance());
-				Chess_Data.getChessData().setIsClientConnected(false);
+				chessBoard.setConnectionBridge(new ConnectionBridge(ChessData.getChessData(), chessBoard, true, null, chat));
+				ChessData.getChessData().addObserver(ChessBoardView.getConnectionInstance());
+				ChessData.getChessData().setIsClientConnected(false);
 			}
 		}).start();
 
@@ -161,7 +161,7 @@ public class OptionsMenu extends JMenu
 	
 	private void setPlayerNames ()
 	{
-		 if (!Chess_Data.getChessData().isGameOnLine()) {
+		 if (!ChessData.getChessData().isGameOnLine()) {
              chessBoard.chooseNameLocal();
          } else {
              chessBoard.chooseNameOnLine();
