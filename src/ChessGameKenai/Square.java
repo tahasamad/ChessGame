@@ -187,10 +187,10 @@ public class Square extends JPanel {
         @Override
         public void mousePressed(MouseEvent e) {
             Piece piece = Square.this.getPiece();
-            Square selectedSquare = Chess_Data.getChessData().getSelectedSquare();
+            Square selectedSquare = ChessData.getChessData().getSelectedSquare();
             if(piece != null)
             {
-            	boolean whiteTurn = Chess_Data.getChessData().isWhiteTurn();
+            	boolean whiteTurn = ChessData.getChessData().isWhiteTurn();
             	ElementColor turnColor = ElementColor.Black;
             	if(whiteTurn)
             	{
@@ -204,7 +204,7 @@ public class Square extends JPanel {
             			selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
             		}
             		Square.this.setBackground(ChessGameConstants.selectedSquareColor);
-            		Chess_Data.getChessData().setSelectedSquare(Square.this);
+            		ChessData.getChessData().setSelectedSquare(Square.this);
             		selectedSquare = Square.this;
             	}
             	else if(selectedSquare != null)
@@ -225,7 +225,7 @@ public class Square extends JPanel {
         	if(hasMoved)
         	{
         		selectedSquare.setBackground(ChessGameUtils.getColorFromElementColor(selectedSquare.getBaseColor()));
-        		Chess_Data.getChessData().setSelectedSquare(null);
+        		ChessData.getChessData().setSelectedSquare(null);
         	}
         }
     }

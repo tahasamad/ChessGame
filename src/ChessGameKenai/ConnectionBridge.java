@@ -45,7 +45,7 @@ public class ConnectionBridge implements Observer {
     private ObjectInputStream dis;
     private ChessBoardView view;
     private ReadData readData;
-    private Chess_Data data;
+    private ChessData data;
     private Color color = Color.ORANGE;
     private SimpleAttributeSet smpSet = new SimpleAttributeSet();
     private Chat chat;
@@ -59,7 +59,7 @@ public class ConnectionBridge implements Observer {
      * @param ipAddress as an InetAddress
      * @param chat as a Chat
      */
-    public ConnectionBridge(Chess_Data data, ChessBoardView view, boolean isServer, InetAddress ipAddress, Chat chat) {
+    public ConnectionBridge(ChessData data, ChessBoardView view, boolean isServer, InetAddress ipAddress, Chat chat) {
         this.view = view;
         this.data = data;
         this.chat = chat;
@@ -199,10 +199,10 @@ public class ConnectionBridge implements Observer {
                 SquareModel squareModel1 = squareModels.get(0);
                 SquareModel squareModel2 = squareModels.get(1);
                 ChessGamePoint srcPoint = squareModel1.getPosition();
-                Piece piece = Chess_Data.getChessData().getSquareModel(srcPoint.getX(), srcPoint.getY()).getPiece();
-                Chess_Data.getChessData().deleteObserver(ConnectionBridge.this);
+                Piece piece = ChessData.getChessData().getSquareModel(srcPoint.getX(), srcPoint.getY()).getPiece();
+                ChessData.getChessData().deleteObserver(ConnectionBridge.this);
                 piece.tryToMove(srcPoint, squareModel2.getPosition());
-                Chess_Data.getChessData().addObserver(ConnectionBridge.this);
+                ChessData.getChessData().addObserver(ConnectionBridge.this);
                 //data.move((Integer) list.get(0), (Integer) list.get(1));TODO:
             }
         }

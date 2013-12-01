@@ -31,7 +31,7 @@ import Utils.ChessGamePoint;
  * @see Observable Class
  * @version 1.1
  */
-public final class Chess_Data extends Observable {
+public final class ChessData extends Observable {
 
     private ArrayList<Non_Visual_Piece> capturedPieces = new ArrayList<Non_Visual_Piece>();
     private ArrayList<Player> players = new ArrayList<Player>();
@@ -45,13 +45,13 @@ public final class Chess_Data extends Observable {
     private ChessGamePoint whiteEnPessant;
     private ChessGamePoint blackEnPessant;
     
-	private static Chess_Data chessData;
+	private static ChessData chessData;
 	
-	public static Chess_Data getChessData()
+	public static ChessData getChessData()
 	{
 		if (chessData == null)
 		{
-			chessData = new Chess_Data ();
+			chessData = new ChessData ();
 		}
 		return chessData;
 	}
@@ -62,7 +62,7 @@ public final class Chess_Data extends Observable {
      * it will contain the information that is specified inside
      * the constructor the constructor creates the non visual pieces and fills the array with them
      */
-    private Chess_Data() {
+    private ChessData() {
     	this.createSquareModels();
         this.loadActivePiecesFromSavedState();
     }
@@ -459,7 +459,7 @@ public final class Chess_Data extends Observable {
     }
     
     public static void destroy() {
-        Chess_Data.chessData = null;
+        ChessData.chessData = null;
     }
     
     /**

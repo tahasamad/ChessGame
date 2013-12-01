@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -61,10 +62,10 @@ import Utils.ChessGameUtils;
 public class Chat extends JPanel {
 
     //INSTNACE VARIABLES
-    private JTextPane chatA;
-    private JPanel chatBox, sendPnl, allChatPanel;
-    private JTextField chatF;
-    private JButton btnSend, btnFont;
+    private JTextPane conversationBox;
+    private JPanel chatBox, sendPnl, rootChatPanel;
+    private JTextField messageBox;
+    private JButton btnSend, fontButton;
     private JScrollPane scroll;
     private Font font;
     private TitledBorder border;
@@ -72,7 +73,7 @@ public class Chat extends JPanel {
     private String imgPath;
     private String imgSet = " :image ";
     private ChessBoardView view;
-    private SimpleAttributeSet smpSet, smpSetUnderline;
+    private SimpleAttributeSet textAttributes, underlineAttributes;
     private Color color = Color.ORANGE;
     private ObjectOutputStream out;
     private String name = "";
@@ -88,14 +89,21 @@ public class Chat extends JPanel {
      * @param data as a Chess_Data object
      */
     public Chat(ChessBoardView view) {
-
         this.view = view;
-
-
-        smpSet = new SimpleAttributeSet();
-        smpSetUnderline = new SimpleAttributeSet();
-        StyleConstants.setUnderline(smpSetUnderline, true);
-
+        textAttributes = new SimpleAttributeSet();
+        underlineAttributes = new SimpleAttributeSet();
+        StyleConstants.setUnderline(underlineAttributes, true);
+        
+        this.createChatBox();
+        this.createConversationBox();
+        this.setupBorder();
+        this.createSendPanel();
+        this.setupEnerAction();
+        this.createRootChatPanel();
+    }
+    
+    private void createChatBox()
+    {
         //chatBox JPanel is the panel which contains the JTextPane
         chatBox = new JPanel(new BorderLayout()) {
 
@@ -110,17 +118,19 @@ public class Chat extends JPanel {
                 int w = chatBox.getWidth();
                 int h = chatBox.getHeight();
 
-                URL url = chatA.getClass().getResource("Icons/background.jpg");
+                URL url = conversationBox.getClass().getResource("Icons/background.jpg");
                 Toolkit toolkit = this.getToolkit();
                 Image image = toolkit.getImage(url);
                 g.drawImage(image, 0, 0, w, h, chatBox);
             }
         };
-
         chatBox.setOpaque(false);
-
+    }
+    
+    private void createConversationBox()
+    {
         //chatA is the JTextPane where the messages are seen
-        chatA = new JTextPane() {
+        conversationBox = new JTextPane() {
 
             /**
              * The method painComponent of chatA
@@ -129,24 +139,51 @@ public class Chat extends JPanel {
              */
             @Override
             public void paintComponent(Graphics g) {
-                int w = chatA.getWidth();
-                int h = chatA.getHeight();
+                int w = conversationBox.getWidth();
+                int h = conversationBox.getHeight();
 
-                URL url = chatA.getClass().getResource("Icons/background.jpg");
+                URL url = conversationBox.getClass().getResource("Icons/background.jpg");
                 Toolkit toolkit = this.getToolkit();
                 Image image = toolkit.getImage(url);
-                g.drawImage(image, 0, 0, w, h, chatA);
+                g.drawImage(image, 0, 0, w, h, conversationBox);
                 super.paintComponent(g);
             }
         };
-
-
-        chatA.setFont(new Font("Dialog", Font.PLAIN, 16));
-        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
-
-        btnFont = ChessGameUtils.getButtonWithText("Font");
-
-        btnFont.addActionListener(new ActionListener() {
+        conversationBox.setFont(new Font("Dialog", Font.PLAIN, 16));
+        conversationBox.setOpaque(false);
+        conversationBox.setEditable(false);
+        appendStr(new ChatPacket("Chess Chat",  underlineAttributes, Color.BLACK));
+        scroll = new JScrollPane(conversationBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chatBox.add(scroll);
+    }
+    
+    private void setupBorder()
+    {
+        //SET BORDER PROPERTIES
+        border = new TitledBorder("Chat");
+        border.setTitleFont(font);
+        border.setTitleColor(Color.WHITE);
+        chatBox.setBorder(border);
+    }
+    
+    private void createSendPanel()
+    {
+    	messageBox = new JTextField(30);
+    	this.createFontButton();
+    	this.createSendButton();
+        //sendPnl is the panel which has the JTextArea and two JButtons
+        sendPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        //Add the JComponents to the panel
+        sendPnl.add(messageBox);
+        sendPnl.add(btnSend);
+        sendPnl.add(fontButton);
+        sendPnl.setOpaque(false);
+    }
+    
+    private void createFontButton()
+    {
+    	fontButton = ChessGameUtils.getButtonWithText("Font");
+        fontButton.addActionListener(new ActionListener() {
 
             /**
              * The method actionPerformed needs to be overridden in our class
@@ -156,27 +193,10 @@ public class Chat extends JPanel {
                 new FontDialog();
             }
         });
+    }
 
-
-
-
-        chatA.setOpaque(false);
-        chatA.setEditable(false);
-
-        scroll = new JScrollPane(chatA, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        //SET BORDER PROPERTIES
-        border = new TitledBorder("Chat");
-        border.setTitleFont(font);
-        border.setTitleColor(Color.WHITE);
-        chatBox.setBorder(border);
-        chatBox.add(scroll);
-
-        chatF = new JTextField(30);
-
-        //sendPnl is the panel which has the JTextArea and two JButtons
-        sendPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+    private void createSendButton()
+    {
         btnSend = ChessGameUtils.getButtonWithText("Send");
 
         btnSend.addActionListener(new ActionListener() {
@@ -186,18 +206,18 @@ public class Chat extends JPanel {
              * @param e ActionEvent object that is generated when listener detects action
              */
             public void actionPerformed(ActionEvent e) {
-                if (!chatF.getText().trim().equals("") || imgPath != null) {
-                    if (chatF.getText().trim().equals("*save")) {
+                if (!messageBox.getText().trim().equals("") || imgPath != null) {
+                    if (messageBox.getText().trim().equals("*save")) {
                         saveChat();
-                        chatF.setText("");
-                    } else if (chatF.getText().trim().equals("*clear")) {
-                        chatA.setText("");
-                        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
-                        chatF.setText("");
+                        messageBox.setText("");
+                    } else if (messageBox.getText().trim().equals("*clear")) {
+                        conversationBox.setText("");
+                        appendStr(new ChatPacket("Chess Chat",  underlineAttributes, Color.BLACK));
+                        messageBox.setText("");
                     } else {
                         try {
                             sendMsg();
-                            chatA.setCaretPosition(chatA.getDocument().getLength());
+                            conversationBox.setCaretPosition(conversationBox.getDocument().getLength());
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -205,32 +225,28 @@ public class Chat extends JPanel {
                 }
             }
         });
-
-        //Add the JComponents to the panel
-        sendPnl.add(chatF);
-        sendPnl.add(btnSend);
-        sendPnl.add(btnFont);
-        sendPnl.setOpaque(false);
-
+    }
+    
+    private void setupEnerAction()
+    {
         enter = (new ActionListener() {
-
             /**
              * The method actionPerformed needs to be overridden in our class
              * @param e ActionEvent object that is generated when listener detects an action
              */
             public void actionPerformed(ActionEvent e) {
-                if (!chatF.getText().trim().equals("") || imgPath != null) {
-                    if (chatF.getText().trim().equals("*save")) {
+                if (!messageBox.getText().trim().equals("") || imgPath != null) {
+                    if (messageBox.getText().trim().equals("*save")) {
                         saveChat();
-                        chatF.setText("");
-                    } else if (chatF.getText().trim().equals("*clear")) {
-                        chatA.setText("");
-                        appendStr(new ChatPacket("Chess Chat",  smpSetUnderline, Color.BLACK));
-                        chatF.setText("");
+                        messageBox.setText("");
+                    } else if (messageBox.getText().trim().equals("*clear")) {
+                        conversationBox.setText("");
+                        appendStr(new ChatPacket("Chess Chat",  underlineAttributes, Color.BLACK));
+                        messageBox.setText("");
                     } else {
                         try {
                             sendMsg();
-                            chatA.setCaretPosition(chatA.getDocument().getLength());
+                            conversationBox.setCaretPosition(conversationBox.getDocument().getLength());
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -238,11 +254,13 @@ public class Chat extends JPanel {
                 }
             }
         });
-
-        chatF.addActionListener(enter);
-
+        messageBox.addActionListener(enter);
+    }
+    
+    private void createRootChatPanel()
+    {
         //allChatPanel is the panel which has all the other panels
-        allChatPanel = new JPanel(new BorderLayout()) {
+        rootChatPanel = new JPanel(new BorderLayout()) {
 
             /**
              * The method painComponent of allChatPanel
@@ -252,29 +270,28 @@ public class Chat extends JPanel {
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                int w = allChatPanel.getWidth();
-                int h = allChatPanel.getHeight();
+                int w = rootChatPanel.getWidth();
+                int h = rootChatPanel.getHeight();
 
-                URL url = chatA.getClass().getResource("Icons/background.jpg");
+                URL url = conversationBox.getClass().getResource("Icons/background.jpg");
                 
                 Toolkit toolkit = this.getToolkit();
                 Image image = toolkit.getImage(url);
-                g.drawImage(image, 0, 0, w, h, allChatPanel);
+                g.drawImage(image, 0, 0, w, h, rootChatPanel);
             }
         };
 
         setButtons(false);
 
         //Add all the panels to the main allChatPanel and set their borderLayout
-        allChatPanel.add(chatBox, BorderLayout.CENTER);
-        allChatPanel.add(sendPnl, BorderLayout.SOUTH);
-        allChatPanel.setPreferredSize(new Dimension(757, 175));
+        rootChatPanel.add(chatBox, BorderLayout.CENTER);
+        rootChatPanel.add(sendPnl, BorderLayout.SOUTH);
+        rootChatPanel.setPreferredSize(new Dimension(757, 175));
 
         //Set the JFrame properties
-        this.add(allChatPanel);
+        this.add(rootChatPanel);
         this.setPreferredSize(new Dimension(757, 175));
         this.setVisible(true);
-
     }
 
     //*****************************************************************\\
@@ -329,7 +346,7 @@ public class Chat extends JPanel {
 
 
             pr.println("*****" + format.format(dateNow) + "*****");
-            pr.print(chatA.getText());
+            pr.print(conversationBox.getText());
             pr.flush();
             pr.close();
 
@@ -361,16 +378,16 @@ public class Chat extends JPanel {
      * @return chatA as a JTextPane
      */
     public JTextPane getTxtPane() {
-        return chatA;
+        return conversationBox;
     }
 
     public void setTxtPaneCaretPosition()
     {
-    	chatA.setCaretPosition(chatA.getDocument().getLength());
+    	conversationBox.setCaretPosition(conversationBox.getDocument().getLength());
     }
     public void insertTxtPaneIcon(Packet packet)
     {
-    	chatA.insertIcon(new ImageIcon(getClass().getResource(packet.getImgPath())));
+    	conversationBox.insertIcon(new ImageIcon(getClass().getResource(packet.getImgPath())));
     }
     /**
      * getTxtField is used to get the JTextField
@@ -378,21 +395,21 @@ public class Chat extends JPanel {
      * @return chatF as a JTextField
      */
     public JTextField getTxtField() {
-        return chatF;
+        return messageBox;
     }
 
     /**
      * appendStr is used to append messages, this method had to be made because
      * JTextPane doesn't include a append() method
      * @param s The message you want to send
-     * @param smpSet the SimpleAttributeSet used
+     * @param textAttributes the SimpleAttributeSet used
      * @param color Color of the String
      */
     public final void appendStr(ChatPacket packet) {
 
         try {
-            Document doc = chatA.getDocument();
-            StyleConstants.setForeground(smpSet, packet.getColor());
+            Document doc = conversationBox.getDocument();
+            StyleConstants.setForeground(textAttributes, packet.getColor());
             doc.insertString(doc.getLength(), packet.getMessage(), packet.getAttributeSet());
 
         } catch (BadLocationException ex) {
@@ -433,13 +450,13 @@ public class Chat extends JPanel {
     private void sendMsg() throws IOException {							//DONE: Changed to private
         out = ChessBoardView.getConnectionInstance().getOutputStream();
 
-        if (imgPath != null && chatF.getText().indexOf(" :image ") >= 0) {
-            chatF.setText(replaceStr(chatF.getText(), imgSet, ""));
+        if (imgPath != null && messageBox.getText().indexOf(" :image ") >= 0) {
+            messageBox.setText(replaceStr(messageBox.getText(), imgSet, ""));
         }
         Packet packet = new Packet();
-        packet.setSmpSet(smpSet);
+        packet.setSmpSet(textAttributes);
         packet.setColor(color);
-        packet.setMessage(chatF.getText().trim());
+        packet.setMessage(messageBox.getText().trim());
         if (imgPath != null) {
             packet.setImgPath(imgPath);
         }
@@ -448,19 +465,19 @@ public class Chat extends JPanel {
         
         name = ChessGameUtils.getCurrentPlayerName();
         
-        if (Chess_Data.getChessData().isServer()) {
-            name = Chess_Data.getChessData().getPlayers().get(0).getName();
+        if (ChessData.getChessData().isServer()) {
+            name = ChessData.getChessData().getPlayers().get(0).getName();
         } else {
-            name = Chess_Data.getChessData().getPlayers().get(1).getName();
+            name = ChessData.getChessData().getPlayers().get(1).getName();
         }
-        if (!chatF.getText().trim().equals("") || imgPath != null) {
+        if (!messageBox.getText().trim().equals("") || imgPath != null) {
 //            appendStr("\n" + name + ": " + chatF.getText(), smpSet, color);
-            appendStr(new ChatPacket("\n" + name + ": " + chatF.getText(), smpSet, color));
+            appendStr(new ChatPacket("\n" + name + ": " + messageBox.getText(), textAttributes, color));
             if (imgPath != null) {
-                chatA.insertIcon(new ImageIcon(getClass().getResource(imgPath)));
+                conversationBox.insertIcon(new ImageIcon(getClass().getResource(imgPath)));
             }
         }
-        chatF.setText("");
+        messageBox.setText("");
         imgPath = null;
     }
 
@@ -472,16 +489,16 @@ public class Chat extends JPanel {
      */
     public final void setButtons(boolean isOn) {
         if (isOn == true) {
-            chatF.setEditable(true);
-            chatF.setEnabled(true);
+            messageBox.setEditable(true);
+            messageBox.setEnabled(true);
             btnSend.setEnabled(true);
-            btnFont.setEnabled(true);
+            fontButton.setEnabled(true);
 
         } else {
-            chatF.setEditable(false);
-            chatF.setEnabled(false);
+            messageBox.setEditable(false);
+            messageBox.setEnabled(false);
             btnSend.setEnabled(false);
-            btnFont.setEnabled(false);
+            fontButton.setEnabled(false);
         }
     }
 
@@ -531,7 +548,7 @@ public class Chat extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     color = JColorChooser.showDialog(view, "Choose Color", Color.BLUE);
                     if (color != null) {
-                        StyleConstants.setForeground(smpSet, color);
+                        StyleConstants.setForeground(textAttributes, color);
                     } else {
                         color = Color.BLUE;
                     }
@@ -545,19 +562,19 @@ public class Chat extends JPanel {
                     if (!chkBold.isSelected() && chkItalic.isSelected()) {
                         StyleConstants.setItalic(smpSet1, true);
                         StyleConstants.setForeground(smpSet1, color);
-                        Chat.this.smpSet = smpSet1;
+                        Chat.this.textAttributes = smpSet1;
                     } else if (chkBold.isSelected() && chkItalic.isSelected()) {
                         StyleConstants.setItalic(smpSet1, true);
                         StyleConstants.setBold(smpSet1, true);
                         StyleConstants.setForeground(smpSet1, color);
-                        Chat.this.smpSet = smpSet1;
+                        Chat.this.textAttributes = smpSet1;
                     }
                     if (chkBold.isSelected() && !chkItalic.isSelected()) {
                         StyleConstants.setBold(smpSet1, true);
                         StyleConstants.setForeground(smpSet1, color);
-                        Chat.this.smpSet = smpSet1;
+                        Chat.this.textAttributes = smpSet1;
                     } else if (!chkBold.isSelected() && !chkItalic.isSelected()) {
-                        Chat.this.smpSet = smpSet1;
+                        Chat.this.textAttributes = smpSet1;
                     }
                     FontDialog.this.dispose();
                 }

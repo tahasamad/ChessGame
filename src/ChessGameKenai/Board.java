@@ -53,13 +53,13 @@ public final class Board extends JPanel implements Observer {
      */
     public Board(ChessBoardView view) {
         this.setLayout(null);
-        int size = Chess_Data.getChessData().getDimension();
+        int size = ChessData.getChessData().getDimension();
         this.squares = new Square[size][size];
         this.view = view;
         this.setupSquares();
         this.setOpaque(false);
         this.populateBoard();
-        Chess_Data.getChessData().discardActivePiecesInSavedState();
+        ChessData.getChessData().discardActivePiecesInSavedState();
     }
 
     /**
@@ -68,10 +68,10 @@ public final class Board extends JPanel implements Observer {
      * the first time it fills the array list of visual piece for later use
      */
     public void populateBoard() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
-        		Non_Visual_Piece activePieceModel = Chess_Data.getChessData().getPieceModelFromSaveState(x, y);
+        		Non_Visual_Piece activePieceModel = ChessData.getChessData().getPieceModelFromSaveState(x, y);
         		if(activePieceModel != null)
         		{
 	            	Piece piece = new Piece(activePieceModel);
@@ -136,7 +136,7 @@ public final class Board extends JPanel implements Observer {
      * this method is used when we want to restart the game
      */
     public void removeAllPieces() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
     	for (int x = 0; x < size; x++) {
     		for (int y = 0; y < size; y++) {
     			Piece piece = this.squares[x][y].getPiece();
@@ -154,12 +154,12 @@ public final class Board extends JPanel implements Observer {
      * As well as this method also adds the pieces to the squares
      */
     public void setupSquares() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
     	for(int x = 0; x < size; x++)
         {
         	for(int y = 0; y < size; y++)
             {
-        		Square 	 square = new Square(Chess_Data.getChessData().getSquareModel(x, y));
+        		Square 	 square = new Square(ChessData.getChessData().getSquareModel(x, y));
         		squares[x][y] = square;
                 this.mapPositions(x, y);
         		this.add(square);
@@ -173,7 +173,7 @@ public final class Board extends JPanel implements Observer {
      */
     public void flipBoard() {
 
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
         //SWITCH STATEMENT FOR CURRENT BOARD VARIABLE IT'S EITHER NORMAL OR FLIPPED
         switch (this.currentBoard) {
 
@@ -226,7 +226,7 @@ public final class Board extends JPanel implements Observer {
     }
 
     public void addHandlers() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
         		this.squares[x][y].addHandler();
@@ -235,7 +235,7 @@ public final class Board extends JPanel implements Observer {
     }
 
     public void removeHandlers() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
         		this.squares[x][y].removeHandler();
@@ -299,7 +299,7 @@ public final class Board extends JPanel implements Observer {
      * of the non visual piece then redraws its view as needed
      */
     public void redrawPieces() {
-    	int size = Chess_Data.getChessData().getDimension();
+    	int size = ChessData.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
         		this.squares[x][y].updateView();
@@ -321,7 +321,7 @@ public final class Board extends JPanel implements Observer {
      * This method is only used if the game is played online
      */
     public void distributeOnLineListeners() {
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
         if (data.isServer()) {
             if (data.isWhiteTurn()) {
                 this.addHandlers();
@@ -343,7 +343,7 @@ public final class Board extends JPanel implements Observer {
      * it is used to update changes
      */
     public void notifyView() {
-        Chess_Data.getChessData().notifyView();
+        ChessData.getChessData().notifyView();
     }
 
     /**
@@ -364,7 +364,7 @@ public final class Board extends JPanel implements Observer {
     public void mapPositions(int x, int y) {
     	int asciiForSmallA = 97;
     	String string = "" + Character.toString((char) (asciiForSmallA + x));
-    	string += (Chess_Data.getChessData().getDimension() - y);
+    	string += (ChessData.getChessData().getDimension() - y);
     	this.mapPositions.put(this.getMapPositionKey(x, y), string);
     }
     
@@ -374,7 +374,7 @@ public final class Board extends JPanel implements Observer {
     }
     
     public void resetSelectedSquare() {
-    	Chess_Data data = Chess_Data.getChessData();
+    	ChessData data = ChessData.getChessData();
     	Square selectedSquare = data.getSelectedSquare();
     	if(selectedSquare != null)
     	{

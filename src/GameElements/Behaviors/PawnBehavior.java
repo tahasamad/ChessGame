@@ -1,6 +1,6 @@
 package GameElements.Behaviors;
 
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import ChessGameKenai.SquareModel;
 import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
@@ -12,7 +12,7 @@ public class PawnBehavior implements Behavior{
 	private OneStepDiagonalBehavior oneStepDiagonalBehavior = new OneStepDiagonalBehavior();
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
-		Chess_Data data = Chess_Data.getChessData();
+		ChessData data = ChessData.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.getY() - currentPosition.getY();
 		BehaviorResult retVal = null;
@@ -91,7 +91,7 @@ public class PawnBehavior implements Behavior{
 	
 	private BehaviorResult normalMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
-		Chess_Data data = Chess_Data.getChessData();
+		ChessData data = ChessData.getChessData();
 		Non_Visual_Piece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.getY() - currentPosition.getY();
 		int range = 1;
@@ -117,7 +117,7 @@ public class PawnBehavior implements Behavior{
 	
 	private BehaviorResult enPassantMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece, ChessGamePoint enPassantPoint, int diff)
 	{
-		Chess_Data data = Chess_Data.getChessData();
+		ChessData data = ChessData.getChessData();
 		if(enPassantPoint != null)
 		{
 			if(newPosition.getX() == enPassantPoint.getX() && newPosition.getY() == (enPassantPoint.getY() + diff))
@@ -146,7 +146,7 @@ public class PawnBehavior implements Behavior{
 		}
 		else
 		{
-			return (Chess_Data.getChessData().getDimension() - 1);
+			return (ChessData.getChessData().getDimension() - 1);
 		}
 	}
 	

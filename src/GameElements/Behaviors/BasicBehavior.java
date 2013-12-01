@@ -2,7 +2,7 @@ package GameElements.Behaviors;
 
 import java.util.ArrayList;
 
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import ChessGameKenai.SquareModel;
 import GameElements.ElementColor;
 import GameElements.Non_Visual_Piece;
@@ -14,7 +14,7 @@ public class BasicBehavior implements Behavior{
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
-		Chess_Data data = Chess_Data.getChessData();
+		ChessData data = ChessData.getChessData();
 		if(data.posHasPiece(newPosition))
 		{
 			Piece killedPiece = data.getSquareModel(newPosition).getPiece();

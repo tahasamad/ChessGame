@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import ChessGameKenai.ChessGameConstants;
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import GameElements.ElementColor;
 import GameElements.PieceType;
 
@@ -20,13 +20,13 @@ public class ChessGameUtils { // Applying Utility Pattern
 	public static String getCurrentPlayerName ()
 	{
 		String playerName = "";
-		if (Chess_Data.getChessData().isServer()) 
+		if (ChessData.getChessData().isServer()) 
 		{
-			playerName = Chess_Data.getChessData().getPlayers().get(0).getName();
+			playerName = ChessData.getChessData().getPlayers().get(0).getName();
 		} 
 		else 
 		{
-			playerName = Chess_Data.getChessData().getPlayers().get(1).getName();
+			playerName = ChessData.getChessData().getPlayers().get(1).getName();
 		}
 		return playerName;
 	}
@@ -34,13 +34,13 @@ public class ChessGameUtils { // Applying Utility Pattern
 	public static String getOtherPlayerName ()
 	{
 		String playerName = "";
-		if (Chess_Data.getChessData().isServer()) 
+		if (ChessData.getChessData().isServer()) 
 		{
-			playerName = Chess_Data.getChessData().getPlayers().get(1).getName();
+			playerName = ChessData.getChessData().getPlayers().get(1).getName();
 		} 
 		else 
 		{
-			playerName = Chess_Data.getChessData().getPlayers().get(0).getName();
+			playerName = ChessData.getChessData().getPlayers().get(0).getName();
 		}
 		return playerName;
 	}

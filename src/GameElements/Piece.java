@@ -15,7 +15,7 @@ import java.net.URL;
 import javax.swing.JPanel;
 
 import ChessGameKenai.ChessGameConstants;
-import ChessGameKenai.Chess_Data;
+import ChessGameKenai.ChessData;
 import GameElements.Behaviors.Behavior;
 import GameElements.Behaviors.BehaviorResult;
 import Utils.ChessGamePoint;
@@ -126,7 +126,7 @@ public class Piece extends JPanel {
     		BehaviorResult result = behavior.proposeMove(originalPosition, destinationPosition, this);
     		if(result != null)
     		{
-    			Chess_Data.getChessData().notifyView(result);
+    			ChessData.getChessData().notifyView(result);
     			return true;
     		}
     	}
