@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ChessGameKenai.ChessData;
 import ChessGameKenai.SquareModel;
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 import Utils.ChessGamePoint;
 
@@ -18,7 +18,7 @@ public class BasicBehavior implements Behavior{
 		if(data.posHasPiece(newPosition))
 		{
 			Piece killedPiece = data.getSquareModel(newPosition).getPiece();
-			Non_Visual_Piece killedPieceModel = killedPiece.getPieceModel();
+			NonVisualPiece killedPieceModel = killedPiece.getPieceModel();
 			killedPieceModel.setIsCaptured(true);
 			data.addToCapturedPieces(killedPieceModel);
 		}

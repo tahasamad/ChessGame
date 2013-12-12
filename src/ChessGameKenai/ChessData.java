@@ -18,7 +18,7 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 import GameElements.PieceType;
 import Utils.ChessGamePoint;
@@ -33,10 +33,10 @@ import Utils.ChessGamePoint;
  */
 public final class ChessData extends Observable {
 
-    private ArrayList<Non_Visual_Piece> capturedPieces = new ArrayList<Non_Visual_Piece>();
+    private ArrayList<NonVisualPiece> capturedPieces = new ArrayList<NonVisualPiece>();
     private ArrayList<Player> players = new ArrayList<Player>();
     private ArrayList<Player> loadedPlayer = new ArrayList<Player>();
-    private Non_Visual_Piece[][] activePiecesInSavedState;
+    private NonVisualPiece[][] activePiecesInSavedState;
     private boolean isWhiteTurn = true;
     private boolean isServer = false;
     private boolean isGameOnLine = false, isClientConnected;
@@ -153,7 +153,7 @@ public final class ChessData extends Observable {
     	int size = this.getDimension();
     	if(this.activePiecesInSavedState == null)
     	{
-            this.activePiecesInSavedState = new Non_Visual_Piece[size][size];
+            this.activePiecesInSavedState = new NonVisualPiece[size][size];
     	}
     	if(this.activePiecesInSavedState != null)
     	{
@@ -169,7 +169,7 @@ public final class ChessData extends Observable {
     	}
     }
     
-    public Non_Visual_Piece getPieceModelFromSaveState(int x, int y)
+    public NonVisualPiece getPieceModelFromSaveState(int x, int y)
     {
     	if(this.activePiecesInSavedState != null)
     	{
@@ -182,7 +182,7 @@ public final class ChessData extends Observable {
     	return null;
     }
     
-    public Non_Visual_Piece getPieceModelFromSavedState(ChessGamePoint position)
+    public NonVisualPiece getPieceModelFromSavedState(ChessGamePoint position)
     {
     	return this.getPieceModelFromSaveState(position.getX(), position.getY());
     }
@@ -192,7 +192,7 @@ public final class ChessData extends Observable {
     	this.activePiecesInSavedState = null;
     }
         
-    private void setPieceModelInSavedState(int x, int y, Non_Visual_Piece pieceModel)
+    private void setPieceModelInSavedState(int x, int y, NonVisualPiece pieceModel)
     {
     	if(this.activePiecesInSavedState != null)
     	{
@@ -216,28 +216,28 @@ public final class ChessData extends Observable {
     {
     	if(yPos == 1 || yPos == this.getDimension() - 2)
         {
-    		Non_Visual_Piece  nonVisualPiece = new Non_Visual_Piece(PieceType.Pawn, color);
+    		NonVisualPiece  nonVisualPiece = new NonVisualPiece(PieceType.Pawn, color);
     		this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
     	else if (xPos == 0 || xPos == 7) 
     	{
-    		Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Rook, color);
+    		NonVisualPiece nonVisualPiece = new NonVisualPiece(PieceType.Rook, color);
     		this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 1 || xPos == 6) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Knight, color);
+        	NonVisualPiece nonVisualPiece = new NonVisualPiece(PieceType.Knight, color);
         	this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 2 || xPos == 5) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Bishop, color);
+        	NonVisualPiece nonVisualPiece = new NonVisualPiece(PieceType.Bishop, color);
         	this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 3) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.Queen, color);
+        	NonVisualPiece nonVisualPiece = new NonVisualPiece(PieceType.Queen, color);
         	this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
         else if (xPos == 4) {
-        	Non_Visual_Piece nonVisualPiece = new Non_Visual_Piece(PieceType.King, color);
+        	NonVisualPiece nonVisualPiece = new NonVisualPiece(PieceType.King, color);
         	this.setPieceModelInSavedState(xPos, yPos, nonVisualPiece);
         }
     }
@@ -392,7 +392,7 @@ public final class ChessData extends Observable {
      */
     public boolean isWinner() {
         for (int i = 0; i < this.capturedPieces.size(); i++) {
-            Non_Visual_Piece pieceModel = this.capturedPieces.get(i);
+            NonVisualPiece pieceModel = this.capturedPieces.get(i);
             if (pieceModel.getType() == PieceType.King) {
                 return true;
             }
@@ -405,11 +405,11 @@ public final class ChessData extends Observable {
      * @return ArrayList<Piece>
      */
     @SuppressWarnings("unchecked")
-	public synchronized ArrayList<Non_Visual_Piece> getCapturedPieces() {
-        return (ArrayList<Non_Visual_Piece>) capturedPieces.clone();
+	public synchronized ArrayList<NonVisualPiece> getCapturedPieces() {
+        return (ArrayList<NonVisualPiece>) capturedPieces.clone();
     }
     
-    public void addToCapturedPieces(Non_Visual_Piece pieceModel) {
+    public void addToCapturedPieces(NonVisualPiece pieceModel) {
         if(this.capturedPieces != null)
         {
         	if(!this.capturedPieces.contains(pieceModel))
@@ -443,7 +443,7 @@ public final class ChessData extends Observable {
 	    	int size = this.getDimension();
 	    	if(this.activePiecesInSavedState == null)
 	    	{
-	    		this.activePiecesInSavedState = new Non_Visual_Piece[size][size];
+	    		this.activePiecesInSavedState = new NonVisualPiece[size][size];
 	    	}
         	for(int x = 0; x < size; x++)
         	{
@@ -560,7 +560,7 @@ public final class ChessData extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(ChessGameConstants.saveFile)));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(new File(ChessGameConstants.saveFileCapturedPieces)));
-            this.activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
+            this.activePiecesInSavedState = (NonVisualPiece[][]) ois.readObject();
             this.capturedPieces = (ArrayList) iis.readObject();
             this.setPieces();
             iis.close();
@@ -583,9 +583,9 @@ public final class ChessData extends Observable {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             ObjectInputStream iis = new ObjectInputStream(new FileInputStream(file + ".bak"));
-            this.activePiecesInSavedState = (Non_Visual_Piece[][]) ois.readObject();
+            this.activePiecesInSavedState = (NonVisualPiece[][]) ois.readObject();
             this.setPieces();
-            this.capturedPieces = (ArrayList<Non_Visual_Piece>) iis.readObject();
+            this.capturedPieces = (ArrayList<NonVisualPiece>) iis.readObject();
             iis.close();
             ois.close();
             return true;
@@ -605,7 +605,7 @@ public final class ChessData extends Observable {
         	for (int y = 0; y < size; y++) {
         		if(this.activePiecesInSavedState != null)
         		{
-        			Non_Visual_Piece oldModel = this.activePiecesInSavedState[x][y];
+        			NonVisualPiece oldModel = this.activePiecesInSavedState[x][y];
         			if(oldModel != null)
         			{
         				this.activePiecesInSavedState[x][y] = oldModel.copy();

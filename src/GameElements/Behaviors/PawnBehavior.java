@@ -3,7 +3,7 @@ package GameElements.Behaviors;
 import ChessGameKenai.ChessData;
 import ChessGameKenai.SquareModel;
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 import Utils.ChessGamePoint;
 
@@ -13,7 +13,7 @@ public class PawnBehavior implements Behavior{
 	@Override
 	public BehaviorResult proposeMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece) {
 		ChessData data = ChessData.getChessData();
-		Non_Visual_Piece pieceModel = piece.getPieceModel();
+		NonVisualPiece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.getY() - currentPosition.getY();
 		BehaviorResult retVal = null;
 		if(data.posHasPiece(newPosition))
@@ -92,7 +92,7 @@ public class PawnBehavior implements Behavior{
 	private BehaviorResult normalMove(ChessGamePoint currentPosition, ChessGamePoint newPosition, Piece piece)
 	{
 		ChessData data = ChessData.getChessData();
-		Non_Visual_Piece pieceModel = piece.getPieceModel();
+		NonVisualPiece pieceModel = piece.getPieceModel();
 		int diffY = newPosition.getY() - currentPosition.getY();
 		int range = 1;
 		if(!pieceModel.isMoved())
@@ -126,7 +126,7 @@ public class PawnBehavior implements Behavior{
 				if(result != null)
 				{
 					SquareModel enPassantSquareModel = data.getSquareModel(enPassantPoint.getX(), enPassantPoint.getY());
-					Non_Visual_Piece enPassantPieceModel = enPassantSquareModel.getPiece().getPieceModel();
+					NonVisualPiece enPassantPieceModel = enPassantSquareModel.getPiece().getPieceModel();
 					enPassantPieceModel.setIsCaptured(true);
 					data.addToCapturedPieces(enPassantPieceModel);
 					enPassantSquareModel.setPiece(null);
@@ -138,7 +138,7 @@ public class PawnBehavior implements Behavior{
 		return null;
 	}
 	
-	private int getYPosForPromotion(Non_Visual_Piece pieceModel)
+	private int getYPosForPromotion(NonVisualPiece pieceModel)
 	{
 		if(isPieceColorWhite (pieceModel))
 		{
@@ -150,7 +150,7 @@ public class PawnBehavior implements Behavior{
 		}
 	}
 	
-	private boolean isPieceColorWhite (Non_Visual_Piece pieceModel)
+	private boolean isPieceColorWhite (NonVisualPiece pieceModel)
 	{
 		return (pieceModel.getColor() == ElementColor.White);
 	}

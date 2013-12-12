@@ -1,10 +1,10 @@
 package GameElements.Behaviors;
 
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 
 public class BehaviorFactory {
 	
-	public static Behavior makeBehaviorForType(Non_Visual_Piece model)
+	public static Behavior makeBehaviorForType(NonVisualPiece model)
 	{
 		Behavior behavior;
 		CompositeBehavior compositeBehavior;

@@ -14,7 +14,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 import GameElements.Behaviors.BehaviorResult;
 import Utils.ChessGamePoint;
@@ -71,7 +71,7 @@ public final class Board extends JPanel implements Observer {
     	int size = ChessData.getChessData().getDimension();
         for (int x = 0; x < size; x++) {
         	for (int y = 0; y < size; y++) {
-        		Non_Visual_Piece activePieceModel = ChessData.getChessData().getPieceModelFromSaveState(x, y);
+        		NonVisualPiece activePieceModel = ChessData.getChessData().getPieceModelFromSaveState(x, y);
         		if(activePieceModel != null)
         		{
 	            	Piece piece = new Piece(activePieceModel);
@@ -262,7 +262,7 @@ public final class Board extends JPanel implements Observer {
             SquareModel squareModel2 = list.get(1);
             if(squareModel2 != null)
             {
-                Non_Visual_Piece pieceModel = squareModel2.getPiece().getPieceModel();
+                NonVisualPiece pieceModel = squareModel2.getPiece().getPieceModel();
                 if (pieceModel.getColor() == ElementColor.White) {
                     turn = "W" + pieceModel.getType();
                 } else {

@@ -46,7 +46,7 @@ import UIMenus.HelpMenu;
 import UIMenus.OptionsMenu;
 
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 import GameElements.PieceType;
 
@@ -509,9 +509,9 @@ public class ChessBoardView extends JFrame implements Observer {
      */
     public void loadCapturedPieces() {
     	ChessData data = ChessData.getChessData();
-    	ArrayList<Non_Visual_Piece> capturedPiece = data.getCapturedPieces();
+    	ArrayList<NonVisualPiece> capturedPiece = data.getCapturedPieces();
         for (int i = 0; i < capturedPiece.size(); i++) {
-        	Non_Visual_Piece pieceModel = data.getCapturedPieces().get(i); 
+        	NonVisualPiece pieceModel = data.getCapturedPieces().get(i); 
             if (pieceModel.getColor() == ElementColor.White) {
                 whiteCapturedPiecesPanel.add(new Piece(pieceModel));
                 whiteCapturedPiecesPanel.revalidate();

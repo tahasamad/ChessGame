@@ -40,13 +40,13 @@ import Utils.ChessGameUtils;
 public class Piece extends JPanel {
 
     private String imagePath;
-	private Non_Visual_Piece pieceModel;
+	private NonVisualPiece pieceModel;
 
     /**
      * Overloaded constructor of our class receives the path to its image
      * @param imagePath as a String
      */
-    public Piece(Non_Visual_Piece pieceModel) {
+    public Piece(NonVisualPiece pieceModel) {
     	this.pieceModel = pieceModel;
         this.imagePath = ChessGameUtils.getPieceImageFilePathForTypeAndColor(this.pieceModel.getType(), this.pieceModel.getColor());
         this.setOpaque(false);
@@ -59,7 +59,7 @@ public class Piece extends JPanel {
      * The method getPiece returns the non visual piece that represents this object
      * @return piece as Non_Visual_Piece
      */
-    public Non_Visual_Piece getPieceModel() {
+    public NonVisualPiece getPieceModel() {
         return pieceModel;
     }
 

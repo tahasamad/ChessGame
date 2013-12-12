@@ -23,7 +23,7 @@ import GameElements.Behaviors.BehaviorFactory;
  * @see Serializable
  * @version 1.5
  */
-public class Non_Visual_Piece implements Serializable {
+public class NonVisualPiece implements Serializable {
 
 	private ElementColor color;
 	private PieceType type;
@@ -43,7 +43,7 @@ public class Non_Visual_Piece implements Serializable {
      * @param position as an integer
      * @param color as Color
      */
-    public Non_Visual_Piece(PieceType type, ElementColor color) {
+    public NonVisualPiece(PieceType type, ElementColor color) {
         this.type = type;
         this.color = color;
         this.behavior = BehaviorFactory.makeBehaviorForType(this);
@@ -157,9 +157,9 @@ public class Non_Visual_Piece implements Serializable {
 		this.viewDirty = viewDirty;
 	}
 
-	public Non_Visual_Piece copy()
+	public NonVisualPiece copy()
     {
-		Non_Visual_Piece newModel = new Non_Visual_Piece(this.getType(), this.getColor());
+		NonVisualPiece newModel = new NonVisualPiece(this.getType(), this.getColor());
 		newModel.setIsMoved(this.isMoved());
 		newModel.setIsCaptured(this.isCaptured());
 		newModel.isQueenFromPawn(this.isQueenFromPawn());

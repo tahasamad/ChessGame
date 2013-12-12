@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import GameElements.ElementColor;
-import GameElements.Non_Visual_Piece;
+import GameElements.NonVisualPiece;
 import GameElements.Piece;
 
 /**
@@ -133,10 +133,10 @@ public class CapturedPieces extends JPanel implements Observer {
      */
     public void update(Observable o, Object arg) {
         ChessData data = ChessData.getChessData();
-        ArrayList<Non_Visual_Piece> capturedPieces = data.getCapturedPieces();
+        ArrayList<NonVisualPiece> capturedPieces = data.getCapturedPieces();
         if (!capturedPieces.isEmpty()) {
         	int size = capturedPieces.size();
-            Non_Visual_Piece pieceModel = capturedPieces.get(size - 1);
+            NonVisualPiece pieceModel = capturedPieces.get(size - 1);
         	if(pieceModel.getViewDirty() && this.color == pieceModel.getColor() && pieceModel.isCaptured())
         	{
         		pieceModel.setViewDirty(false);
